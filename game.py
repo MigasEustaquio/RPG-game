@@ -117,7 +117,6 @@ while True:
     #if the room contains an item, and the item is the one they want to get
     if 'person' in rooms[currentRoom] and move[1] in rooms[currentRoom]['person'].lower():
       #add the item to their inventory
-    #   inventory += [move[1]]                           PERDER VIDA ######################
       #falar com a pessoa
       print(people[rooms[currentRoom]['person']])
       #delete the item from the room
@@ -164,7 +163,7 @@ while True:
     print("---------------------------")
     print('Your health has dropped to zero!\nGAME OVER')
     break
-  # player wins if they get to the Fourth District with a key and a potion
+  # player wins if they get to the Fourth District
   if currentRoom == 'Fourth District':
     print('You found Donald & Goofy... YOU WIN!')
     break
