@@ -1,12 +1,16 @@
 #!/bin/python3
 
+from dictionaries.location import *
+from dictionaries.dictionaries import *
+from player import *
+
 def showInstructions():
     #print a main menu and the commands
     print('''
-RPG Game v 0.1
+RPG Game v 0.2
 Traverse Town
 ========
-
+Talk to Leon!
 Find Donald and Goofy!
 Survive the heartless!
 
@@ -19,104 +23,82 @@ Commands:
 def showStatus():
   #print the player's current status
   print('\n---------------------------')
-  # print(keyItems)
-  # print(item)
   print('You are in the ' + currentRoom)
-  print("HP : " + str(HP))
-  print("MP : " + str(MP))
-  #print the current inventory
-  #print("inventory : " + str(inventory))
-  #print an item if there is one
   if "person" in rooms[currentRoom]:
     print('You see ' + rooms[currentRoom]['person'])
   print("---------------------------")
 
+def battle(enemy):
+    print("---------------------------")
+    print('You see a Heartless! It\'s a '+ enemy + '!')
+    print('commands: [attack], [magic], [item], [run]')
+    
+    heartlessHealth = int(heartless[enemy]['HP'])
+    heartlessDamage = int(heartless[enemy]['damage'])
+    command = ''
+    while True:
+        player.showBattleStatus()
+        while command == '':
+            command = input('>')
+        command = command.lower()
 
-def showBattleStatus():
-  #print the player's current battle status
-  print('\n---------------------------')
-  #print the current inventory
-  print("HP : " + str(HP))
-  print("MP : " + str(MP))
-  print("Items :",item)
-  #print an item if there is one
-  print("---------------------------")
+        print("---------------------------")
 
+        if command == 'attack':
+            command = ''
+            print('You and the heartless attack each other!')
+            print('You caused 1 ♥  of damage!')
+            heartlessHealth = heartlessHealth-1
+            print("You lost "+ str(heartlessDamage) + ' ♥ !')
+            player.HP = player.HP - heartlessDamage
 
+        if "magic" in command:
+          
+          if not player.magic:
+            print('Magic is still a mystery to you!')
+          command = ''
 
-#an inventory, which is initially empty
-HP = ["❤","❤","❤"]
-MP = ['●']  ## full: ●,  empty: ○
+        if "item" in command:
+          command = command.lower().split()
+          if not player.item:
+            print('You have no items!')
+          else:
+            try:
+              if command[1] in player.item:
+                del player.item[player.item.index(command[1])]
 
-magic = []
-item = []
-keyItems = []
+                print("The heartless attacks you!")
+                print("You lost "+ str(heartlessDamage) + ' ♥ !')
 
-#a dictionary linking a room to other room positions
-rooms = {
+                print('Used a ' + str(command[1]))
+                print(items[command[1]]['speech'])
 
-            'First District' : { 'north' : 'Second District',
-                  'shop' : ''                                           ##### Para implementar
-            },        
+                player.HP = player.HP + items[command[1]]['HP']  - heartlessDamage
 
-            'Second District' : { 'south' : 'First District',
-                  'east' : 'Third District',
-                  'west' : 'Hotel',
-                  'heartless'  : 'shadow'
-                },
-                
-            'Third District' : { 'west'  : 'Second District',              
-                },
-                
-            'Hotel' : { 'east' : 'Second District',
-                    'west' : 'Green Room',
-                    'north' : 'Red Room',
-                    'heartless'  : 'shadow'
-                    
-             },
+              else:
+                print("You don\'t have any ", command[1])
+            except IndexError:
+                print('try: item [item name]')
+          command = ''
 
-             'Green Room' : { 'east' : 'Hotel',
-                  'north' : 'Alleyway',
-                  'person'  : 'Leon'
-                },
+        if "run" in command:
+            command = ''
+            print('You got away successfully!')
+            return 'run'
 
-              'Red Room' : { 'south' : 'Hotel',
-                  'west' : 'Alleyway',
-                  'person'  : 'Yuffie'
-                },
+        if player.HP == 0:
+            return 'defeat'
 
-              'Alleyway' : { 'south' : 'Green Room',
-                  'east' : 'Red Room',
-                  'heartless'  : 'shadow'
-                },
-
-         }
-
-people = {
-
-            'Leon' : {'speech' : 'Leon: Donald & Goofy are in the Third District!',
-                      'reward' : 'key item',
-                      'key item': 'Leon\'s tip'
-            },
-            'Yuffie' : {'speech' : 'Yuffie: Hi there, Sora!',
-                        'reward' : 'item',
-                        'item' : 'potion'
-            }
-
-}
-
-heartless = {
-
-            'shadow' : {'commands' : 'attack', 
-                    'HP': 1 ,
-                    'damage': 1
-            }
-
-}
+        if heartlessHealth <= 0:
+            print('You defeated the Heartless!\nCONGRATULATIONS!')
+            # print('You gained xp!')
+            return 'victory'
 
 #start the player in the First District
 currentRoom = 'First District'
 previusRoom = 'First District'
+
+player = player()
 
 showInstructions()
 
@@ -134,6 +116,9 @@ while True:
     move = input('>')
     
   move = move.lower().split()
+
+  if 'status' in move:
+      player.showBattleStatus()
 
   #if they type 'go' first
   if move[0] == 'go':
@@ -155,10 +140,10 @@ while True:
       print(people[rooms[currentRoom]['person']]['speech'])
       reward = people[rooms[currentRoom]['person']]['reward']
       if reward == 'key item':
-        keyItems.append(people[rooms[currentRoom]['person']]['key item'])
+        player.keyItems.append(people[rooms[currentRoom]['person']]['key item'])
         print('You got the "' + people[rooms[currentRoom]['person']]['key item'] + '" key item!')
       elif reward == 'item':
-        item.append(people[rooms[currentRoom]['person']]['item'])
+        player.item.append(people[rooms[currentRoom]['person']]['item'])
         print('You got a "' + people[rooms[currentRoom]['person']]['item'] + '"!')
 
       people[rooms[currentRoom]['person']]['reward'] = 'no'
@@ -169,86 +154,21 @@ while True:
       #tell them they can't get it
       print('Can\'t talk to ' + move[1] + '!')
 
-  # player loses if they enter a room with a monster
+
   if 'heartless' in rooms[currentRoom]:           ###### BATTLE
-    showBattleStatus()
-    print("---------------------------")
-    print('You see a Heartless! It\'s a '+ rooms[currentRoom]['heartless'] + '!')
-    print('commands: [attack], [magic], [item], [run]')
-    
-    heartlessHealth = int(heartless[rooms[currentRoom]['heartless']]['HP'])
-    heartlessDamage = int(heartless[rooms[currentRoom]['heartless']]['damage'])
-    command = ''
-    while True:
-        while command == '':
-            command = input('>')
-        command = command.lower()
 
+    result = battle(rooms[currentRoom]['heartless'])  
+    if result == 'victory':
+        del rooms[currentRoom]['heartless']
+    elif result == 'run':
+        currentRoom = previusRoom
+    elif result == 'defeat':
         print("---------------------------")
+        print('Your HP has dropped to zero!\nGAME OVER')
+        break
 
-        if command == 'attack':
-            command = ''
-            print('You and the heartless attack each other!')
-            print('You caused 1 ❤  of damage!')
-            heartlessHealth = heartlessHealth-1
-            print("You lost "+ str(heartlessDamage) + ' ❤ !')
-            i=0
-            while i<heartlessDamage:
-              del HP[-1]
-              i+=1
-
-        if "magic" in command:
-          
-          if not magic:
-            print('Magic is still a mystery to you!')
-          command = ''
-
-        if "item" in command:
-          command = command.lower().split()
-          if not item:
-            print('You have no items!')
-          else:
-            try:
-              if command[1] in item:
-                print('Used', command[1])
-                del item[item.index(command[1])]
-
-                print("The heartless attacks you!")
-                print("You lost "+ str(heartlessDamage) + ' ❤ !')
-                i=0
-                while i<heartlessDamage:
-                  del HP[-1]
-                  i+=1
-
-              else:
-                print("You don\'t have any ", command[1])
-            except IndexError:
-                print('try: item [item name]')
-          command = ''
-
-
-        if "run" in command:
-            command = ''
-            currentRoom = previusRoom
-            print('You got away successfully!')
-            break
-
-        if HP == []:
-            break
-
-        if heartlessHealth <= 0:
-            print('You defeated the Heartless!\nCONGRATULATIONS!')
-            # print('You gained xp!')
-            del rooms[currentRoom]['heartless']
-            break
-    
-
-  if HP == []:
-    print("---------------------------")
-    print('Your HP has dropped to zero!\nGAME OVER')
-    break
-  # player wins if they get to the Fourth District
-  if currentRoom == 'Third District' and 'Leon\'s tip' in keyItems:
+  # player wins if they get to the Third District
+  if currentRoom == 'Third District' and 'Leon\'s tip' in player.keyItems:
     print('You found Donald & Goofy... YOU WIN!')
     break
   
