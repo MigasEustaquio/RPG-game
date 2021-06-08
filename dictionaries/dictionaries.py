@@ -4,20 +4,27 @@ people = {
                       'reward' : 'key item',
                       'key item': 'Leon\'s tip'
             },
-            'Yuffie' : {'speech' : 'Yuffie: Hi there, Sora!',
-                        'reward' : 'item',
-                        'item' : 'potion'
-            }
+            'Yuffie' : {'speech' : 'Yuffie: Hi there, Sora!\nDid you know that there\'s a shop in the Fisrt District?\n Try typing \'enter shop\'',
+                        'reward' : 'key item',
+                        'key item' : 'First District Shop location'
+            },
+            'Moogle' : {'speech' : 'Moogle: Hi there, Kupo!\nTo buy an item just type \'buy [item]\'\n\nHere\'s what I have in stock:',
+                        'reward' : 'no'
+            },
 
 }
 
 heartless = {
 
             'shadow' : {'commands' : 'attack', 
-                    'HP': 1 ,
-                    'damage': 1
-            }
+                    'HP': 1 , 'damage': 1,
+                    'munny' : [1,5]
+            },
 
+            'soldier' : {'commands' : 'attack', 
+                    'HP': 2 , 'damage': 1,
+                    'munny' : [2,6]
+            }
 }
 
 items = {
@@ -38,5 +45,14 @@ items = {
                         'HP' : 5, 'MP' : 5 },
                 'megalixir' : { 'speech':'You healed 10 ♥ and restored 10 ● !',
                         'HP' : 10, 'MP' : 10 },
+
+}
+
+shops = {
+
+            'First District Shop' : {'potion' : 10,
+                      'hi-potion' : 20,
+                      'ether': 15
+            },
 
 }

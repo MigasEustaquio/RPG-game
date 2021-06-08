@@ -1,4 +1,5 @@
 #!/bin/python3
+import random
 
 from dictionaries.location import *
 from dictionaries.dictionaries import *
@@ -15,9 +16,10 @@ Find Donald and Goofy!
 Survive the heartless!
 
 Commands:
-  go [direction]
+  go [direction]/[back]
+  enter [location]
   talk [person]
-  command [command]
+  menu
 ''')
 
 def showStatus():
@@ -26,12 +28,21 @@ def showStatus():
   print('You are in the ' + currentRoom)
   if "person" in rooms[currentRoom]:
     print('You see ' + rooms[currentRoom]['person'])
+  if "shop" in rooms[currentRoom] and (currentRoom+' Shop location') in player.keyItems:
+    print('You see the ' + rooms[currentRoom]['shop'] + ', try: \'enter shop\'')
+  if "Shop" in currentRoom:
+      print('To get out of the shop type: \'go back\'')
   print("---------------------------")
+
+def shop(currentRoom):
+    for item in shops[currentRoom]:
+        print(item, '   \tcost:', shops[currentRoom][item], 'munny!')
+
 
 def battle(enemy):
     print("---------------------------")
     print('You see a Heartless! It\'s a '+ enemy + '!')
-    print('commands: [attack], [magic], [item], [run]')
+    print('commands: \n\nattack \nmagic [magic name] \nitem [item name] \nrun')
     
     heartlessHealth = int(heartless[enemy]['HP'])
     heartlessDamage = int(heartless[enemy]['damage'])
@@ -74,6 +85,7 @@ def battle(enemy):
                 print(items[command[1]]['speech'])
 
                 player.HP = player.HP + items[command[1]]['HP']  - heartlessDamage
+                player.MP = player.MP + items[command[1]]['MP']
 
               else:
                 print("You don\'t have any ", command[1])
@@ -90,7 +102,11 @@ def battle(enemy):
             return 'defeat'
 
         if heartlessHealth <= 0:
-            print('You defeated the Heartless!\nCONGRATULATIONS!')
+
+            munny = 3 * random.randint(heartless[enemy]['munny'][0], heartless[enemy]['munny'][1])
+            print('\nYou defeated the Heartless!\nCONGRATULATIONS!')
+            print('You obtained ' + str(munny) + ' munny!')
+            player.munny += munny
             # print('You gained xp!')
             return 'victory'
 
@@ -102,7 +118,6 @@ player = player()
 
 showInstructions()
 
-#loop forever
 while True:
 
   showStatus()
@@ -117,25 +132,57 @@ while True:
     
   move = move.lower().split()
 
-  if 'status' in move:
-      player.showBattleStatus()
+  if 'menu' in move:        ##### SHOW MENU
+      player.menu()
+
+  if move[0] == 'buy':        ##### BUY IN SHOP
+      if move[1] in shops[currentRoom]:
+        if player.munny >= shops[currentRoom][move[1]]:
+            print('\nMoogle: Thanks for shopping here, Kupo!!\nObtained a ' + move[1] + '!')
+            player.munny = player.munny - shops[currentRoom][move[1]]
+            player.item.append(move[1])
+        else:
+            print('\nMoogle: You don\'t have enough munny for this item, Kupo!!')
+      else:
+          print('\nMoogle: I\'m sorry, I don\'t have this item, Kupo!')
+
+
+  if move[0] == 'use':        ##### USE ITEM
+    if not player.item:
+        print('You have no items!')
+    else:
+        try:
+            if move[1] in player.item:
+                del player.item[player.item.index(move[1])]
+                print('Used a ' + str(move[1]))
+                print(items[move[1]]['speech'])
+                player.HP = player.HP + items[move[1]]['HP']
+                player.MP = player.MP + items[move[1]]['MP']
+            else:
+                print("You don\'t have any ", move[1])
+        except IndexError:
+            print('try: use [item]')
+        command = ''
 
   #if they type 'go' first
-  if move[0] == 'go':
+  if move[0] == 'go' or move[0] == 'enter':        ##### MOVE
     #check that they are allowed wherever they want to go
     if move[1] in rooms[currentRoom]:
       #set the current room to the new room
       previusRoom = currentRoom
       currentRoom = rooms[currentRoom][move[1]]
     #there is no door (link) to the new room
+    elif move[1] == 'back':
+        temp = currentRoom
+        currentRoom = previusRoom
+        previusRoom = temp
     else:
       print('You can\'t go that way!')
 
-  #if they type 'get' first
-  if move[0] == 'talk' :
-    #if the room contains an item, and the item is the one they want to get
+  #if they type 'talk' first
+  if move[0] == 'talk' :        ##### TALK WITH PERSON
+    #if the room contains an person
     if 'person' in rooms[currentRoom] and move[1] in rooms[currentRoom]['person'].lower():
-      #add the item to their inventory
       #falar com a pessoa
       print(people[rooms[currentRoom]['person']]['speech'])
       reward = people[rooms[currentRoom]['person']]['reward']
@@ -145,27 +192,29 @@ while True:
       elif reward == 'item':
         player.item.append(people[rooms[currentRoom]['person']]['item'])
         print('You got a "' + people[rooms[currentRoom]['person']]['item'] + '"!')
-
       people[rooms[currentRoom]['person']]['reward'] = 'no'
-      #delete the item from the room
-      #del rooms[currentRoom]['item']
-    #otherwise, if the item isn't there to get
+      if rooms[currentRoom]['person'].lower() == 'moogle':
+          shop(currentRoom)
     else:
-      #tell them they can't get it
+      #tell them they can't talk
       print('Can\'t talk to ' + move[1] + '!')
 
 
-  if 'heartless' in rooms[currentRoom]:           ###### BATTLE
 
+  if 'heartless' in rooms[currentRoom]:           ###### BATTLE
     result = battle(rooms[currentRoom]['heartless'])  
     if result == 'victory':
         del rooms[currentRoom]['heartless']
     elif result == 'run':
+        temp = currentRoom
         currentRoom = previusRoom
+        previusRoom = temp
     elif result == 'defeat':
         print("---------------------------")
         print('Your HP has dropped to zero!\nGAME OVER')
         break
+
+
 
   # player wins if they get to the Third District
   if currentRoom == 'Third District' and 'Leon\'s tip' in player.keyItems:

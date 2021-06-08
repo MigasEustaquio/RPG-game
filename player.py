@@ -8,6 +8,7 @@ class player:
         self.magic = []
         self.item = []
         self.keyItems = []
+        self.munny = 0
 
     def showBattleStatus(self):
         #print the player's current battle status
@@ -29,9 +30,15 @@ class player:
             i+=1
         
         print('\n---------------------------')
-        #print the current inventory
         print("HP : " + str(currentHP))
         print("MP : " + str(currentMP))
         print("Items :", self.item)
-        #print an item if there is one
+        print("---------------------------")
+
+    def menu(self):
+        self.showBattleStatus()
+        print('Munny: ' + str(self.munny))
+        print("Key items :", self.keyItems)
+        # print('\nTo cast a magic spell just type \'cast [magic]\'')
+        print('To use an item just type \'use [item]\'')
         print("---------------------------")
