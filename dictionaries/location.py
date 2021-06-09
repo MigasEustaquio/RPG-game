@@ -2,7 +2,7 @@
 rooms = {
 
             'First District' : { 'north' : 'Second District',
-                  'shop' : 'First District Shop'                                           ##### Para implementar
+                  'shop' : 'First District Shop'
             },        
 
             'Second District' : { 'south' : 'First District',

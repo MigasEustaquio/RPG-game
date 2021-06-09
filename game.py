@@ -46,6 +46,8 @@ def battle(enemy):
     
     heartlessHealth = int(heartless[enemy]['HP'])
     heartlessDamage = int(heartless[enemy]['damage'])
+    statusEffect = 'none'
+    statusDuration = 99
     command = ''
     while True:
         player.showBattleStatus()
@@ -53,20 +55,55 @@ def battle(enemy):
             command = input('>')
         command = command.lower()
 
+        if statusDuration == 0:
+          print('\nThe ' + statusEffect + ' effect has passed\n')
+          statusEffect = 'none'
+          statusDuration = 99
+
         print("---------------------------")
 
         if command == 'attack':
             command = ''
             print('You and the heartless attack each other!')
             print('You caused 1 ♥  of damage!')
+
+            if statusEffect != 'none':
+              print(magics[statusEffect]['status']['speech'])
+              heartlessHealth = heartlessHealth-magics[statusEffect]['status']['damage']
+              statusDuration = statusDuration - 1
+
             heartlessHealth = heartlessHealth-1
             print("You lost "+ str(heartlessDamage) + ' ♥ !')
             player.HP = player.HP - heartlessDamage
 
         if "magic" in command:
-          
+          command = command.lower().split()
           if not player.magic:
             print('Magic is still a mystery to you!')
+
+          else:
+            if command[1] in player.magic:
+              if player.MP >= magics[command[1]]['MP']:
+
+                print(magics[command[1]]['speech'])
+                player.MP = player.MP - magics[command[1]]['MP']
+
+                print("The heartless attacks you!")
+                print("You lost "+ str(heartlessDamage) + ' ♥ !')
+
+                if statusEffect != 'none':
+                  print(magics[statusEffect]['status']['speech'])
+                  heartlessHealth = heartlessHealth-magics[statusEffect]['status']['damage']
+                  statusDuration = statusDuration - 1
+
+                heartlessHealth = heartlessHealth-magics[command[1]]['damage']
+                player.HP = player.HP + magics[command[1]]['heal'] - heartlessDamage
+
+                if command[1] != 'cure':
+                  statusEffect = command[1]
+                  statusDuration = magics[statusEffect]['status']['duration']
+
+
           command = ''
 
         if "item" in command:
@@ -83,6 +120,12 @@ def battle(enemy):
 
                 print('Used a ' + str(command[1]))
                 print(items[command[1]]['speech'])
+
+                if statusEffect != 'none':
+                  print(magics[statusEffect]['status']['speech'])
+                  heartlessHealth = heartlessHealth-magics[statusEffect]['status']['damage']
+                  statusDuration = statusDuration - 1
+
 
                 player.HP = player.HP + items[command[1]]['HP']  - heartlessDamage
                 player.MP = player.MP + items[command[1]]['MP']
