@@ -5,7 +5,7 @@ class player:
         self.MP = 1  ## full: ●,  empty: ○
         self.MaxMP = 1
 
-        self.magic = ['fire']
+        self.magic = []
         self.item = []
         self.keyItems = []
         self.munny = 0

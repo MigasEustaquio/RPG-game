@@ -45,7 +45,6 @@ def battle(enemy):
     print('commands: \n\nattack \nmagic [magic name] \nitem [item name] \nrun')
     
     heartlessHealth = int(heartless[enemy]['HP'])
-    heartlessDamage = int(heartless[enemy]['damage'])
     statusEffect = 'none'
     statusDuration = 99
     command = ''
@@ -55,10 +54,15 @@ def battle(enemy):
             command = input('>')
         command = command.lower()
 
+        heartlessDamage = int(heartless[enemy]['damage'])
+
         if statusDuration == 0:
           print('\nThe ' + statusEffect + ' effect has passed\n')
           statusEffect = 'none'
           statusDuration = 99
+
+        if statusEffect == 'blizzard':
+          heartlessDamage = heartlessDamage -1
 
         print("---------------------------")
 
@@ -73,6 +77,7 @@ def battle(enemy):
               statusDuration = statusDuration - 1
 
             heartlessHealth = heartlessHealth-1
+            
             print("You lost "+ str(heartlessDamage) + ' ♥ !')
             player.HP = player.HP - heartlessDamage
 
@@ -103,6 +108,8 @@ def battle(enemy):
                   statusEffect = command[1]
                   statusDuration = magics[statusEffect]['status']['duration']
 
+              else:
+                print('Not enough MP!')
 
           command = ''
 
