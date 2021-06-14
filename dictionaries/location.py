@@ -1,38 +1,38 @@
 #a dictionary linking a room to other room positions
 rooms = {
 
-            'First District' : { 'north' : 'Second District',
+            'First District' : { 'up' : 'Second District',
                   'shop' : 'First District Shop'
             },        
 
-            'Second District' : { 'south' : 'First District',
-                  'east' : 'Third District',
-                  'west' : 'Hotel',
+            'Second District' : { 'down' : 'First District',
+                  'right' : 'Third District',
+                  'left' : 'Hotel',
                   'heartless'  : 'shadow'
                 },
                 
-            'Third District' : { 'west'  : 'Second District',              
+            'Third District' : { 'left'  : 'Second District',              
                 },
                 
-            'Hotel' : { 'east' : 'Second District',
-                    'west' : 'Green Room',
-                    'north' : 'Red Room',
+            'Hotel' : { 'right' : 'Second District',
+                    'left' : 'Green Room',
+                    'up' : 'Red Room',
                     'heartless'  : 'shadow'
                     
              },
 
-             'Green Room' : { 'east' : 'Hotel',
-                  'north' : 'Alleyway',
+             'Green Room' : { 'right' : 'Hotel',
+                  'up' : 'Alleyway',
                   'person'  : 'Leon'
                 },
 
-              'Red Room' : { 'south' : 'Hotel',
-                  'west' : 'Alleyway',
+              'Red Room' : { 'down' : 'Hotel',
+                  'left' : 'Alleyway',
                   'person'  : 'Yuffie'
                 },
 
-              'Alleyway' : { 'south' : 'Green Room',
-                  'east' : 'Red Room',
+              'Alleyway' : { 'down' : 'Green Room',
+                  'right' : 'Red Room',
                   'heartless'  : 'soldier'
                 },
 

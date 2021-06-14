@@ -1,3 +1,4 @@
+from dictionaries.dictionaries import *
 class player:
     def __init__(self):
         self.HP = 5  ## full: ♥,  empty: ♡
@@ -9,6 +10,11 @@ class player:
         self.item = []
         self.keyItems = []
         self.munny = 0
+
+        #STORY RELATED
+        self.world = 'TraverseTown'
+        self.map = str(wordMaps[self.world])
+        self.story = 0
 
     def showBattleStatus(self):
         #print the player's current battle status
@@ -41,4 +47,5 @@ class player:
         print("Key items :", self.keyItems)
         # print('\nTo cast a magic spell just type \'cast [magic]\'')
         print('To use an item just type \'use [item]\'')
+        print('To open the map of the current World just type \'map\'')
         print("---------------------------")

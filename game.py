@@ -28,10 +28,14 @@ def showStatus():
   print('You are in the ' + currentRoom)
   if "person" in rooms[currentRoom]:
     print('You see ' + rooms[currentRoom]['person'])
+    if rooms[currentRoom]['person'].lower() not in player.map:
+      player.map = player.map + people[rooms[currentRoom]['person']]['mapUpdate']
   if "shop" in rooms[currentRoom] and (currentRoom+' Shop location') in player.keyItems:
     print('You see the ' + rooms[currentRoom]['shop'] + ', try: \'enter shop\'')
   if "Shop" in currentRoom:
-      print('To get out of the shop type: \'go back\'')
+      player.HP = player.MaxHP
+      player.MP = player.MaxMP
+      print('\nYou see a Save point, HP and MP restored!\nTo get out of the shop type: \'go back\'')
   print("---------------------------")
 
 def shop(currentRoom):
@@ -174,11 +178,18 @@ while True:
 
   #get the player's next 'move'
   #.split() breaks it up into an list array
-  #eg typing 'go east' would give the list:
-  #['go','east']
+  #eg typing 'go up' would give the list:
+  #['go','up']
+
   move = ''
   while move == '':  
     move = input('>')
+
+  if move == 'map':        ##### OPEN MAP
+    print('Opening map...\n')
+    from PIL import Image
+    img = Image.open('images/' + player.world + '/Map' + str(maps[player.world][player.map]) + '.jpg')
+    img.show()
     
   move = move.lower().split()
 
@@ -236,7 +247,13 @@ while True:
       #falar com a pessoa
       print(people[rooms[currentRoom]['person']]['speech'])
       reward = people[rooms[currentRoom]['person']]['reward']
-      if reward == 'key item':
+      if reward == 'story':
+        if player.story == (people[rooms[currentRoom]['person']]['story']-1):
+          player.story += 1
+          print()
+
+
+      elif reward == 'key item':
         player.keyItems.append(people[rooms[currentRoom]['person']]['key item'])
         print('You got the "' + people[rooms[currentRoom]['person']]['key item'] + '" key item!')
       elif reward == 'item':
@@ -267,7 +284,7 @@ while True:
 
 
   # player wins if they get to the Third District
-  if currentRoom == 'Third District' and 'Leon\'s tip' in player.keyItems:
+  if currentRoom == 'Third District' and  player.story == 1:
     print('You found Donald & Goofy... YOU WIN!')
     break
   

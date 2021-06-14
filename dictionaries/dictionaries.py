@@ -1,17 +1,39 @@
 people = {
 
             'Leon' : {'speech' : 'Leon: Donald & Goofy are in the Third District!',
-                      'reward' : 'key item',
-                      'key item': 'Leon\'s tip'
+                      'reward' : 'story',
+                      'story' : 1,
+                      'mapUpdate' : 'leon '
             },
             'Yuffie' : {'speech' : 'Yuffie: Hi there, Sora!\nDid you know that there\'s a shop in the Fisrt District?\n Try typing \'enter shop\'',
                         'reward' : 'key item',
-                        'key item' : 'First District Shop location'
+                        'key item' : 'First District Shop location',
+                        'mapUpdate' : 'yuffie '
             },
             'Moogle' : {'speech' : 'Moogle: Hi there, Kupo!\nTo buy an item just type \'buy [item]\'\n\nHere\'s what I have in stock:',
-                        'reward' : 'no'
+                        'reward' : 'no',
+                        'mapUpdate' : 'moogle '
             },
 
+}
+
+maps = {
+
+            'TraverseTown' : {
+                    '' : 0,
+                    'yuffie ' : 1,
+                    'yuffie moogle ' : 2,
+                    'leon ' : 3,
+                    'yuffie leon ' : 4,
+                    'leon yuffie ' : 4,
+                    'leon yuffie moogle ' : 5,
+                    'yuffie leon moogle ' : 5,
+                    'yuffie moogle leon ' : 5,
+                    
+            },
+            'Wonderland' : 0
+            
+            
 }
 
 heartless = {
@@ -72,3 +94,10 @@ shops = {
             },
 
 }
+
+wordMaps = {
+
+            'TraverseTown' : '',
+            'Wonderland' : ''
+            }
+
