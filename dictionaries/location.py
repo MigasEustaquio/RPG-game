@@ -2,41 +2,59 @@
 rooms = {
 
             'First District' : { 'up' : 'Second District',
-                  'shop' : 'First District Shop'
+                  'shop' : 'First District Shop',
+                  'resetHeartless' : ['Hotel', 'Alleyway']
             },        
 
             'Second District' : { 'down' : 'First District',
                   'right' : 'Third District',
                   'left' : 'Hotel',
-                  'heartless'  : 'shadow'
+                  'treasure' : {'treasure' : 'item', 'item' : 'potion'},
+                  'heartless'  : { 
+                    'waves' : 2, 'status' : 2, 'wave' : {
+                       2 : 'soldier', 1 : 'shadow'}
+                  },
+                  'resetHeartless' : ['Alleyway']
                 },
                 
-            'Third District' : { 'left'  : 'Second District',              
+            'Third District' : { 'left'  : 'Second District',
+                                'resetHeartless' : ['Hotel', 'Alleyway']
                 },
                 
             'Hotel' : { 'right' : 'Second District',
                     'left' : 'Green Room',
                     'up' : 'Red Room',
-                    'heartless'  : 'shadow'
-                    
+                    'heartless'  : { 
+                    'waves' : 1, 'status' : 1, 'wave' : {
+                        1 : 'shadow'}
+                    },
+                    'resetHeartless' : ['Alleyway']
              },
 
              'Green Room' : { 'right' : 'Hotel',
                   'up' : 'Alleyway',
-                  'person'  : 'Leon'
+                  'person'  : 'Leon',
+                  'resetHeartless' : ['Second District']
                 },
 
               'Red Room' : { 'down' : 'Hotel',
                   'left' : 'Alleyway',
-                  'person'  : 'Yuffie'
+                  'person'  : 'Yuffie',
+                  'resetHeartless' : ['Second District']
                 },
 
               'Alleyway' : { 'down' : 'Green Room',
                   'right' : 'Red Room',
-                  'heartless'  : 'soldier'
+                  'treasure' : {'treasure' : 'mapUpdate', 'mapUpdate' : 'heartless '},
+                  'heartless'  : { 
+                    'waves' : 3, 'status' : 3, 'wave' : {
+                       3 : 'soldier', 2 : 'shadow', 1 : 'shadow'}
+                  },
+                  'resetHeartless' : ['Second District', 'Hotel']
                 },
 
-            'First District Shop' : { 'person'  : 'Moogle',              
+            'First District Shop' : { 'person'  : 'Moogle',
+                                    'resetHeartless' : ['Second District', 'Hotel', 'Alleyway']
                 },
 
          }
