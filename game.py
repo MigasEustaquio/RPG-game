@@ -36,7 +36,7 @@ def showStatus():                ###SHOW STATUS
   if "Shop" in currentRoom:
       player.HP = player.MaxHP
       player.MP = player.MaxMP
-      print('\nYou see a Save point, HP and MP restored!\nTo get out of the shop type: \'go back\'')
+      print('\nYou see a Save point, HP and MP restored!\nTo open the save menu just type \'save\'\nTo get out of the shop type: \'go back\'')
   if 'treasure' in rooms[currentRoom]:
     print('You see a treasure chest!')
   print(Fore.RED + "---------------------------")

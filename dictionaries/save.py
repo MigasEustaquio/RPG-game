@@ -15,7 +15,7 @@ saves = {
                 'keyblades' : ['Kingdom Key'],
                 'abilities' : [],
                 'world' : 'TraverseTown',
-                'map' : 0,
+                'map' : '',
                 'story' : 0,
                 },
 
@@ -35,7 +35,7 @@ saves = {
                 'keyblades' : ['Kingdom Key'],
                 'abilities' : [],
                 'world' : 'TraverseTown',
-                'map' : 0,
+                'map' : '',
                 'story' : 0,
                 },
 
@@ -55,7 +55,7 @@ saves = {
                 'keyblades' : ['Kingdom Key'],
                 'abilities' : [],
                 'world' : 'TraverseTown',
-                'map' : 0,
+                'map' : '',
                 'story' : 0,
                 },
 
@@ -74,7 +74,7 @@ saves = {
                 'keyblades' : ['Kingdom Key'],
                 'abilities' : [],
                 'world' : 'TraverseTown',
-                'map' : 0,
+                'map' : '',
                 'story' : 0,
                 },
 

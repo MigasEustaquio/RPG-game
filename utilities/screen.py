@@ -57,7 +57,7 @@ def loadScreen(player, saves):
   option = ''
   i=1
   while option == '':
-    print('Select a save file or navigate with \'next\' or \'previus\'. (0 to cancel)\n')
+    print('Select a save file or navigate with \'next\' or \'previous\'. (0 to cancel)\n')
     if 2 in saves:
       if 3 in saves:
         print(Fore.BLUE + '''
@@ -87,11 +87,11 @@ def loadScreen(player, saves):
       else:
         print(Fore.RED + 'No save file after this!')
       option=''
-    elif str(option).lower() == 'previus':
+    elif str(option).lower() == 'previous':
       if i>1:
         i-=1
       else:
-        print(Fore.RED + 'No save file previus to this!')
+        print(Fore.RED + 'No save file previous to this!')
       option=''
     elif option == '0':
       titleScreen(player, saves)
@@ -153,7 +153,7 @@ Load Game
 
 def saveScreen(y, saves):
     if y.saveFile !=0:
-        answer = input('You wish to overwrite the save file ' + str(y.saveFile) + ' ? (yes/no)')
+        answer = input('You wish to overwrite the save file ' + str(y.saveFile) + ' ? (yes/no)\n>')
         if answer.lower() == 'yes':
             print()
             return
@@ -166,7 +166,7 @@ def saveScreen(y, saves):
     option = ''
     i=1
     while option == '':
-        print('Select a save file or navigate with \'next\' or \'previus\'\n')
+        print('Select a save file or navigate with \'next\' or \'previous\'. (0 to cancel)\n')
         if 2 in saves:
             if 3 in saves:
                 print(Fore.BLUE + '''
@@ -197,12 +197,15 @@ World: ''' + str(saves[i]['world']) + '''
             else:
                 print(Fore.RED + 'No save file after this!')
             option=''
-        elif str(option).lower() == 'previus':
+        elif str(option).lower() == 'previous':
             if i>1:
                 i-=1
             else:
-                print(Fore.RED + 'No save file previus to this!')
+                print(Fore.RED + 'No save file previous to this!')
             option=''
+        elif option == '0':
+          print('Save canceled')
+          return
         elif option.isnumeric():
             if int(option) in saves:
                 answer = input('You wish to overwrite the save file ' + option + ' ? (yes/no)')
