@@ -58,6 +58,51 @@ def levelUP():
     player.MP += levelUp[player.level]['MP']
     print('Maximum MP increased')
 
+def useItem(item):                      ###USE ITEM
+  del player.item[player.item.index(item)]
+
+  print('Used a ' + player.colors['GREEN'] + str(item))
+  if 'potion' in item:
+    print(items[item]['speech'][0] + red + items[item]['speech'][1] + white + items[item]['speech'][2])
+  elif 'ether' in item:
+    print(items[item]['speech'][0] + blue + items[item]['speech'][1] + white + items[item]['speech'][2])
+  else:
+    print(items[item]['speech'][0] + red + items[item]['speech'][1] + white + items[item]['speech'][2] +  blue + items[item]['speech'][3] + white + items[item]['speech'][4])
+
+  player.HP = player.HP + items[item]['HP']
+  if player.HP > player.MaxHP: player.HP = player.MaxHP
+  player.MP = player.MP + items[item]['MP']
+  if player.MP > player.MaxMP: player.MP = player.MaxMP
+
+
+def scan(enemy, heartlessHealth):         ###SCAN
+  heartlessHealthDisplay = ''
+  i=0
+  while i<heartless[enemy]['HP']:
+    if i<heartlessHealth:
+      heartlessHealthDisplay += '♥'
+    else:
+      heartlessHealthDisplay += '♡'
+    i+=1
+
+  print(Fore.MAGENTA + '\n---------------------------')
+  print("Scan : " + enemy)
+  print("HP : " + player.colors['RED'] + heartlessHealthDisplay)
+  print(Fore.MAGENTA + "---------------------------")
+
+def statusEffectDamage(statusEffect, heartlessHealth, statusDuration):
+  print(magics[statusEffect]['status']['speech'][0] + player.colors[magics[statusEffect]['speech'][4]] + magics[statusEffect]['status']['speech'][1] + white + magics[statusEffect]['status']['speech'][2] + red + magics[statusEffect]['status']['speech'][3] + white + magics[statusEffect]['status']['speech'][4])
+  return heartlessHealth-magics[statusEffect]['status']['damage'], statusDuration - 1
+
+def calculateDamage (heartlessHealth, heartlessDamage, damage):
+  print("You lost " + red + str(heartlessDamage) + ' ♥ ' + white + '!')
+  oldHP = player.HP
+  player.HP = player.HP - heartlessDamage
+  if 'second chance' in player.abilities:
+    if player.HP < 1 and oldHP > 1:
+      player.HP = 1
+      print('Second Chance')
+  return heartlessHealth-damage
 
 def battle(enemy):         ###BATTLE
 
@@ -65,6 +110,7 @@ def battle(enemy):         ###BATTLE
     white = player.colors['WHITE']
     blue = player.colors['BLUE']
     yellow = player.colors['YELLOW']
+    green = player.colors['GREEN']
 
     print("---------------------------")
     print('You see a ' + red + 'Heartless' + white +'! It\'s a '+ red + enemy + white + '!')
@@ -74,24 +120,12 @@ def battle(enemy):         ###BATTLE
     statusEffect = 'none'
     statusDuration = 99
     command = ''
+
     while True:
         player.showBattleStatus()
 
-        heartlessHealthDisplay = ''
-
         if 'scan' in player.abilities:
-          i=0
-          while i<heartless[enemy]['HP']:
-              if i<heartlessHealth:
-                  heartlessHealthDisplay += '♥'
-              else:
-                  heartlessHealthDisplay += '♡'
-              i+=1
-
-          print(Fore.MAGENTA + '\n---------------------------')
-          print("Scan : " + enemy)
-          print("HP : " + red + heartlessHealthDisplay)
-          print(Fore.MAGENTA + "---------------------------")
+          scan(enemy, heartlessHealth)
 
         while command == '':
             command = input('>')
@@ -100,31 +134,27 @@ def battle(enemy):         ###BATTLE
         heartlessDamage = int(heartless[enemy]['damage'])
         damage = keybladeStatus[player.keyblade]['damage']
 
+### Status effect duration
         if statusDuration == 0:
           print('\nThe ' + player.colors[magics[statusEffect]['speech'][4]] + magics[statusEffect]['status']['name'] + white + ' effect has passed\n')
           statusEffect = 'none'
           statusDuration = 99
 
-        if statusEffect == 'blizzard':
-          heartlessDamage = heartlessDamage -1
+        if 'blizza' in statusEffect:
+          heartlessDamage = heartlessDamage - magics[statusEffect]['status']['reduction']
+### Status effect duration
 
         print("---------------------------")
 
         if command == 'attack':
             command = ''
             print('You and the heartless attack each other!')
-            print('You caused ' + red + str(damage) + ' ♥  ' + white + 'of damage!')
-
+            print('You caused ' + red + str(damage) + ' ♥ ' + white + 'of damage!')
+### Status effect
             if statusEffect != 'none':
-              # print(magics[statusEffect]['status']['speech'])
-              print(magics[statusEffect]['status']['speech'][0] + player.colors[magics[statusEffect]['speech'][4]] + magics[statusEffect]['status']['speech'][1] + white + magics[statusEffect]['status']['speech'][2] + red + magics[statusEffect]['status']['speech'][3] + white + magics[statusEffect]['status']['speech'][4])
-              heartlessHealth = heartlessHealth-magics[statusEffect]['status']['damage']
-              statusDuration = statusDuration - 1
-
-            heartlessHealth = heartlessHealth-damage
-            
-            print("You lost " + red + str(heartlessDamage) + ' ♥ ' + white + '!')
-            player.HP = player.HP - heartlessDamage
+              heartlessHealth, statusDuration = statusEffectDamage(statusEffect, heartlessHealth, statusDuration)
+### Calculate damage
+            heartlessHealth = calculateDamage(heartlessHealth, heartlessDamage, damage)
 
         elif "magic" in command:
           command = command.lower().split()
@@ -136,29 +166,26 @@ def battle(enemy):         ###BATTLE
               if player.MP >= magics[command[1]]['MP']:
 
                 magicText = magics[command[1]]['speech']
-
+###COLOR SPEECH
                 print('You used ' + blue + str(magics[command[1]]['MP']) +' ● ' + white + '!')
                 if command[1] != 'cure':
                   print(magicText[0] + red + magicText[1] + white + magicText[2] + player.colors[magicText[4]] + magicText[3])
                 else:
                   print(magicText[0] + red + magicText[1] + white + magicText[2])
                 player.MP = player.MP - magics[command[1]]['MP']
-
-                print("The heartless attacks you!")
-                print("You lost " + red + str(heartlessDamage) + ' ♥ ' + white + '!')
-
+### Status effect
                 if statusEffect != 'none':
-                  print(magics[statusEffect]['status']['speech'][0] + player.colors[magics[statusEffect]['speech'][4]] + magics[statusEffect]['status']['speech'][1] + white + magics[statusEffect]['status']['speech'][2] + red + magics[statusEffect]['status']['speech'][3] + white + magics[statusEffect]['status']['speech'][4])
-                  heartlessHealth = heartlessHealth-magics[statusEffect]['status']['damage']
-                  statusDuration = statusDuration - 1
-
-                heartlessHealth = heartlessHealth-magics[command[1]]['damage']
-                player.HP = player.HP + magics[command[1]]['heal'] - heartlessDamage
-
+                  heartlessHealth, statusDuration = statusEffectDamage(statusEffect, heartlessHealth, statusDuration)
+###Calculate damage
+                print("The heartless attacks you!")
+                player.HP = player.HP + magics[command[1]]['heal']
+                if player.HP > player.MaxHP: player.HP = player.MaxHP
+                heartlessHealth = calculateDamage(heartlessHealth, heartlessDamage, magics[command[1]]['damage'])
+### Start status effect
                 if command[1] != 'cure':
                   statusEffect = command[1]
                   statusDuration = magics[statusEffect]['status']['duration']
-
+###
               else:
                 print('Not enough MP!')
 
@@ -171,28 +198,29 @@ def battle(enemy):         ###BATTLE
           else:
             try:
               if command[1] in player.item:
-                del player.item[player.item.index(command[1])]
+                # del player.item[player.item.index(command[1])]
 
-                print("The heartless attacks you!")
-                print("You lost " + red + str(heartlessDamage) + ' ♥ ' + white + '!')
+                useItem(command[1])
 
-                print('Used a ' + str(command[1]))
-                # print(items[command[1]]['speech'])
+#                 print('Used a ' + green + str(command[1]))
+# ###COLOR SPEECH
+#                 if 'potion' in command[1]:
+#                   print(items[command[1]]['speech'][0] + red + items[command[1]]['speech'][1] + white + items[command[1]]['speech'][2])
+#                 elif 'ether' in command[1]:
+#                   print(items[command[1]]['speech'][0] + blue + items[command[1]]['speech'][1] + white + items[command[1]]['speech'][2])
+#                 else:
+#                   print(items[command[1]]['speech'][0] + red + items[command[1]]['speech'][1] + white + items[command[1]]['speech'][2] +  blue + items[command[1]]['speech'][3] + white + items[command[1]]['speech'][4])
 
-                if 'potion' in command[1]:
-                  print(items[command[1]]['speech'][0] + red + items[command[1]]['speech'][1] + white + items[command[1]]['speech'][2])
-                elif 'ether' in command[1]:
-                  print(items[command[1]]['speech'][0] + blue + items[command[1]]['speech'][1] + white + items[command[1]]['speech'][2])
-                else:
-                  print(items[command[1]]['speech'][0] + red + items[command[1]]['speech'][1] + white + items[command[1]]['speech'][2] +  blue + items[command[1]]['speech'][3] + white + items[command[1]]['speech'][4])
-
+                # player.HP = player.HP + items[command[1]]['HP']
+                # if player.HP > player.MaxHP: player.HP = player.MaxHP
+                # player.MP = player.MP + items[command[1]]['MP']
+                # if player.MP > player.MaxMP: player.MP = player.MaxMP
+### Status effect
                 if statusEffect != 'none':
-                  print(magics[statusEffect]['status']['speech'][0] + player.colors[magics[statusEffect]['speech'][4]] + magics[statusEffect]['status']['speech'][1] + white + magics[statusEffect]['status']['speech'][2] + red + magics[statusEffect]['status']['speech'][3] + white + magics[statusEffect]['status']['speech'][4])
-                  heartlessHealth = heartlessHealth-magics[statusEffect]['status']['damage']
-                  statusDuration = statusDuration - 1
-
-                player.HP = player.HP + items[command[1]]['HP']  - heartlessDamage
-                player.MP = player.MP + items[command[1]]['MP']
+                  heartlessHealth, statusDuration = statusEffectDamage(statusEffect, heartlessHealth, statusDuration)
+###Calculate damage
+                print("The heartless attacks you!")
+                heartlessHealth = calculateDamage(heartlessHealth, heartlessDamage, 0)
 
               else:
                 print("You don\'t have any ", command[1])
@@ -209,7 +237,7 @@ def battle(enemy):         ###BATTLE
           command = ''
           print('Command not found!')
 
-        if player.HP == 0:
+        if player.HP < 1:
             return 'defeat'
 
         if heartlessHealth <= 0:
@@ -312,11 +340,7 @@ while True:
     else:
         try:
             if move[1] in player.item:
-                del player.item[player.item.index(move[1])]
-                print('Used a ' + str(move[1]))
-                print(items[move[1]]['speech'])
-                player.HP = player.HP + items[move[1]]['HP']
-                player.MP = player.MP + items[move[1]]['MP']
+                useItem(move[1])
             else:
                 print("You don\'t have any ", move[1])
         except IndexError:
@@ -338,6 +362,7 @@ while True:
             print(magics[move[1]]['speech'][0] + red + magics[move[1]]['speech'][1] + white + magics[move[1]]['speech'][2])
             player.MP = player.MP - magics[move[1]]['MP']
             player.HP = player.HP + magics[move[1]]['heal']
+            if player.HP > player.MaxHP: player.HP = player.MaxHP
           else:
             print('Not enough MP!')
 

@@ -28,7 +28,7 @@ magics = {
 
                 'blizzard' : { 'speech' : ['You cast Blizzard and deal ', '1 ♥',  ' of damage!\nThe enemy is now ', 'Freezing', 'BLUE'],
                         'MP' : 1, 'damage' : 1, 'heal' : 0,
-                        'status' : {'name': 'Freezing', 'speech': ['The enemy is ','freezing',' and inflicts ','1 ♥',' less of damage!'], 'damage' : 0, 'duration' : 2}
+                        'status' : {'name': 'Freezing', 'speech': ['The enemy is ','freezing',' and inflicts ','1 ♥',' less of damage!'], 'damage' : 0, 'duration' : 2, 'reduction' : 1}
                         },
 
                 'cure' : { 'speech' : ['You cast Cure and restore ', '3 ♥', ' !'],
