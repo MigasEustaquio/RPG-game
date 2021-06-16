@@ -4,12 +4,12 @@ import random
 from dictionaries.people import *
 from dictionaries.location import *
 from dictionaries.enemies import *
-from player import *
+from utilities.screen import *
+
 
 def showInstructions():
     #print a main menu and the commands
     print('''
-RPG Game v 0.5
 Traverse Town
 ========
 Talk to Leon!
@@ -23,7 +23,7 @@ Commands:
   menu
 ''')
 
-def showStatus():         ###STATUS
+def showStatus():                ###SHOW STATUS
   #print the player's current status
   print(Fore.RED + '\n---------------------------')
   print(Fore.WHITE + 'You are in the ' + currentRoom)
@@ -41,14 +41,14 @@ def showStatus():         ###STATUS
     print('You see a treasure chest!')
   print(Fore.RED + "---------------------------")
 
-def shop(currentRoom):         ###SHOP
+def shop(currentRoom):                    ###SHOP
     for item in shops[currentRoom]:
         print(item, '   \tcost:', shops[currentRoom][item], 'munny!')
 
-def levelUP():
+def levelUP():                                   ###LEVEL UP
   if levelUp[player.level]['ability'] != 'none':
     player.abilities.append(levelUp[player.level]['ability'])
-    print('Obtained ' + levelUp[player.level]['ability'] + '!')
+    print('\nObtained ' + levelUp[player.level]['ability'] + '!')
   if levelUp[player.level]['HP'] != 0:
     player.MaxHP += levelUp[player.level]['HP']
     player.HP += levelUp[player.level]['HP']
@@ -58,10 +58,14 @@ def levelUP():
     player.MP += levelUp[player.level]['MP']
     print('Maximum MP increased')
 
-def useItem(item):                      ###USE ITEM
+def useItem(item):                          ###USE ITEM
   del player.item[player.item.index(item)]
 
-  print('Used a ' + player.colors['GREEN'] + str(item))
+  if str(item) == 'ether' or str(item) == 'elixir':
+    print('\nUsed an ' + green + str(item))
+  else:
+    print('\nUsed a ' + green + str(item))
+
   if 'potion' in item:
     print(items[item]['speech'][0] + red + items[item]['speech'][1] + white + items[item]['speech'][2])
   elif 'ether' in item:
@@ -75,7 +79,7 @@ def useItem(item):                      ###USE ITEM
   if player.MP > player.MaxMP: player.MP = player.MaxMP
 
 
-def scan(enemy, heartlessHealth):         ###SCAN
+def scan(enemy, heartlessHealth):              ###SCAN
   heartlessHealthDisplay = ''
   i=0
   while i<heartless[enemy]['HP']:
@@ -87,14 +91,15 @@ def scan(enemy, heartlessHealth):         ###SCAN
 
   print(Fore.MAGENTA + '\n---------------------------')
   print("Scan : " + enemy)
-  print("HP : " + player.colors['RED'] + heartlessHealthDisplay)
+  print("HP : " + red + heartlessHealthDisplay)
   print(Fore.MAGENTA + "---------------------------")
 
-def statusEffectDamage(statusEffect, heartlessHealth, statusDuration):
+
+def statusEffectDamage(statusEffect, heartlessHealth, statusDuration):         ###STATUS EFFECT DAMAGE
   print(magics[statusEffect]['status']['speech'][0] + player.colors[magics[statusEffect]['speech'][4]] + magics[statusEffect]['status']['speech'][1] + white + magics[statusEffect]['status']['speech'][2] + red + magics[statusEffect]['status']['speech'][3] + white + magics[statusEffect]['status']['speech'][4])
   return heartlessHealth-magics[statusEffect]['status']['damage'], statusDuration - 1
 
-def calculateDamage (heartlessHealth, heartlessDamage, damage):
+def calculateDamage (heartlessHealth, heartlessDamage, damage):         ###CALCULATE DAMAGE
   print("You lost " + red + str(heartlessDamage) + ' ♥ ' + white + '!')
   oldHP = player.HP
   player.HP = player.HP - heartlessDamage
@@ -104,13 +109,7 @@ def calculateDamage (heartlessHealth, heartlessDamage, damage):
       print('Second Chance')
   return heartlessHealth-damage
 
-def battle(enemy):         ###BATTLE
-
-    red = player.colors['RED']
-    white = player.colors['WHITE']
-    blue = player.colors['BLUE']
-    yellow = player.colors['YELLOW']
-    green = player.colors['GREEN']
+def battle(enemy):                 ###BATTLE
 
     print("---------------------------")
     print('You see a ' + red + 'Heartless' + white +'! It\'s a '+ red + enemy + white + '!')
@@ -142,11 +141,10 @@ def battle(enemy):         ###BATTLE
 
         if 'blizza' in statusEffect:
           heartlessDamage = heartlessDamage - magics[statusEffect]['status']['reduction']
-### Status effect duration
-
+###
         print("---------------------------")
 
-        if command == 'attack':
+        if command == 'attack':       ###ATTACK
             command = ''
             print('You and the heartless attack each other!')
             print('You caused ' + red + str(damage) + ' ♥ ' + white + 'of damage!')
@@ -156,7 +154,7 @@ def battle(enemy):         ###BATTLE
 ### Calculate damage
             heartlessHealth = calculateDamage(heartlessHealth, heartlessDamage, damage)
 
-        elif "magic" in command:
+        elif "magic" in command:       ###MAGIC
           command = command.lower().split()
           if not player.magic:
             print('Magic is still a mystery to you!')
@@ -191,30 +189,14 @@ def battle(enemy):         ###BATTLE
 
           command = ''
 
-        elif "item" in command:
+        elif "item" in command:       ###ITEM
           command = command.lower().split()
           if not player.item:
             print('You have no items!')
           else:
             try:
               if command[1] in player.item:
-                # del player.item[player.item.index(command[1])]
-
                 useItem(command[1])
-
-#                 print('Used a ' + green + str(command[1]))
-# ###COLOR SPEECH
-#                 if 'potion' in command[1]:
-#                   print(items[command[1]]['speech'][0] + red + items[command[1]]['speech'][1] + white + items[command[1]]['speech'][2])
-#                 elif 'ether' in command[1]:
-#                   print(items[command[1]]['speech'][0] + blue + items[command[1]]['speech'][1] + white + items[command[1]]['speech'][2])
-#                 else:
-#                   print(items[command[1]]['speech'][0] + red + items[command[1]]['speech'][1] + white + items[command[1]]['speech'][2] +  blue + items[command[1]]['speech'][3] + white + items[command[1]]['speech'][4])
-
-                # player.HP = player.HP + items[command[1]]['HP']
-                # if player.HP > player.MaxHP: player.HP = player.MaxHP
-                # player.MP = player.MP + items[command[1]]['MP']
-                # if player.MP > player.MaxMP: player.MP = player.MaxMP
 ### Status effect
                 if statusEffect != 'none':
                   heartlessHealth, statusDuration = statusEffectDamage(statusEffect, heartlessHealth, statusDuration)
@@ -228,23 +210,23 @@ def battle(enemy):         ###BATTLE
                 print('try: item [item name]')
           command = ''
 
-        elif "run" in command:
+        elif "run" in command:       ###RUN
             command = ''
             print('You got away successfully!')
             return 'run'
 
-        else:
+        else:       ###ERROR
           command = ''
           print('Command not found!')
 
-        if player.HP < 1:
+        if player.HP < 1:       ###DEFEAT
             return 'defeat'
 
-        if heartlessHealth <= 0:
+        if heartlessHealth <= 0:       ###VICTORY
 
             munny = 3 * random.randint(heartless[enemy]['munny'][0], heartless[enemy]['munny'][1])
             print('\nYou defeated the Heartless!\nCONGRATULATIONS!')
-            print('You obtained ' + yellow + str(munny) + '🔸 munny!')
+            print('\nYou obtained ' + yellow + str(munny) + '🔸 munny!')
             player.munny += munny
             print('You gained ' + str(heartless[enemy]['exp']) + ' exp!')
             player.exp += heartless[enemy]['exp']
@@ -256,24 +238,34 @@ def battle(enemy):         ###BATTLE
 
             return 'victory'
 
+#################       MAIN
+
+player = player()
+
+with open('utilities/saveFile.txt', 'r') as f:
+  saves = ast.literal_eval(f.read())
+
 #start the player in the First District
 currentRoom = 'First District'
 previusRoom = 'First District'
 
-player = player()
-
-showInstructions()
-
+#COLOR
 colorama_init(autoreset=True)
 colors = dict(Fore.__dict__.items())
-alreadyBattled = 0
-
 red = player.colors['RED']
 white = player.colors['WHITE']
 blue = player.colors['BLUE']
+yellow = player.colors['YELLOW']
+green = player.colors['GREEN']
+
+alreadyBattled = 0
+firstTimeMap = 0
+
+titleScreen(player, saves)
+
+showInstructions()
 
 while True:
-
   showStatus()
 
   #get the player's next 'move'
@@ -285,13 +277,19 @@ while True:
   while move == '':  
     move = input('>')
 
-  if move == 'map':        ##### OPEN MAP
+  move = move.lower().split()
+
+  if 'map' in move:        ##### OPEN MAP
+    if firstTimeMap == 0:
+      print('The first time opening a map may glitch and refuse to open, just close the map and open it again!')
+      firstTimeMap = 1
+    
     print('Opening map...\n')
     from PIL import Image
     img = Image.open('images/' + player.world + '/Map' + str(maps[player.world][player.map]) + '.jpg')
     img.show()
   
-  if 'treasure' in move:
+  elif 'treasure' in move:        ##### TREASURE
     if 'treasure' in rooms[currentRoom]:
       if rooms[currentRoom]['treasure']['treasure'] == 'item':
         print('You got a "' + rooms[currentRoom]['treasure']['item'] + '"!')
@@ -313,12 +311,17 @@ while True:
     else:
       print('There\'s no treasure chest in this room!')
 
-  move = move.lower().split()
-
-  if 'menu' in move:        ##### SHOW MENU
+  elif 'menu' in move:        ##### SHOW MENU
       player.menu()
 
-  if move[0] == 'buy':        ##### BUY IN SHOP
+  elif 'save' in move:
+    if 'Shop' in currentRoom:
+      saveScreen(player, saves)
+    else:
+      print('There is no save point here!')
+
+  elif move[0] == 'buy':        ##### BUY IN SHOP
+    if 'Shop' in currentRoom:
       if move[1] in shops[currentRoom]:
         if player.munny >= shops[currentRoom][move[1]]:
             print('\nMoogle: Thanks for shopping here, Kupo!!\nObtained a ' + move[1] + '!')
@@ -332,9 +335,11 @@ while True:
             print('\nMoogle: You don\'t have enough munny for this item, Kupo!!')
       else:
           print('\nMoogle: I\'m sorry, I don\'t have this item, Kupo!')
+    else:
+      print('You are not in a shop!')
 
 
-  if move[0] == 'use':        ##### USE ITEM
+  elif move[0] == 'use':        ##### USE ITEM
     if not player.item:
         print('You have no items!')
     else:
@@ -348,7 +353,7 @@ while True:
         command = ''
 
 
-  if move[0] == 'cast':        ##### MAGIC
+  elif move[0] == 'cast':        ##### MAGIC
     if not player.magic:
         print('Magic is still a mystery to you!')
 
@@ -368,7 +373,7 @@ while True:
 
 
   #if they type 'go' first
-  if move[0] == 'go' or move[0] == 'enter':        ##### MOVE
+  elif move[0] == 'go' or move[0] == 'enter':        ##### MOVE
     #check that they are allowed wherever they want to go
     if move[1] in rooms[currentRoom]:
       #set the current room to the new room
@@ -391,7 +396,7 @@ while True:
       print('You can\'t go that way!')
 
   #if they type 'talk' first
-  if move[0] == 'talk' :        ##### TALK WITH PERSON
+  elif move[0] == 'talk' :        ##### TALK WITH PERSON
     #if the room contains an person
     if 'person' in rooms[currentRoom] and move[1] in rooms[currentRoom]['person'].lower():
       #falar com a pessoa
@@ -422,7 +427,6 @@ while True:
       print('Can\'t talk to ' + move[1] + '!')
 
 
-
   if 'heartless' in rooms[currentRoom] and alreadyBattled == 0:           ###### BATTLE
     status = rooms[currentRoom]['heartless']['status']
     if status > 0:
@@ -440,9 +444,7 @@ while True:
           break
 
 
-
   # player wins if they get to the Third District
   if currentRoom == 'Third District' and  player.story == 1:
     print('You found Donald & Goofy... YOU WIN!')
     break
-  
