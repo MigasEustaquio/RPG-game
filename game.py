@@ -45,6 +45,19 @@ def shop(currentRoom):         ###SHOP
     for item in shops[currentRoom]:
         print(item, '   \tcost:', shops[currentRoom][item], 'munny!')
 
+def levelUP():
+  if levelUp[player.level]['ability'] != 'none':
+    player.abilities.append(levelUp[player.level]['ability'])
+    print('Obtained ' + levelUp[player.level]['ability'] + '!')
+  if levelUp[player.level]['HP'] != 0:
+    player.MaxHP += levelUp[player.level]['HP']
+    player.HP += levelUp[player.level]['HP']
+    print('Maximum HP increased')
+  if levelUp[player.level]['MP'] != 0:
+    player.MaxMP += levelUp[player.level]['MP']
+    player.MP += levelUp[player.level]['MP']
+    print('Maximum MP increased')
+
 
 def battle(enemy):         ###BATTLE
 
@@ -63,6 +76,23 @@ def battle(enemy):         ###BATTLE
     command = ''
     while True:
         player.showBattleStatus()
+
+        heartlessHealthDisplay = ''
+
+        if 'scan' in player.abilities:
+          i=0
+          while i<heartless[enemy]['HP']:
+              if i<heartlessHealth:
+                  heartlessHealthDisplay += '♥'
+              else:
+                  heartlessHealthDisplay += '♡'
+              i+=1
+
+          print(Fore.MAGENTA + '\n---------------------------')
+          print("Scan : " + enemy)
+          print("HP : " + red + heartlessHealthDisplay)
+          print(Fore.MAGENTA + "---------------------------")
+
         while command == '':
             command = input('>')
         command = command.lower()
@@ -108,7 +138,10 @@ def battle(enemy):         ###BATTLE
                 magicText = magics[command[1]]['speech']
 
                 print('You used ' + blue + str(magics[command[1]]['MP']) +' ● ' + white + '!')
-                print(magicText[0] + red + magicText[1] + white + magicText[2] + player.colors[magicText[4]] + magicText[3])
+                if command[1] != 'cure':
+                  print(magicText[0] + red + magicText[1] + white + magicText[2] + player.colors[magicText[4]] + magicText[3])
+                else:
+                  print(magicText[0] + red + magicText[1] + white + magicText[2])
                 player.MP = player.MP - magics[command[1]]['MP']
 
                 print("The heartless attacks you!")
@@ -191,6 +224,7 @@ def battle(enemy):         ###BATTLE
             if player.exp >= levelUp[player.level]['next']:
               player.level+=1
               print('Level Up!\nLevel: ' + str(player.level))
+              levelUP()
 
             return 'victory'
 
@@ -300,7 +334,8 @@ while True:
           print('You can\'t cast that now!')
         else:
           if player.MP >= magics[move[1]]['MP']:
-            print(magics[move[1]]['speech'])
+            print('You used ' + blue + str(magics[move[1]]['MP']) +' ● ' + white + '!')
+            print(magics[move[1]]['speech'][0] + red + magics[move[1]]['speech'][1] + white + magics[move[1]]['speech'][2])
             player.MP = player.MP - magics[move[1]]['MP']
             player.HP = player.HP + magics[move[1]]['heal']
           else:

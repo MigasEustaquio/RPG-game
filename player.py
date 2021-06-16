@@ -25,6 +25,8 @@ class player:
 
         self.keyblades = ['Kingdom Key']
 
+        self.abilities = []
+
         #STORY RELATED
         self.world = 'TraverseTown'
         self.map = str(worldMaps[self.world])   ############### WHEN CHANGE WORLDS HAVE TO UPDATE THE worldMaps DICTIONARY

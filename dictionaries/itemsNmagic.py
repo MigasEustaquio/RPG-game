@@ -31,7 +31,7 @@ magics = {
                         'status' : {'name': 'Freezing', 'speech': ['The enemy is ','freezing',' and inflicts ','1 ♥',' less of damage!'], 'damage' : 0, 'duration' : 2}
                         },
 
-                'cure' : { 'speech' : 'You cast Cure and restore 3 ♥ !',
+                'cure' : { 'speech' : ['You cast Cure and restore ', '3 ♥', ' !'],
                         'MP' : 1, 'damage' : 0, 'heal' : 3,
                          },
 
