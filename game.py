@@ -10,6 +10,7 @@ from utilities.screen import *
 def showInstructions():
     #print a main menu and the commands
     print('''
+Tutorial:
 Traverse Town
 ========
 Talk to Leon!
@@ -27,17 +28,17 @@ def showStatus():                ###SHOW STATUS
   #print the player's current status
   print(Fore.RED + '\n---------------------------')
   print(Fore.WHITE + 'You are in the ' + currentRoom)
-  if "person" in rooms[currentRoom]:
-    print('You see ' + rooms[currentRoom]['person'])
-    if rooms[currentRoom]['person'].lower() not in player.map:
-      player.map = player.map + people[rooms[currentRoom]['person']]['mapUpdate']
-  if "shop" in rooms[currentRoom] and (currentRoom+' Shop location') in player.keyItems:
-    print('You see the ' + rooms[currentRoom]['shop'] + ', try: \'enter shop\'')
+  if "person" in rooms[player.world][currentRoom]:
+    print('You see ' + rooms[player.world][currentRoom]['person'])
+    if rooms[player.world][currentRoom]['person'].lower() not in player.map:
+      player.map = player.map + people[rooms[player.world][currentRoom]['person']]['mapUpdate']
+  if "shop" in rooms[player.world][currentRoom] and (currentRoom+' Shop location') in player.keyItems:
+    print('You see the ' + rooms[player.world][currentRoom]['shop'] + ', try: \'enter shop\'')
   if "Shop" in currentRoom:
       player.HP = player.MaxHP
       player.MP = player.MaxMP
       print('\nYou see a Save point, HP and MP restored!\nTo open the save menu just type \'save\'\nTo get out of the shop type: \'go back\'')
-  if 'treasure' in rooms[currentRoom]:
+  if 'treasure' in rooms[player.world][currentRoom]:
     print('You see a treasure chest!')
   print(Fore.RED + "---------------------------")
 
@@ -52,11 +53,17 @@ def levelUP():                                   ###LEVEL UP
   if levelUp[player.level]['HP'] != 0:
     player.MaxHP += levelUp[player.level]['HP']
     player.HP += levelUp[player.level]['HP']
-    print('Maximum HP increased')
+    print('Maximum HP increased!')
   if levelUp[player.level]['MP'] != 0:
     player.MaxMP += levelUp[player.level]['MP']
     player.MP += levelUp[player.level]['MP']
-    print('Maximum MP increased')
+    print('Maximum MP increased!')
+  if 'STR' in levelUp[player.level]:
+    player.STR += levelUp[player.level]['STR']
+    print('Strength increased!')
+  if 'DEF' in levelUp[player.level]:
+    player.DEF += levelUp[player.level]['DEF']
+    print('Defense increased!')
 
 def useItem(item):                          ###USE ITEM
   del player.item[player.item.index(item)]
@@ -99,10 +106,12 @@ def statusEffectDamage(statusEffect, heartlessHealth, statusDuration):         #
   print(magics[statusEffect]['status']['speech'][0] + player.colors[magics[statusEffect]['speech'][4]] + magics[statusEffect]['status']['speech'][1] + white + magics[statusEffect]['status']['speech'][2] + red + magics[statusEffect]['status']['speech'][3] + white + magics[statusEffect]['status']['speech'][4])
   return heartlessHealth-magics[statusEffect]['status']['damage'], statusDuration - 1
 
-def calculateDamage (heartlessHealth, heartlessDamage, damage):         ###CALCULATE DAMAGE
-  print("You lost " + red + str(heartlessDamage) + ' ♥ ' + white + '!')
+def calculateDamage (heartlessHealth, heartlessDamage, damage, defense):         ###CALCULATE DAMAGE TAKEN
+  damageTaken = heartlessDamage-defense
+  if damageTaken < 0: damageTaken = 0
+  print("You lost " + red + str(damageTaken) + ' ♥ ' + white + '!')
   oldHP = player.HP
-  player.HP = player.HP - heartlessDamage
+  player.HP = player.HP - damageTaken
   if 'second chance' in player.abilities:
     if player.HP < 1 and oldHP > 1:
       player.HP = 1
@@ -110,6 +119,14 @@ def calculateDamage (heartlessHealth, heartlessDamage, damage):         ###CALCU
   return heartlessHealth-damage
 
 def battle(enemy):                 ###BATTLE
+
+    heartlessDamage = int(heartless[enemy]['damage'])
+    damage = keybladeStatus[player.keyblade]['damage'] + player.STR
+    defense = player.DEF
+
+    for accessory in player.equipment:
+      damage += equipments[accessory]['STR']
+      defense += equipments[accessory]['DEF']
 
     print("---------------------------")
     print('You see a ' + red + 'Heartless' + white +'! It\'s a '+ red + enemy + white + '!')
@@ -129,17 +146,13 @@ def battle(enemy):                 ###BATTLE
         while command == '':
             command = input('>')
         command = command.lower()
-
-        heartlessDamage = int(heartless[enemy]['damage'])
-        damage = keybladeStatus[player.keyblade]['damage']
-
 ### Status effect duration
         if statusDuration == 0:
           print('\nThe ' + player.colors[magics[statusEffect]['speech'][4]] + magics[statusEffect]['status']['name'] + white + ' effect has passed\n')
           statusEffect = 'none'
           statusDuration = 99
 
-        if 'blizza' in statusEffect:
+        if 'blizza' in statusEffect or 'thund' in statusEffect:
           heartlessDamage = heartlessDamage - magics[statusEffect]['status']['reduction']
 ###
         print("---------------------------")
@@ -152,7 +165,7 @@ def battle(enemy):                 ###BATTLE
             if statusEffect != 'none':
               heartlessHealth, statusDuration = statusEffectDamage(statusEffect, heartlessHealth, statusDuration)
 ### Calculate damage
-            heartlessHealth = calculateDamage(heartlessHealth, heartlessDamage, damage)
+            heartlessHealth = calculateDamage(heartlessHealth, heartlessDamage, damage, defense)
 
         elif "magic" in command:       ###MAGIC
           command = command.lower().split()
@@ -166,7 +179,7 @@ def battle(enemy):                 ###BATTLE
                 magicText = magics[command[1]]['speech']
 ###COLOR SPEECH
                 print('You used ' + blue + str(magics[command[1]]['MP']) +' ● ' + white + '!')
-                if command[1] != 'cure':
+                if 'cur' not in command[1]:
                   print(magicText[0] + red + magicText[1] + white + magicText[2] + player.colors[magicText[4]] + magicText[3])
                 else:
                   print(magicText[0] + red + magicText[1] + white + magicText[2])
@@ -178,9 +191,9 @@ def battle(enemy):                 ###BATTLE
                 print("The heartless attacks you!")
                 player.HP = player.HP + magics[command[1]]['heal']
                 if player.HP > player.MaxHP: player.HP = player.MaxHP
-                heartlessHealth = calculateDamage(heartlessHealth, heartlessDamage, magics[command[1]]['damage'])
+                heartlessHealth = calculateDamage(heartlessHealth, heartlessDamage, magics[command[1]]['damage'], defense)
 ### Start status effect
-                if command[1] != 'cure':
+                if 'cur' not in command[1]:
                   statusEffect = command[1]
                   statusDuration = magics[statusEffect]['status']['duration']
 ###
@@ -202,7 +215,7 @@ def battle(enemy):                 ###BATTLE
                   heartlessHealth, statusDuration = statusEffectDamage(statusEffect, heartlessHealth, statusDuration)
 ###Calculate damage
                 print("The heartless attacks you!")
-                heartlessHealth = calculateDamage(heartlessHealth, heartlessDamage, 0)
+                heartlessHealth = calculateDamage(heartlessHealth, heartlessDamage, 0, defense)
 
               else:
                 print("You don\'t have any ", command[1])
@@ -245,10 +258,6 @@ player = player()
 with open('utilities/saveFile.txt', 'r') as f:
   saves = ast.literal_eval(f.read())
 
-#start the player in the First District
-currentRoom = 'First District'
-previusRoom = 'First District'
-
 #COLOR
 colorama_init(autoreset=True)
 colors = dict(Fore.__dict__.items())
@@ -262,6 +271,9 @@ alreadyBattled = 0
 firstTimeMap = 0
 
 titleScreen(player, saves)
+
+currentRoom = rooms[player.world][0]
+previusRoom = currentRoom
 
 showInstructions()
 
@@ -281,7 +293,7 @@ while True:
 
   if 'map' in move:        ##### OPEN MAP
     if firstTimeMap == 0:
-      print('The first time opening a map may glitch and refuse to open, just close the map and open it again!')
+      print('The first time opening a map may glitch out and refuse to open, just close the map and open it again!')
       firstTimeMap = 1
     
     print('Opening map...\n')
@@ -290,29 +302,38 @@ while True:
     img.show()
   
   elif 'treasure' in move:        ##### TREASURE
-    if 'treasure' in rooms[currentRoom]:
-      if rooms[currentRoom]['treasure']['treasure'] == 'item':
-        print('You got a "' + rooms[currentRoom]['treasure']['item'] + '"!')
+    if 'treasure' in rooms[player.world][currentRoom]:
+      if rooms[player.world][currentRoom]['treasure']['treasure'] == 'item':
+        print('You got a "' + rooms[player.world][currentRoom]['treasure']['item'] + '"!')
         if len(player.item) < player.itemPouch:
-          player.item.append(rooms[currentRoom]['treasure']['item'])
+          player.item.append(rooms[player.world][currentRoom]['treasure']['item'])
         else:
-          player.stock.append(rooms[currentRoom]['treasure']['item'])
+          player.stock.append(rooms[player.world][currentRoom]['treasure']['item'])
           print('Your item pouch is full, item send to stock!!')
 
-      if rooms[currentRoom]['treasure']['treasure'] == 'key item':
-        print('You got the "' + rooms[currentRoom]['treasure']['key item'] + '" key item!')
-        player.keyItems.append(rooms[currentRoom]['treasure']['key item'])
+      if rooms[player.world][currentRoom]['treasure']['treasure'] == 'key item':
+        print('You got the "' + rooms[player.world][currentRoom]['treasure']['key item'] + '" key item!')
+        player.keyItems.append(rooms[player.world][currentRoom]['treasure']['key item'])
 
-      if rooms[currentRoom]['treasure']['treasure'] == 'mapUpdate':
-        player.map = player.map + rooms[currentRoom]['treasure']['mapUpdate']
+      if rooms[player.world][currentRoom]['treasure']['treasure'] == 'mapUpdate':
+        player.map = player.map + rooms[player.world][currentRoom]['treasure']['mapUpdate']
         print(player.world + ' map updated!')
 
-      del rooms[currentRoom]['treasure']
+      del rooms[player.world][currentRoom]['treasure']
     else:
       print('There\'s no treasure chest in this room!')
 
   elif 'menu' in move:        ##### SHOW MENU
       player.menu()
+
+  elif 'equipment' in move:    ##### TRADE EQUIPMENT
+      player.tradeEquipment()
+
+  elif 'keyblade' in move:    ##### TRADE KEYBLADE
+      player.tradeKeyblade()
+
+  elif 'status' in move:        ##### SHOW MENU
+      player.status()
 
   elif 'save' in move:
     if 'Shop' in currentRoom:
@@ -321,16 +342,21 @@ while True:
       print('There is no save point here!')
 
   elif move[0] == 'buy':        ##### BUY IN SHOP
+    if len(move)>2: move[1]=move[1]+' '+move[2]
+    print(move[1])
     if 'Shop' in currentRoom:
       if move[1] in shops[currentRoom]:
         if player.munny >= shops[currentRoom][move[1]]:
             print('\nMoogle: Thanks for shopping here, Kupo!!\nObtained a ' + move[1] + '!')
             player.munny = player.munny - shops[currentRoom][move[1]]
-            if len(player.item) < player.itemPouch:
-              player.item.append(move[1])
+            if move[1] in items:
+              if len(player.item) < player.itemPouch:
+                player.item.append(move[1])
+              else:
+                player.stock.append(move[1])
+                print('Your item pouch is full, item send to stock!!')
             else:
-              player.stock.append(move[1])
-              print('Your item pouch is full, item send to stock!!')
+              player.equipmentList.append(move[1])
         else:
             print('\nMoogle: You don\'t have enough munny for this item, Kupo!!')
       else:
@@ -359,7 +385,7 @@ while True:
 
     else:
       if move[1] in player.magic:
-        if move[1] != 'cure':
+        if 'cur' not in move[1]:
           print('You can\'t cast that now!')
         else:
           if player.MP >= magics[move[1]]['MP']:
@@ -375,51 +401,51 @@ while True:
   #if they type 'go' first
   elif move[0] == 'go' or move[0] == 'enter':        ##### MOVE
     #check that they are allowed wherever they want to go
-    if move[1] in rooms[currentRoom]:
+    if move[1] in rooms[player.world][currentRoom]:
       #set the current room to the new room
       alreadyBattled = 0
       previusRoom = currentRoom
-      currentRoom = rooms[currentRoom][move[1]]
-      for room in rooms[currentRoom]['resetHeartless']:
-        if rooms[room]['heartless']['status'] == 0:
-          rooms[room]['heartless']['status'] = rooms[room]['heartless']['waves']
+      currentRoom = rooms[player.world][currentRoom][move[1]]
+      for room in rooms[player.world][currentRoom]['resetHeartless']:
+        if rooms[player.world][room]['heartless']['status'] == 0:
+          rooms[player.world][room]['heartless']['status'] = rooms[player.world][room]['heartless']['waves']
     #there is no door (link) to the new room
     elif move[1] == 'back':
         alreadyBattled = 0
         temp = currentRoom
         currentRoom = previusRoom
         previusRoom = temp
-        for room in rooms[currentRoom]['resetHeartless']:
-          if rooms[room]['heartless']['status'] == 0:
-            rooms[room]['heartless']['status'] = rooms[room]['heartless']['waves']
+        for room in rooms[player.world][currentRoom]['resetHeartless']:
+          if rooms[player.world][room]['heartless']['status'] == 0:
+            rooms[player.world][room]['heartless']['status'] = rooms[player.world][room]['heartless']['waves']
     else:
       print('You can\'t go that way!')
 
   #if they type 'talk' first
   elif move[0] == 'talk' :        ##### TALK WITH PERSON
     #if the room contains an person
-    if 'person' in rooms[currentRoom] and move[1] in rooms[currentRoom]['person'].lower():
+    if 'person' in rooms[player.world][currentRoom] and move[1] in rooms[player.world][currentRoom]['person'].lower():
       #falar com a pessoa
-      print(people[rooms[currentRoom]['person']]['speech'])
-      reward = people[rooms[currentRoom]['person']]['reward']
+      print(people[rooms[player.world][currentRoom]['person']]['speech'])
+      reward = people[rooms[player.world][currentRoom]['person']]['reward']
       if reward == 'story':
-        if player.story == (people[rooms[currentRoom]['person']]['story']-1):
+        if player.story == (people[rooms[player.world][currentRoom]['person']]['story']-1):
           player.story += 1
           print()
 
       elif reward == 'key item':
-        player.keyItems.append(people[rooms[currentRoom]['person']]['key item'])
-        print('You got the "' + people[rooms[currentRoom]['person']]['key item'] + '" key item!')
+        player.keyItems.append(people[rooms[player.world][currentRoom]['person']]['key item'])
+        print('You got the "' + people[rooms[player.world][currentRoom]['person']]['key item'] + '" key item!')
 
       elif reward == 'item':
-        print('You got a "' + people[rooms[currentRoom]['person']]['item'] + '"!')
+        print('You got a "' + people[rooms[player.world][currentRoom]['person']]['item'] + '"!')
         if len(player.item) < player.itemPouch:
-          player.item.append(people[rooms[currentRoom]['person']]['item'])
+          player.item.append(people[rooms[player.world][currentRoom]['person']]['item'])
         else:
-          player.stock.append(people[rooms[currentRoom]['person']]['item'])
+          player.stock.append(people[rooms[player.world][currentRoom]['person']]['item'])
           print('Your item pouch is full, item send to stock!!')
-      people[rooms[currentRoom]['person']]['reward'] = 'no'
-      if rooms[currentRoom]['person'].lower() == 'moogle':
+      people[rooms[player.world][currentRoom]['person']]['reward'] = 'no'
+      if rooms[player.world][currentRoom]['person'].lower() == 'moogle':
           shop(currentRoom)
 
     else:
@@ -427,13 +453,13 @@ while True:
       print('Can\'t talk to ' + move[1] + '!')
 
 
-  if 'heartless' in rooms[currentRoom] and alreadyBattled == 0:           ###### BATTLE
-    status = rooms[currentRoom]['heartless']['status']
+  if 'heartless' in rooms[player.world][currentRoom] and alreadyBattled == 0:           ###### BATTLE
+    status = rooms[player.world][currentRoom]['heartless']['status']
     if status > 0:
-      result = battle(rooms[currentRoom]['heartless']['wave'][status])  
+      result = battle(rooms[player.world][currentRoom]['heartless']['wave'][status])  
       if result == 'victory':
         alreadyBattled = 1
-        rooms[currentRoom]['heartless']['status'] = (status - 1)
+        rooms[player.world][currentRoom]['heartless']['status'] = (status - 1)
       elif result == 'run':
           temp = currentRoom
           currentRoom = previusRoom

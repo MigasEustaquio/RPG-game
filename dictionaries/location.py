@@ -1,5 +1,8 @@
 #a dictionary linking a room to other room positions
 rooms = {
+  'TraverseTown' : {
+
+    0 : 'First District',
 
             'First District' : { 'up' : 'Second District',
                   'shop' : 'First District Shop',
@@ -56,5 +59,55 @@ rooms = {
             'First District Shop' : { 'person'  : 'Moogle',
                                     'resetHeartless' : ['Second District', 'Hotel', 'Alleyway']
                 },
+
+  },
+
+
+  'CastleOblivion': {
+
+    0 : '1st Floor',
+
+      '1st Floor' : { 'right' : '2nd Floor',
+                  'down' : '5th Floor',
+                  'shop' : '1st Floor Shop',
+                  'resetHeartless' : []
+      }, 
+
+      '2nd Floor' : { 'right' : '3rd Floor',
+                  'left' : '1st Floor',
+                  'up' : '1st Floor',
+                  'down' : '5th Floor',
+                  'heartless'  : { 
+                    'waves' : 1, 'status' : 1, 'wave' : { 1 : 'angel star'}
+                  },
+                  'resetHeartless' : []
+      },
+
+      '3rd Floor' : { 'right' : '4th Floor',
+                  'left' : '2nd Floor',
+                  'up' : '1st Floor',
+                  'down' : '5th Floor',
+                  'resetHeartless' : []
+      },
+
+      '4th Floor' : { 'right' : '5th Floor',
+                  'left' : '3rd Floor',
+                  'up' : '1st Floor',
+                  'down' : '5th Floor',
+                  'resetHeartless' : []
+      },
+
+      '5th Floor' : {'left' : '4th Floor',
+                  'up' : '1st Floor',
+                  'resetHeartless' : []
+      },
+
+      '1st Floor Shop' : { 'person'  : 'Moogle',
+                  'resetHeartless' : []
+                },
+
+  }
+
+
 
          }

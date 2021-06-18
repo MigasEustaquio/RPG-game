@@ -7,11 +7,16 @@ def save(file, y, saves):
 
   x['keyblade'] = y.keyblade
   x['HP'] = y.MaxHP
+  x['STR'] = y.STR
+  x['DEF'] = y.DEF
   x['MP'] = y.MaxMP
   x['magic'] = y.magic
   x['item'] = y.item
   x['itemPouch'] = y.itemPouch
   x['keyItems'] = y.keyItems
+  x['equipment'] = y.equipment
+  x['equipmentNumber'] = y.equipmentNumber
+  x['equipmentList'] = y.equipmentList
   x['exp'] = y.exp
   x['level'] = y.level
   x['munny'] = y.munny
@@ -23,7 +28,7 @@ def save(file, y, saves):
   x['story'] = y.story
   y.saveFile = file
 
-  with open('saveFile.txt', 'w') as file:
+  with open('utilities/saveFile.txt', 'w') as file:
     file.write(str(saves))
 
   print('Save complete\n')
@@ -36,10 +41,15 @@ def load(file, y, saves):
   y.keyblade = x['keyblade']
   y.MaxHP = x['HP']
   y.MaxMP = x['MP']
+  y.STR = x['STR']
+  y.DEF = x['DEF']
   y.magic = x['magic']
   y.item = x['item']
   y.itemPouch = x['itemPouch']
   y.keyItems = x['keyItems']
+  y.equipment = x['equipment']
+  y.equipmentNumber = x['equipmentNumber']
+  y.equipmentList = x['equipmentList']
   y.exp = x['exp']
   y.level = x['level']
   y.munny = x['munny']
@@ -155,7 +165,7 @@ def saveScreen(y, saves):
     if y.saveFile !=0:
         answer = input('You wish to overwrite the save file ' + str(y.saveFile) + ' ? (yes/no)\n>')
         if answer.lower() == 'yes':
-            print()
+            save(int(y.saveFile), y, saves)
             return
         elif answer.lower() == 'no':
             pass
@@ -195,13 +205,13 @@ World: ''' + str(saves[i]['world']) + '''
             if (i+3) in saves:
                 i+=1
             else:
-                print(Fore.RED + 'No save file after this!')
+                print(Fore.RED + 'No save file after these!')
             option=''
         elif str(option).lower() == 'previous':
             if i>1:
                 i-=1
             else:
-                print(Fore.RED + 'No save file previous to this!')
+                print(Fore.RED + 'No save file previous to these!')
             option=''
         elif option == '0':
           print('Save canceled')

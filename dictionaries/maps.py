@@ -26,10 +26,17 @@ maps = {
                     'yuffie moogle leon heartless ' : 10,
                     'yuffie heartless moogle leon ' : 10,
                     'yuffie moogle heartless leon ' : 10,
+                    'complete' : 10
                     
                     
             },
-            'Wonderland' : 0
+            'Wonderland' : {},
+
+
+            'CastleOblivion' : {
+                    '' : 0,
+                    'moogle ' : 0,
+            }
             
             
 }
@@ -38,6 +45,11 @@ maps = {
 worldMaps = {
 
             'TraverseTown' : '',
-            'Wonderland' : ''
+            'Wonderland' : '',
+
+
+
+
+            'CastleOblivion' : '',
             }
 
