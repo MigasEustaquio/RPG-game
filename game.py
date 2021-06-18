@@ -35,7 +35,7 @@ def showStatus():                ###SHOW STATUS
   if "shop" in rooms[player.world][currentRoom] and (currentRoom+' Shop location') in player.keyItems:
     print('You see the ' + rooms[player.world][currentRoom]['shop'] + ', try: \'enter shop\'')
   if "Shop" in currentRoom:
-      player.HP = player.MaxHP
+      player.HP = player.TotalHP
       player.MP = player.MaxMP
       print('\nYou see a Save point, HP and MP restored!\nTo open the save menu just type \'save\'\nTo get out of the shop type: \'go back\'')
   if 'treasure' in rooms[player.world][currentRoom]:
@@ -81,7 +81,7 @@ def useItem(item):                          ###USE ITEM
     print(items[item]['speech'][0] + red + items[item]['speech'][1] + white + items[item]['speech'][2] +  blue + items[item]['speech'][3] + white + items[item]['speech'][4])
 
   player.HP = player.HP + items[item]['HP']
-  if player.HP > player.MaxHP: player.HP = player.MaxHP
+  if player.HP > player.TotalHP: player.HP = player.TotalHP
   player.MP = player.MP + items[item]['MP']
   if player.MP > player.MaxMP: player.MP = player.MaxMP
 
@@ -190,7 +190,7 @@ def battle(enemy):                 ###BATTLE
 ###Calculate damage
                 print("The heartless attacks you!")
                 player.HP = player.HP + magics[command[1]]['heal']
-                if player.HP > player.MaxHP: player.HP = player.MaxHP
+                if player.HP > player.TotalHP: player.HP = player.TotalHP
                 heartlessHealth = calculateDamage(heartlessHealth, heartlessDamage, magics[command[1]]['damage'], defense)
 ### Start status effect
                 if 'cur' not in command[1]:
@@ -271,6 +271,10 @@ alreadyBattled = 0
 firstTimeMap = 0
 
 titleScreen(player, saves)
+
+player.calculateHealth()
+player.HP = player.TotalHP
+player.MP = player.TotalMP
 
 currentRoom = rooms[player.world][0]
 previusRoom = currentRoom
@@ -393,7 +397,7 @@ while True:
             print(magics[move[1]]['speech'][0] + red + magics[move[1]]['speech'][1] + white + magics[move[1]]['speech'][2])
             player.MP = player.MP - magics[move[1]]['MP']
             player.HP = player.HP + magics[move[1]]['heal']
-            if player.HP > player.MaxHP: player.HP = player.MaxHP
+            if player.HP > player.TotalHP: player.HP = player.TotalHP
           else:
             print('Not enough MP!')
 
@@ -468,6 +472,7 @@ while True:
           print("---------------------------")
           print('Your HP has dropped to zero!\nGAME OVER')
           break
+    player.calculateHealth()
 
 
   # player wins if they get to the Third District

@@ -28,7 +28,7 @@ saves = {
                 2 : { 
                 'keyblade': 'Kingdom Key',
                 'HP' : 10,
-                'MP' : 10,
+                'MP' : 1,
                 'STR' : 1,
                 'DEF' : 1,
                 'magic' : ['fire', 'fira', 'firaga', 'blizzard', 'blizzara', 'blizzaga', 'cure', 'cura', 'curaga'],

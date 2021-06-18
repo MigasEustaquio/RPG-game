@@ -11,8 +11,10 @@ class player:
         self.keyblade = 'Kingdom Key'
 
         self.MaxHP = 5
-        self.HP = self.MaxHP  ## full: ♥,  empty: ♡
-        self.MaxMP = 1+keybladeStatus[self.keyblade]['MP']
+        self.TotalHP = self.MaxHP
+        self.HP = self.TotalHP  ## full: ♥,  empty: ♡
+        self.MaxMP = 1
+        self.TotalMP = self.MaxMP#+keybladeStatus[self.keyblade]['MP']
         self.MP = self.MaxMP  ## full: ●,  empty: ○
 
         self.STR = 0
@@ -46,19 +48,37 @@ class player:
         colorama_init(autoreset=True)
         self.colors = dict(Fore.__dict__.items())
 
+
+    def calculateHealth(self):
+        self.TotalHP = self.MaxHP
+        self.TotalMP = self.MaxMP
+
+        self.TotalMP += keybladeStatus[self.keyblade]['MP']
+
+        for accessory in self.equipment:
+            self.TotalHP += equipments[accessory]['HP']
+            self.TotalMP += equipments[accessory]['MP']
+
+        if self.HP > self.TotalHP: self.HP = self.TotalHP
+        if self.MP > self.TotalMP: self.MP = self.TotalMP
+
+
     def showBattleStatus(self):
         #print the player's current battle status
         currentHP = ''
         currentMP = ''
         i=0
-        while i<self.MaxHP:
+
+        self.calculateHealth()
+
+        while i<self.TotalHP:
             if i<self.HP:
                 currentHP += '♥'
             else:
                 currentHP += '♡'
             i+=1
         i=0
-        while i<self.MaxMP:
+        while i<self.TotalMP:
             if i<self.MP:
                 currentMP += '●'
             else:
@@ -85,6 +105,14 @@ class player:
         print(Fore.YELLOW + "---------------------------")
 
     def status(self):
+
+        damage = self.STR
+        defense = self.DEF
+        damage += keybladeStatus[self.keyblade]['damage']
+        for accessory in self.equipment:
+            damage += equipments[accessory]['STR']
+            defense += equipments[accessory]['DEF']
+
         self.menu()
         print(Fore.GREEN + "---------------------------")
         print("Keyblade: " + self.keyblade)
@@ -100,6 +128,8 @@ class player:
         print("Abilities: ", self.abilities)
         print("Strength: ", self.STR)
         print("Defense: ", self.DEF)
+        print("Total Strength: ", damage)
+        print("Total Defense: ", defense)
 
 
     def tradeEquipment(self):
@@ -213,6 +243,10 @@ DEF: ''' + str(equipments[self.equipmentList[j]]['DEF']) + '''
                         self.equipment.append(option[1])
                         self.equipmentList.remove(option[1])
                         print(option[1] + ' equipped!\n')
+                        self.TotalHP += equipments[option[1]]['HP']
+                        self.HP += equipments[option[1]]['HP']
+                        self.TotalMP += equipments[option[1]]['MP']
+                        self.MP += equipments[option[1]]['MP']
                         if (input('Do you want to keep equipping? (yes/no)\n') == 'yes'):
                             pass
                         else:
@@ -228,6 +262,8 @@ DEF: ''' + str(equipments[self.equipmentList[j]]['DEF']) + '''
                     self.equipmentList.append(option[1])
                     self.equipment.remove(option[1])
                     print(option[1] + ' unequipped!\n')
+                    self.TotalHP = self.TotalHP - equipments[option[1]]['HP']
+                    self.TotalMP = self.TotalMP - equipments[option[1]]['MP']
                     if (input('Do you want to keep equipping? (yes/no)\n') == 'yes'):
                         pass
                     else:
@@ -239,6 +275,8 @@ DEF: ''' + str(equipments[self.equipmentList[j]]['DEF']) + '''
             else:
                 print(Fore.RED + 'Command not found')
                 option=''
+
+        self.calculateHealth()
 
 
     def tradeKeyblade(self):
@@ -284,7 +322,8 @@ MP: ''' + str(keybladeStatus[self.keyblades[i]]['MP']) + '''
 
             option = input('>')
             option = option.lower().split()
-            if len(option)>2: option[1] = option[1] + ' ' + option[2]
+            if len(option)>2: option[1] = option[1].capitalize() + ' ' + option[2].capitalize()
+            else: option[1] = option[1].capitalize()
 
             if 'next' in option:
 
@@ -306,9 +345,11 @@ MP: ''' + str(keybladeStatus[self.keyblades[i]]['MP']) + '''
                 break
 
             elif option[0] == 'equip':
-                if option[1].capitalize() in self.keyblades:
-                    self.keyblade = option[1].capitalize()
-                    print(option[1].capitalize() + ' equipped!\n')
+                if option[1] in self.keyblades:
+                    self.TotalMP = self.TotalMP + keybladeStatus[option[1]]['MP'] - keybladeStatus[self.keyblade]['MP']
+                    self.MP = self.MP + keybladeStatus[option[1]]['MP'] - keybladeStatus[self.keyblade]['MP']
+                    self.keyblade = option[1]
+                    print(option[1] + ' equipped!\n')
                     break
                 else:
                     print(Fore.RED + 'Equipment not found')
@@ -317,3 +358,5 @@ MP: ''' + str(keybladeStatus[self.keyblades[i]]['MP']) + '''
             else:
                 print(Fore.RED + 'Command not found')
                 option=''
+
+        self.calculateHealth()
