@@ -2,7 +2,9 @@ import ast
 from utilities.player import *
 
 def save(file, y, saves):
-  print('Saving file...\n')
+  print('Saving in file ' +  str(file)  +'...\n')
+
+  saves[file] = {}
   x=saves[file]
 
   x['keyblade'] = y.keyblade
@@ -29,10 +31,12 @@ def save(file, y, saves):
   x['story'] = y.story
   y.saveFile = file
 
+  saves[file]=x
+
   with open('utilities/saveFile.txt', 'w') as file:
     file.write(str(saves))
 
-  print('Save complete\n')
+  print('Save complete!\n')
 
 
 def load(file, y, saves):
@@ -76,7 +80,7 @@ def loadScreen(player, saves):
     Save ''' + str(i) + '''   \t\t\t\tSave ''' + str(i+1) + '''   \t\t\t\tSave ''' + str(i+2) + Fore.WHITE + '''
 
     Lvl: ''' + str(saves[i]['level']) + '''   \t\t\t\tLvl: ''' + str(saves[i+1]['level']) + '''   \t\t\t\tLvl: ''' + str(saves[i+2]['level']) + '''
-    World: ''' + str(saves[i]['world']) + '''   \t\tWorld: ''' + str(saves[i+1]['world']) + '''   \t\t\tWorld: ''' + str(saves[i+2]['world']) + '''
+    World: ''' + str(saves[i]['world']) + '''   \t\tWorld: ''' + str(saves[i+1]['world']) + '''   \t\tWorld: ''' + str(saves[i+2]['world']) + '''
         ''')
       else:
         print(Fore.BLUE + '''
@@ -227,7 +231,11 @@ World: ''' + str(saves[i]['world']) + '''
                 else:
                     print('Save canceled')
             else:
-                save(int(option), y, saves)
+                if (int(option)-1) in saves:
+                  save(int(option), y, saves)
+                else:
+                  print("Save file too far! Saving in new file...")
+                  save(len(saves)+1, y, saves)
                 return
         else:
             print(Fore.RED + 'Save file not found')

@@ -90,7 +90,7 @@ def useItem(item):                          ###USE ITEM
   player.HP = player.HP + items[item]['HP']
   if player.HP > player.TotalHP: player.HP = player.TotalHP
   player.MP = player.MP + items[item]['MP']
-  if player.MP > player.MaxMP: player.MP = player.MaxMP
+  if player.MP > player.TotalMP: player.MP = player.TotalMP
 
 
 def scan(enemy, heartlessHealth):              ###SCAN
@@ -109,7 +109,7 @@ def scan(enemy, heartlessHealth):              ###SCAN
   print(Fore.MAGENTA + "---------------------------")
 
 
-def statusEffectDamage(statusEffect, heartlessHealth, statusDuration):         ###STATUS EFFECT DAMAGE
+def statusEffectDamage(statusEffect, heartlessHealth, statusDuration):           ###STATUS EFFECT DAMAGE
   print(magics[statusEffect]['status']['speech'][0] + player.colors[magics[statusEffect]['speech'][4]] + magics[statusEffect]['status']['speech'][1] + white + magics[statusEffect]['status']['speech'][2] + red + magics[statusEffect]['status']['speech'][3] + white + magics[statusEffect]['status']['speech'][4])
   return heartlessHealth-magics[statusEffect]['status']['damage'], statusDuration - 1
 
@@ -119,7 +119,7 @@ def calculateDamage (heartlessHealth, heartlessDamage, damage, defense):        
   print("You lost " + red + str(damageTaken) + ' ♥ ' + white + '!')
   oldHP = player.HP
   player.HP = player.HP - damageTaken
-  if 'second chance' in player.abilities:
+  if 'second chance' in player.abilities:                                    ###SECOND CHANCE
     if player.HP < 1 and oldHP > 1:
       player.HP = 1
       print('Second Chance')
@@ -187,9 +187,9 @@ def battle(enemy):                 ###BATTLE
 ###COLOR SPEECH
                 print('You used ' + blue + str(magics[command[1]]['MP']) +' ● ' + white + '!')
                 if 'cur' not in command[1]:
-                  print(magicText[0] + red + magicText[1] + white + magicText[2] + player.colors[magicText[4]] + magicText[3])
+                  print("You cast " + player.colors[magicText[4]] + command[1].capitalize() + white + " and deal " + red + magicText[1] + white + magicText[2] + player.colors[magicText[4]] + magicText[3])
                 else:
-                  print(magicText[0] + red + magicText[1] + white + magicText[2])
+                  print("You cast " + green + command[1] + white + " and restore " + red + magicText[1] + white + magicText[2])
                 player.MP = player.MP - magics[command[1]]['MP']
 ### Status effect
                 if statusEffect != 'none':
@@ -256,6 +256,18 @@ def battle(enemy):                 ###BATTLE
               print('Level Up!\nLevel: ' + str(player.level))
               levelUP()
 
+            dropNumber = random.randint(1, 100)
+            for drop in heartless[enemy]['drop']:
+              if dropNumber <= drop:
+                print("Obtained a " + green + heartless[enemy]['drop'][drop] + white + "!")
+                if len(player.item) < player.itemPouch:
+                  player.item.append(heartless[enemy]['drop'][drop])
+                else:
+                  player.stock.append(heartless[enemy]['drop'][drop])
+                  print('Your item pouch is full, item send to stock!!')
+                break
+            
+
             return 'victory'
 
 #################       MAIN
@@ -318,7 +330,7 @@ while True:
   elif 'treasure' in move:        ##### TREASURE
     if 'treasure' in rooms[player.world][currentRoom]:
       if rooms[player.world][currentRoom]['treasure']['treasure'] == 'item':
-        print('You got a "' + rooms[player.world][currentRoom]['treasure']['item'] + '"!')
+        print('Obtained a "' + rooms[player.world][currentRoom]['treasure']['item'] + '"!')
         if len(player.item) < player.itemPouch:
           player.item.append(rooms[player.world][currentRoom]['treasure']['item'])
         else:
@@ -326,7 +338,7 @@ while True:
           print('Your item pouch is full, item send to stock!!')
 
       if rooms[player.world][currentRoom]['treasure']['treasure'] == 'key item':
-        print('You got the "' + rooms[player.world][currentRoom]['treasure']['key item'] + '" key item!')
+        print('Obtained the "' + rooms[player.world][currentRoom]['treasure']['key item'] + '" key item!')
         player.keyItems.append(rooms[player.world][currentRoom]['treasure']['key item'])
 
       if rooms[player.world][currentRoom]['treasure']['treasure'] == 'mapUpdate':
@@ -410,7 +422,7 @@ while True:
         else:
           if player.MP >= magics[move[1]]['MP']:
             print('You used ' + blue + str(magics[move[1]]['MP']) +' ● ' + white + '!')
-            print(magics[move[1]]['speech'][0] + red + magics[move[1]]['speech'][1] + white + magics[move[1]]['speech'][2])
+            print("You cast " + green + move[1].capitalize() + white + " and restore " + red + magics[move[1]]['speech'][1] + white + magics[move[1]]['speech'][2])
             player.MP = player.MP - magics[move[1]]['MP']
             player.HP = player.HP + magics[move[1]]['heal']
             if player.HP > player.TotalHP: player.HP = player.TotalHP

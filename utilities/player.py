@@ -87,18 +87,44 @@ class player:
             else:
                 currentMP += '○'
             i+=1
-        
-        print(Fore.GREEN + '\n---------------------------')
+
+        itemRepeat = {}
+        for individualItem in self.item:
+            if individualItem in itemRepeat:
+                itemRepeat[individualItem] += 1
+            else:
+                itemRepeat[individualItem] = 1
+        itemsDisplay = ''
+        for individualItem in itemRepeat:
+            if itemRepeat[individualItem] == 1:
+                itemsDisplay = itemsDisplay + Fore.GREEN + individualItem + Fore.WHITE + ', '
+            else:
+                itemsDisplay = itemsDisplay + Fore.GREEN + individualItem + Fore.WHITE + 'x' + str(itemRepeat[individualItem]) + ', '
+        itemsDisplay = itemsDisplay[:-2]
+        print(Fore.YELLOW + '\n---------------------------')
         print("HP : " + Fore.RED + str(currentHP))
         print(Fore.WHITE + "MP : " + Fore.BLUE + str(currentMP))
-        print(Fore.WHITE + "Items :", *self.item)
-        print(Fore.GREEN + "---------------------------")
+        print(Fore.WHITE + "Items :", itemsDisplay)
+        print(Fore.YELLOW + "---------------------------")
 
     def menu(self):
+        itemRepeat = {}
+        for individualItem in self.stock:
+            if individualItem in itemRepeat:
+                itemRepeat[individualItem] += 1
+            else:
+                itemRepeat[individualItem] = 1
+        itemsDisplay = ''
+        for individualItem in itemRepeat:
+            if itemRepeat[individualItem] == 1:
+                itemsDisplay = itemsDisplay + Fore.GREEN + individualItem + Fore.WHITE + ', '
+            else:
+                itemsDisplay = itemsDisplay + Fore.GREEN + individualItem + Fore.WHITE + 'x' + str(itemRepeat[individualItem]) + ', '
+        itemsDisplay = itemsDisplay[:-2]
         self.showBattleStatus()
         print("Level: " + str(self.level))
         print('\nMunny: ' + str(self.munny) + '🔸')
-        print("Items in stock: ", self.stock)
+        print("Items in stock: ", itemsDisplay)
         print("To see the complete status just type \'status\'")
         if self.tutorial['equipment'] == 0:
           print(Fore.YELLOW + "tutorial: " + Fore.WHITE + tutorialSpeech['equipment'])
@@ -109,7 +135,6 @@ class player:
         print("\nTo see the tutorials just type \'" + Fore.YELLOW + "tutorials" + Fore.WHITE + "\'")
 
     def status(self):
-
         damage = self.STR
         defense = self.DEF
         damage += keybladeStatus[self.keyblade]['damage']

@@ -5,14 +5,14 @@ heartless = {
                     'HP': 1 , 'damage': 1,
                     'munny' : [1,5],
                     'exp' : 10,
-                    'drop' : {}
+                    'drop' : {5 : 'potion'}
             },
 
             'soldier' : {'commands' : 'attack', 
                     'HP': 2 , 'damage': 1,
                     'munny' : [2,6],
                     'exp' : 20,
-                    'drop' : {}
+                    'drop' : {10 : 'potion'}
             },
 
             'air pirate' : {'commands' : 'attack', 

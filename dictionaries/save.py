@@ -33,7 +33,7 @@ saves = {
                 'STR' : 1,
                 'DEF' : 1,
                 'magic' : ['fire', 'fira', 'firaga', 'blizzard', 'blizzara', 'blizzaga', 'cure', 'cura', 'curaga'],
-                'item' : ['potion', 'hi-potion', 'mega-potion', 'ether', 'hi-ether', 'mega-ether', 'elixir', 'megalixir'],
+                'item' : ['potion', 'potion', 'mega-potion', 'ether', 'hi-ether', 'mega-ether', 'elixir', 'megalixir'],
                 'itemPouch' : 8,
                 'keyItems' : ['1st Floor Shop location'],
                 'equipment' : ['angel bangle', 'brave warrior', 'cosmic arts', 'exp bracelet'],

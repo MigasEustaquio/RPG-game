@@ -8,8 +8,8 @@ items = {
                         'HP' : 10, 'MP' : 0 },
                 'ether' : { 'speech':['You restored ', '2 ●', ' !'],
                         'HP' : 0, 'MP' : 2 },
-                'hi-ether' : { 'speech':['You restored ', '3 ●', ' !'],
-                        'HP' : 0, 'MP' : 3 },
+                'hi-ether' : { 'speech':['You restored ', '4 ●', ' !'],
+                        'HP' : 0, 'MP' : 4 },
                 'mega-ether' : { 'speech':['You restored ', '10 ●', ' !'],
                         'HP' : 0, 'MP' : 10 },
                 'elixir' :{ 'speech':['You healed ', '5 ♥', ' and restored ', '5 ●', ' !'],
@@ -72,15 +72,15 @@ magics = {
 
 
 
-                'cure' : { 'speech' : ['You cast Cura and restore ', '3 ♥', ' !'],
+                'cure' : { 'speech' : ['You cast Cure and restore ', '3 ♥', ' !'],
                         'MP' : 1, 'damage' : 0, 'heal' : 3,
                          },
 
-                'cura' : { 'speech' : ['You cast Curaga and restore ', '5 ♥', ' !'],
+                'cura' : { 'speech' : ['You cast Cura and restore ', '5 ♥', ' !'],
                         'MP' : 2, 'damage' : 0, 'heal' : 5,
                          },
 
-                'curaga' : { 'speech' : ['You cast Cure and restore ', '10 ♥', ' !'],
+                'curaga' : { 'speech' : ['You cast Curaga and restore ', '10 ♥', ' !'],
                         'MP' : 3, 'damage' : 0, 'heal' : 10,
                          },
 
