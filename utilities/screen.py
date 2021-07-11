@@ -25,6 +25,7 @@ def save(file, y, saves):
   x['abilities'] = y.abilities
   x['world'] = y.world
   x['map'] = y.map
+  x['tutorial'] = y.tutorial
   x['story'] = y.story
   y.saveFile = file
 
@@ -58,6 +59,7 @@ def load(file, y, saves):
   y.abilities = x['abilities']
   y.world = x['world']
   y.map = x['map']
+  y.tutorial = x['tutorial']
   y.story = x['story']
   y.saveFile = file
   y.HP = y.MaxHP

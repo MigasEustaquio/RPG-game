@@ -1,0 +1,18 @@
+select abilities? (brain storming)
+
+
+create new save files
+
+add enemies
+
+add worlds
+
+add abilities
+
+synthesize?
+
+enemy drops
+
+enemy commands?
+
+exp equipment

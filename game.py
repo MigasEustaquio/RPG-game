@@ -36,10 +36,17 @@ def showStatus():                ###SHOW STATUS
     print('You see the ' + rooms[player.world][currentRoom]['shop'] + ', try: \'enter shop\'')
   if "Shop" in currentRoom:
       player.HP = player.TotalHP
-      player.MP = player.MaxMP
-      print('\nYou see a Save point, HP and MP restored!\nTo open the save menu just type \'save\'\nTo get out of the shop type: \'go back\'')
+      player.MP = player.TotalMP
+      print('\nYou see a Save point, HP and MP restored!')
+      if player.tutorial['save'] == 0:
+        print(Fore.YELLOW + "tutorial: " + Fore.WHITE + tutorialSpeech['save'])
+        player.tutorial['save'] = 1
+      print('To get out of the shop type: \'go back\'')
   if 'treasure' in rooms[player.world][currentRoom]:
     print('You see a treasure chest!')
+    if player.tutorial['treasure chest'] == 0:
+      print(Fore.YELLOW + "tutorial: " + Fore.WHITE + tutorialSpeech['treasure chest'])
+      player.tutorial['treasure chest'] = 1
   print(Fore.RED + "---------------------------")
 
 def shop(currentRoom):                    ###SHOP
@@ -268,13 +275,16 @@ yellow = player.colors['YELLOW']
 green = player.colors['GREEN']
 
 alreadyBattled = 0
-firstTimeMap = 0
+# firstTimeMap = 0
 
 titleScreen(player, saves)
 
 player.calculateHealth()
 player.HP = player.TotalHP
 player.MP = player.TotalMP
+
+if player.tutorial == {}:
+  player.tutorial = tutorials
 
 currentRoom = rooms[player.world][0]
 previusRoom = currentRoom
@@ -296,9 +306,9 @@ while True:
   move = move.lower().split()
 
   if 'map' in move:        ##### OPEN MAP
-    if firstTimeMap == 0:
+    if player.tutorial['open map'] == 0:
       print('The first time opening a map may glitch out and refuse to open, just close the map and open it again!')
-      firstTimeMap = 1
+      player.tutorial['open map'] = 1
     
     print('Opening map...\n')
     from PIL import Image
@@ -322,6 +332,9 @@ while True:
       if rooms[player.world][currentRoom]['treasure']['treasure'] == 'mapUpdate':
         player.map = player.map + rooms[player.world][currentRoom]['treasure']['mapUpdate']
         print(player.world + ' map updated!')
+        if player.tutorial['open map'] == 0:
+          print(Fore.YELLOW + "tutorial: " + Fore.WHITE + tutorialSpeech['open map'])
+          player.tutorial['open map'] = 1
 
       del rooms[player.world][currentRoom]['treasure']
     else:
@@ -338,6 +351,9 @@ while True:
 
   elif 'status' in move:        ##### SHOW MENU
       player.status()
+
+  elif 'tutorials' in move:        ##### SHOW TUTORIALS
+      player.showTutorials()
 
   elif 'save' in move:
     if 'Shop' in currentRoom:

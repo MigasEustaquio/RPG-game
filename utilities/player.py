@@ -5,6 +5,7 @@ from dictionaries.itemsNmagic import *
 from dictionaries.exp import *
 from dictionaries.maps import *
 from dictionaries.save import *
+from dictionaries.tutorials import *
 class player:
     def __init__(self):
 
@@ -14,7 +15,7 @@ class player:
         self.TotalHP = self.MaxHP
         self.HP = self.TotalHP  ## full: ♥,  empty: ♡
         self.MaxMP = 1
-        self.TotalMP = self.MaxMP#+keybladeStatus[self.keyblade]['MP']
+        self.TotalMP = self.MaxMP
         self.MP = self.MaxMP  ## full: ●,  empty: ○
 
         self.STR = 0
@@ -41,6 +42,8 @@ class player:
         self.world = 'TraverseTown'
         self.map = str(worldMaps[self.world])   ############### WHEN CHANGE WORLDS HAVE TO UPDATE THE worldMaps DICTIONARY
         self.story = 0
+
+        self.tutorial = tutorials
 
         self.saveFile = 0
         self.editedSaves = saves
@@ -96,13 +99,14 @@ class player:
         print("Level: " + str(self.level))
         print('\nMunny: ' + str(self.munny) + '🔸')
         print("Items in stock: ", self.stock)
-        print(Fore.YELLOW + "---------------------------")
-        print('To cast a magic spell just type \'cast [magic]\'')
-        print('To use an item just type \'use [item]\'')
-        print('To equip an equipment just type \'equipment\'')
-        print('To open the map of the current World just type \'map\'')
-        print('To get the treasure chest from the current room just type \'treasure\'')
-        print(Fore.YELLOW + "---------------------------")
+        print("To see the complete status just type \'status\'")
+        if self.tutorial['equipment'] == 0:
+          print(Fore.YELLOW + "tutorial: " + Fore.WHITE + tutorialSpeech['equipment'])
+          self.tutorial['equipment'] = 1
+        if self.tutorial['keyblade'] == 0:
+          print(Fore.YELLOW + "tutorial: " + Fore.WHITE + tutorialSpeech['keyblade'])
+          self.tutorial['keyblade'] = 1
+        print("\nTo see the tutorials just type \'" + Fore.YELLOW + "tutorials" + Fore.WHITE + "\'")
 
     def status(self):
 
@@ -117,19 +121,24 @@ class player:
         print(Fore.GREEN + "---------------------------")
         print("Keyblade: " + self.keyblade)
         print("Keyblade List: ", *self.keyblades)
-        print("Equipment: " + str(self.equipment))
+        print("\nEquipment: " + str(self.equipment))
         print("Number of equipable equipment: " + str(self.equipmentNumber))
         print("Equipment List: " + str(self.equipmentList))
-        print("Exp: " + str(self.exp))
+        print("\nExp: " + str(self.exp))
         print("Next level: " + str(levelUp[self.level]['next']-self.exp) + ' xp')
-        print("Key items: ", self.keyItems)
+        print("\nKey items: ", self.keyItems)
         print(Fore.BLUE + "---------------------------")
         print("Spells learned: ", *self.magic)
         print("Abilities: ", self.abilities)
-        print("Strength: ", self.STR)
+        print("\nStrength: ", self.STR)
         print("Defense: ", self.DEF)
         print("Total Strength: ", damage)
         print("Total Defense: ", defense)
+
+    def showTutorials(self):
+        for text in self.tutorial:
+            if self.tutorial[text] == 1:
+                print(tutorialSpeech[text])
 
 
     def tradeEquipment(self):
@@ -203,7 +212,6 @@ DEF: ''' + str(equipments[self.equipmentList[j]]['DEF']) + '''
             else:
                 print('You have nothing unequipped!\n')
 
-
             option = input('>')
             option = option.lower().split()
             if len(option)>2: option[1] = option[1] + ' ' + option[2]
@@ -234,7 +242,7 @@ DEF: ''' + str(equipments[self.equipmentList[j]]['DEF']) + '''
                         print(Fore.RED + 'No more equipments previous to these!')
                 option=''
 
-            elif option == '0':
+            elif option == '0' or option[0] == '0':
                 break
 
             elif option[0] == 'equip':
@@ -263,7 +271,9 @@ DEF: ''' + str(equipments[self.equipmentList[j]]['DEF']) + '''
                     self.equipment.remove(option[1])
                     print(option[1] + ' unequipped!\n')
                     self.TotalHP = self.TotalHP - equipments[option[1]]['HP']
+                    self.HP = self.HP - equipments[option[1]]['HP']
                     self.TotalMP = self.TotalMP - equipments[option[1]]['MP']
+                    self.MP = self.MP - equipments[option[1]]['MP']
                     if (input('Do you want to keep equipping? (yes/no)\n') == 'yes'):
                         pass
                     else:
@@ -319,14 +329,12 @@ MP: ''' + str(keybladeStatus[self.keyblades[i]]['MP']) + '''
             else:
                 print('You don\' have other keyblades!\n')
 
-
             option = input('>')
             option = option.lower().split()
             if len(option)>2: option[1] = option[1].capitalize() + ' ' + option[2].capitalize()
-            else: option[1] = option[1].capitalize()
+            elif len(option)>1: option[1] = option[1].capitalize()
 
             if 'next' in option:
-
                 if len(self.keyblades) > (i+3):
                     i+=1
                 else:
@@ -334,14 +342,13 @@ MP: ''' + str(keybladeStatus[self.keyblades[i]]['MP']) + '''
                 option=''
 
             elif 'previus' in option:
-
                 if i>0:
                     i-=1
                 else:
                     print(Fore.RED + 'No more equipments previous to these!')
                 option=''
 
-            elif option == '0':
+            elif option == '0' or option[0] == '0':
                 break
 
             elif option[0] == 'equip':
