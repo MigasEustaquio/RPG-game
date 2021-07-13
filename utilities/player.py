@@ -66,16 +66,10 @@ class player:
 
         if self.HP > self.TotalHP: self.HP = self.TotalHP
         if self.MP > self.TotalMP: self.MP = self.TotalMP
-
-
-    def showBattleStatus(self):
-        #print the player's current battle status
+    def buildHPMPDisplay(self):
         currentHP = ''
         currentMP = ''
         i=0
-
-        self.calculateHealth()
-
         while i<self.TotalHP:
             if i<self.HP:
                 currentHP += '♥'
@@ -89,7 +83,8 @@ class player:
             else:
                 currentMP += '○'
             i+=1
-
+        return currentHP, currentMP
+    def buildItemDisplay(self):
         itemRepeat = {}
         for individualItem in self.item:
             if individualItem in itemRepeat:
@@ -102,14 +97,8 @@ class player:
                 itemsDisplay = itemsDisplay + Fore.GREEN + individualItem + Fore.WHITE + ', '
             else:
                 itemsDisplay = itemsDisplay + Fore.GREEN + individualItem + Fore.WHITE + 'x' + str(itemRepeat[individualItem]) + ', '
-        itemsDisplay = itemsDisplay[:-2]
-        print(Fore.YELLOW + '\n---------------------------')
-        print("HP : " + Fore.RED + str(currentHP))
-        print(Fore.WHITE + "MP : " + Fore.BLUE + str(currentMP))
-        print(Fore.WHITE + "Items :", itemsDisplay)
-        print(Fore.YELLOW + "---------------------------")
-
-    def menu(self):
+        return itemsDisplay[:-2]
+    def buildStockDisplay(self):
         itemRepeat = {}
         for individualItem in self.stock:
             if individualItem in itemRepeat:
@@ -122,7 +111,33 @@ class player:
                 itemsDisplay = itemsDisplay + Fore.GREEN + individualItem + Fore.WHITE + ', '
             else:
                 itemsDisplay = itemsDisplay + Fore.GREEN + individualItem + Fore.WHITE + 'x' + str(itemRepeat[individualItem]) + ', '
-        itemsDisplay = itemsDisplay[:-2]
+        return itemsDisplay[:-2]
+    def buildSTRDEFDisplay(self):
+        damage = self.STR
+        defense = self.DEF
+        damage += keybladeStatus[self.keyblade]['damage']
+        for accessory in self.equipment:
+            damage += equipments[accessory]['STR']
+            defense += equipments[accessory]['DEF']
+        return damage, defense
+
+    def showBattleStatus(self):
+        #print the player's current battle status
+
+        self.calculateHealth()
+        currentHP, currentMP = self.buildHPMPDisplay()
+        itemsDisplay = self.buildItemDisplay()        
+
+        print(Fore.YELLOW + '\n---------------------------')
+        print("HP : " + Fore.RED + str(currentHP))
+        print(Fore.WHITE + "MP : " + Fore.BLUE + str(currentMP))
+        print(Fore.WHITE + "Items :", itemsDisplay)
+        print(Fore.YELLOW + "---------------------------")
+
+    def menu(self):
+        
+        itemsDisplay = self.buildStockDisplay()
+
         self.showBattleStatus()
         print("Level: " + str(self.level))
         print('\nMunny: ' + str(self.munny) + '🔸')
@@ -137,12 +152,8 @@ class player:
         print("\nTo see the tutorials just type \'" + Fore.YELLOW + "tutorials" + Fore.WHITE + "\'")
 
     def status(self):
-        damage = self.STR
-        defense = self.DEF
-        damage += keybladeStatus[self.keyblade]['damage']
-        for accessory in self.equipment:
-            damage += equipments[accessory]['STR']
-            defense += equipments[accessory]['DEF']
+        
+        damage, defense = self.buildSTRDEFDisplay()
 
         self.menu()
         print(Fore.GREEN + "---------------------------")
@@ -166,7 +177,6 @@ class player:
         for text in self.tutorial:
             if self.tutorial[text] == 1:
                 print(tutorialSpeech[text])
-
 
     def tradeEquipment(self):
         option = ''

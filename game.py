@@ -214,7 +214,8 @@ def battle(enemy):                 ###BATTLE
 
         elif "magic" in command:       ###MAGIC
           command = command.lower().split()
-          finishCount = 0
+          if 'Combo Master' not in player.abilities or finishCount == 3:
+            finishCount = 0
           if not player.magic:
             print('Magic is still a mystery to you!')
 
@@ -228,7 +229,7 @@ def battle(enemy):                 ###BATTLE
                 if 'cur' not in command[1]:
                   print("You cast " + player.colors[magicText[4]] + command[1].capitalize() + white + " and deal " + red + magicText[1] + white + magicText[2] + player.colors[magicText[4]] + magicText[3])
                 else:
-                  print("You cast " + green + command[1] + white + " and restore " + red + magicText[1] + white + magicText[2])
+                  print("You cast " + green + command[1].capitalize() + white + " and restore " + red + magicText[1] + white + magicText[2])
                 player.MP = player.MP - magics[command[1]]['MP']
 ### Status effect
                 if statusEffect != 'none':
@@ -237,7 +238,11 @@ def battle(enemy):                 ###BATTLE
                 print("The heartless attacks you!")
                 player.HP = player.HP + magics[command[1]]['heal']
                 if player.HP > player.TotalHP: player.HP = player.TotalHP
-                heartlessHealth = calculateDamage(heartlessHealth, heartlessDamage, magics[command[1]]['damage'], defense)
+                if 'Leaf Bracer' in player.abilities and 'cur' in command[1]:
+                  print(green + 'Leaf Bracer' + white +' protects you from damage while casting a Cure spell!')
+                  heartlessHealth = calculateDamage(heartlessHealth, 0, magics[command[1]]['damage'], defense)
+                else:
+                  heartlessHealth = calculateDamage(heartlessHealth, heartlessDamage, magics[command[1]]['damage'], defense)
 ### Start status effect
                 if 'cur' not in command[1]:
                   statusEffect = command[1]
@@ -327,7 +332,6 @@ yellow = player.colors['YELLOW']
 green = player.colors['GREEN']
 
 alreadyBattled = 0
-# firstTimeMap = 0
 
 titleScreen(player, saves)
 
