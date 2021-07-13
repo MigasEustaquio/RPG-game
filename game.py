@@ -57,6 +57,8 @@ def levelUP():                                   ###LEVEL UP
   if levelUp[player.level]['ability'] != 'none':
     player.abilities.append(levelUp[player.level]['ability'])
     print('\nObtained ' + levelUp[player.level]['ability'] + '!')
+    if levelUp[player.level]['ability'] in finishersList:
+      player.finishers.append(levelUp[player.level]['ability'])
   if levelUp[player.level]['HP'] != 0:
     player.MaxHP += levelUp[player.level]['HP']
     player.HP += levelUp[player.level]['HP']
@@ -119,11 +121,38 @@ def calculateDamage (heartlessHealth, heartlessDamage, damage, defense):        
   print("You lost " + red + str(damageTaken) + ' ♥ ' + white + '!')
   oldHP = player.HP
   player.HP = player.HP - damageTaken
-  if 'second chance' in player.abilities:                                    ###SECOND CHANCE
+  if 'Second Chance' in player.abilities:                                    ###SECOND CHANCE
     if player.HP < 1 and oldHP > 1:
       player.HP = 1
       print('Second Chance')
   return heartlessHealth-damage
+
+def finishAttack(heartlessHealth, damage):
+
+  finish = player.finishers[random.randint(0, (len(player.finishers)-1))]
+  if finish == 'Blitz':
+    print("You used Blitz and dealt " + yellow + "double" + white + " damage!" + ' You caused ' + red + str(2*damage) + ' ♥ ' + white + 'of damage!')
+    return heartlessHealth - damage
+  elif finish == 'Gravity Break':
+    # print("You used Gravity Break and dealt " + yellow + "triple" + white + " damage!" + ' You caused ' + red + str(3*damage) + ' ♥ ' + white + 'of damage!')
+    print('Gravity Break (not implemented)')
+    return heartlessHealth
+  elif finish == 'Hurricane Blast':
+    # print("You used Zantetsuken and dealt " + yellow + "triple" + white + " damage!" + ' You caused ' + red + str(3*damage) + ' ♥ ' + white + 'of damage!')
+    print('Hurricane Blast (not implemented)')
+    return heartlessHealth
+  elif finish == 'Ripple Drive':
+    # print("You used Zantetsuken and dealt " + yellow + "triple" + white + " damage!" + ' You caused ' + red + str(3*damage) + ' ♥ ' + white + 'of damage!')
+    print('Ripple Drive (not implemented)')
+    return heartlessHealth
+  elif finish == 'Stun Impact':
+    # print("You used Zantetsuken and dealt " + yellow + "triple" + white + " damage!" + ' You caused ' + red + str(3*damage) + ' ♥ ' + white + 'of damage!')
+    print('Stun Impact (not implemented)')
+    return heartlessHealth
+  elif finish == 'Zantetsuken':
+    print("You used Zantetsuken and dealt " + yellow + "triple" + white + " damage!" + ' You caused ' + red + str(3*damage) + ' ♥ ' + white + 'of damage!')
+    return heartlessHealth - 2*damage
+
 
 def battle(enemy):                 ###BATTLE
 
@@ -142,12 +171,13 @@ def battle(enemy):                 ###BATTLE
     heartlessHealth = int(heartless[enemy]['HP'])
     statusEffect = 'none'
     statusDuration = 99
+    finishCount = 0
     command = ''
 
     while True:
         player.showBattleStatus()
 
-        if 'scan' in player.abilities:
+        if 'Scan' in player.abilities:
           scan(enemy, heartlessHealth)
 
         while command == '':
@@ -166,8 +196,16 @@ def battle(enemy):                 ###BATTLE
 
         if command == 'attack':       ###ATTACK
             command = ''
-            print('You and the heartless attack each other!')
-            print('You caused ' + red + str(damage) + ' ♥ ' + white + 'of damage!')
+            if any(item in player.abilities for item in finishersList) and finishCount == 3:
+              heartlessHealth = finishAttack(heartlessHealth, damage)
+              finishCount = 0
+            elif any(item in player.abilities for item in finishersList) and 'Negative Combo' in player.abilities and finishCount == 2:
+              heartlessHealth = finishAttack(heartlessHealth, damage)
+              finishCount = 0
+            else:
+              finishCount += 1
+              print('You and the heartless attack each other!')
+              print('You caused ' + red + str(damage) + ' ♥ ' + white + 'of damage!')
 ### Status effect
             if statusEffect != 'none':
               heartlessHealth, statusDuration = statusEffectDamage(statusEffect, heartlessHealth, statusDuration)
@@ -176,6 +214,7 @@ def battle(enemy):                 ###BATTLE
 
         elif "magic" in command:       ###MAGIC
           command = command.lower().split()
+          finishCount = 0
           if not player.magic:
             print('Magic is still a mystery to you!')
 
@@ -211,6 +250,7 @@ def battle(enemy):                 ###BATTLE
 
         elif "item" in command:       ###ITEM
           command = command.lower().split()
+          finishCount = 0
           if not player.item:
             print('You have no items!')
           else:
@@ -326,6 +366,13 @@ while True:
     from PIL import Image
     img = Image.open('images/' + player.world + '/Map' + str(maps[player.world][player.map]) + '.jpg')
     img.show()
+
+
+  elif 'test' in move:        ##### TEST
+
+    if any(item in player.abilities for item in finishersList):
+      print('\ntested!\n')
+
   
   elif 'treasure' in move:        ##### TREASURE
     if 'treasure' in rooms[player.world][currentRoom]:

@@ -8,7 +8,7 @@ add abilities
 
 synthesize?
 
-enemy drops (começado)
+enemy drops (half done)
 
 enemy commands?
 

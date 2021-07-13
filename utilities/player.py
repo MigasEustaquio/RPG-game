@@ -6,6 +6,7 @@ from dictionaries.exp import *
 from dictionaries.maps import *
 from dictionaries.save import *
 from dictionaries.tutorials import *
+from dictionaries.abilities import *
 class player:
     def __init__(self):
 
@@ -37,6 +38,7 @@ class player:
         self.keyblades = ['Kingdom Key']
 
         self.abilities = []
+        self.finishers = []
 
         #STORY RELATED
         self.world = 'TraverseTown'

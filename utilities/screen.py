@@ -25,6 +25,7 @@ def save(file, y, saves):
   x['stock'] = y.stock
   x['keyblades'] = y.keyblades
   x['abilities'] = y.abilities
+  x['finishers'] = y.finishers
   x['world'] = y.world
   x['map'] = y.map
   x['tutorial'] = y.tutorial
@@ -61,6 +62,7 @@ def load(file, y, saves):
   y.stock = x['stock']
   y.keyblades = x['keyblades']
   y.abilities = x['abilities']
+  y.finishers = x['finishers']
   y.world = x['world']
   y.map = x['map']
   y.tutorial = x['tutorial']
