@@ -1,11 +1,12 @@
 #!/bin/python3
+# from os import X_OK
 import random
+import math
 
 from dictionaries.people import *
 from dictionaries.location import *
 from dictionaries.enemies import *
 from utilities.screen import *
-
 
 def showInstructions():
     #print a main menu and the commands
@@ -24,7 +25,7 @@ Commands:
   menu
 ''')
 
-def showStatus():                ###SHOW STATUS
+def showStatus():                         ###SHOW STATUS
   #print the player's current status
   print(Fore.RED + '\n---------------------------')
   print(Fore.WHITE + 'You are in the ' + currentRoom)
@@ -40,7 +41,9 @@ def showStatus():                ###SHOW STATUS
       print('\nYou see a Save point, HP and MP restored!')
       if player.tutorial['save'] == 0:
         print(Fore.YELLOW + "tutorial: " + Fore.WHITE + tutorialSpeech['save'])
+        print(Fore.YELLOW + "tutorial: " + Fore.WHITE + tutorialSpeech['quit'])
         player.tutorial['save'] = 1
+        player.tutorial['quit'] = 1
       print('To get out of the shop type: \'go back\'')
   if 'treasure' in rooms[player.world][currentRoom]:
     print('You see a treasure chest!')
@@ -53,7 +56,7 @@ def shop(currentRoom):                    ###SHOP
     for item in shops[currentRoom]:
         print(item, '   \tcost:', shops[currentRoom][item], 'munny!')
 
-def levelUP():                                   ###LEVEL UP
+def levelUP():                            ###LEVEL UP
   if levelUp[player.level]['ability'] != 'none':
     player.abilities.append(levelUp[player.level]['ability'])
     print('\nObtained ' + levelUp[player.level]['ability'] + '!')
@@ -74,7 +77,7 @@ def levelUP():                                   ###LEVEL UP
     player.DEF += levelUp[player.level]['DEF']
     print('Defense increased!')
 
-def useItem(item):                          ###USE ITEM
+def useItem(item):                        ###USE ITEM
   del player.item[player.item.index(item)]
 
   if str(item) == 'ether' or str(item) == 'elixir':
@@ -95,7 +98,7 @@ def useItem(item):                          ###USE ITEM
   if player.MP > player.TotalMP: player.MP = player.TotalMP
 
 
-def scan(enemy, heartlessHealth):              ###SCAN
+def scan(enemy, heartlessHealth):         ###SCAN
   heartlessHealthDisplay = ''
   i=0
   while i<heartless[enemy]['HP']:
@@ -127,36 +130,40 @@ def calculateDamage (heartlessHealth, heartlessDamage, damage, defense):        
       print('Second Chance')
   return heartlessHealth-damage
 
-def finishAttack(heartlessHealth, damage):
-
+def finishAttack(heartlessHealth, damage, heartlessDamage):                      ###FINISHERS
   finish = player.finishers[random.randint(0, (len(player.finishers)-1))]
   if finish == 'Blitz':
-    print("You used Blitz and dealt " + yellow + "double" + white + " damage!" + ' You caused ' + red + str(2*damage) + ' ♥ ' + white + 'of damage!')
-    return heartlessHealth - damage
+    print("You used " + yellow + "Blitz" + white + " and dealt " + yellow + "critical" + white + " damage!" + ' You caused ' + red + str(math.ceil(1.5*damage)) + ' ♥ ' + white + 'of damage!')
+    return (heartlessHealth - math.ceil(0.5*damage)), heartlessDamage
   elif finish == 'Gravity Break':
-    # print("You used Gravity Break and dealt " + yellow + "triple" + white + " damage!" + ' You caused ' + red + str(3*damage) + ' ♥ ' + white + 'of damage!')
-    print('Gravity Break (not implemented)')
-    return heartlessHealth
-  elif finish == 'Hurricane Blast':
+    print("You used " + blue + "Gravity Break" + white + " and the gravity pull stunned the enemy!" + ' You caused ' + red + str(damage) + ' ♥ ' + white + 'of damage!')
+    return heartlessHealth, 0
+  elif finish == 'Hurricane Blast':   ##NOT IMPLEMENTED
     # print("You used Zantetsuken and dealt " + yellow + "triple" + white + " damage!" + ' You caused ' + red + str(3*damage) + ' ♥ ' + white + 'of damage!')
     print('Hurricane Blast (not implemented)')
-    return heartlessHealth
-  elif finish == 'Ripple Drive':
-    # print("You used Zantetsuken and dealt " + yellow + "triple" + white + " damage!" + ' You caused ' + red + str(3*damage) + ' ♥ ' + white + 'of damage!')
-    print('Ripple Drive (not implemented)')
-    return heartlessHealth
-  elif finish == 'Stun Impact':
+    return heartlessHealth, heartlessDamage
+  elif finish == 'Ripple Drive':   ##HALF IMPLEMENTED
+    if 'Kingdom' in player.keyblade:
+      print("You used " + blue + "Ripple Drive" + white + " and activated the " + blue + "Defender" + white + " ability!" + ' You caused ' + red + str(damage) + ' ♥ ' + white + 'of damage!')
+      return heartlessHealth, heartlessDamage-1
+    elif 'Oathkeeper' in player.keyblade:
+      print("You used " + green + "Ripple Drive" + white + " and restore " + red + str(math.ceil(player.TotalMP/4)) + ' ♥'+ white + " !" + ' You caused ' + red + str(damage) + ' ♥ ' + white + 'of damage!')
+      player.HP += math.ceil(player.TotalMP/4)
+      return heartlessHealth, heartlessDamage
+    else:
+      print('Not implemented')
+      return heartlessHealth, heartlessDamage
+  elif finish == 'Stun Impact':   ##NOT IMPLEMENTED
     # print("You used Zantetsuken and dealt " + yellow + "triple" + white + " damage!" + ' You caused ' + red + str(3*damage) + ' ♥ ' + white + 'of damage!')
     print('Stun Impact (not implemented)')
-    return heartlessHealth
+    return heartlessHealth, heartlessDamage
   elif finish == 'Zantetsuken':
-    print("You used Zantetsuken and dealt " + yellow + "triple" + white + " damage!" + ' You caused ' + red + str(3*damage) + ' ♥ ' + white + 'of damage!')
-    return heartlessHealth - 2*damage
+    print("You used " + yellow + "Zantetsuken" + white + " and dealt " + yellow + "double" + white + " damage!" + ' You caused ' + red + str(2*damage) + ' ♥ ' + white + 'of damage!')
+    return (heartlessHealth - damage), heartlessDamage
 
 
 def battle(enemy):                 ###BATTLE
-
-    heartlessDamage = int(heartless[enemy]['damage'])
+  ###
     damage = keybladeStatus[player.keyblade]['damage'] + player.STR
     defense = player.DEF
 
@@ -176,6 +183,7 @@ def battle(enemy):                 ###BATTLE
 
     while True:
         player.showBattleStatus()
+        heartlessDamage = int(heartless[enemy]['damage'])
 
         if 'Scan' in player.abilities:
           scan(enemy, heartlessHealth)
@@ -183,7 +191,7 @@ def battle(enemy):                 ###BATTLE
         while command == '':
             command = input('>')
         command = command.lower()
-### Status effect duration
+  ### Status effect duration
         if statusDuration == 0:
           print('\nThe ' + player.colors[magics[statusEffect]['speech'][4]] + magics[statusEffect]['status']['name'] + white + ' effect has passed\n')
           statusEffect = 'none'
@@ -191,27 +199,29 @@ def battle(enemy):                 ###BATTLE
 
         if 'blizza' in statusEffect or 'thund' in statusEffect:
           heartlessDamage = heartlessDamage - magics[statusEffect]['status']['reduction']
-###
+          statusDuration = statusDuration - 1
+    ###
         print("---------------------------")
-
+  ###ATTACK
         if command == 'attack':       ###ATTACK
             command = ''
+    ### Finishers
             if any(item in player.abilities for item in finishersList) and finishCount == 3:
-              heartlessHealth = finishAttack(heartlessHealth, damage)
+              heartlessHealth, heartlessDamage = finishAttack(heartlessHealth, damage, heartlessDamage)
               finishCount = 0
             elif any(item in player.abilities for item in finishersList) and 'Negative Combo' in player.abilities and finishCount == 2:
-              heartlessHealth = finishAttack(heartlessHealth, damage)
+              heartlessHealth, heartlessDamage = finishAttack(heartlessHealth, damage, heartlessDamage)
               finishCount = 0
             else:
               finishCount += 1
               print('You and the heartless attack each other!')
               print('You caused ' + red + str(damage) + ' ♥ ' + white + 'of damage!')
-### Status effect
-            if statusEffect != 'none':
+      ### Status effect
+            if 'fir' in statusEffect:
               heartlessHealth, statusDuration = statusEffectDamage(statusEffect, heartlessHealth, statusDuration)
-### Calculate damage
+    ### Calculate damage
             heartlessHealth = calculateDamage(heartlessHealth, heartlessDamage, damage, defense)
-
+  ###MAGIC
         elif "magic" in command:       ###MAGIC
           command = command.lower().split()
           if 'Combo Master' not in player.abilities or finishCount == 3:
@@ -224,17 +234,17 @@ def battle(enemy):                 ###BATTLE
               if player.MP >= magics[command[1]]['MP']:
 
                 magicText = magics[command[1]]['speech']
-###COLOR SPEECH
+    ###COLOR SPEECH
                 print('You used ' + blue + str(magics[command[1]]['MP']) +' ● ' + white + '!')
                 if 'cur' not in command[1]:
                   print("You cast " + player.colors[magicText[4]] + command[1].capitalize() + white + " and deal " + red + magicText[1] + white + magicText[2] + player.colors[magicText[4]] + magicText[3])
                 else:
                   print("You cast " + green + command[1].capitalize() + white + " and restore " + red + magicText[1] + white + magicText[2])
                 player.MP = player.MP - magics[command[1]]['MP']
-### Status effect
+    ### Status effect
                 if statusEffect != 'none':
                   heartlessHealth, statusDuration = statusEffectDamage(statusEffect, heartlessHealth, statusDuration)
-###Calculate damage
+    ###Calculate damage
                 print("The heartless attacks you!")
                 player.HP = player.HP + magics[command[1]]['heal']
                 if player.HP > player.TotalHP: player.HP = player.TotalHP
@@ -243,16 +253,16 @@ def battle(enemy):                 ###BATTLE
                   heartlessHealth = calculateDamage(heartlessHealth, 0, magics[command[1]]['damage'], defense)
                 else:
                   heartlessHealth = calculateDamage(heartlessHealth, heartlessDamage, magics[command[1]]['damage'], defense)
-### Start status effect
+    ### Start status effect
                 if 'cur' not in command[1]:
                   statusEffect = command[1]
                   statusDuration = magics[statusEffect]['status']['duration']
-###
+    ###
               else:
                 print('Not enough MP!')
 
           command = ''
-
+  ###ITEM
         elif "item" in command:       ###ITEM
           command = command.lower().split()
           finishCount = 0
@@ -262,10 +272,10 @@ def battle(enemy):                 ###BATTLE
             try:
               if command[1] in player.item:
                 useItem(command[1])
-### Status effect
+    ### Status effect
                 if statusEffect != 'none':
                   heartlessHealth, statusDuration = statusEffectDamage(statusEffect, heartlessHealth, statusDuration)
-###Calculate damage
+    ###Calculate damage
                 print("The heartless attacks you!")
                 heartlessHealth = calculateDamage(heartlessHealth, heartlessDamage, 0, defense)
 
@@ -286,21 +296,21 @@ def battle(enemy):                 ###BATTLE
 
         if player.HP < 1:       ###DEFEAT
             return 'defeat'
-
+  ###VICTORY
         if heartlessHealth <= 0:       ###VICTORY
-
+    ###MUNNY
             munny = 3 * random.randint(heartless[enemy]['munny'][0], heartless[enemy]['munny'][1])
             print('\nYou defeated the Heartless!\nCONGRATULATIONS!')
             print('\nYou obtained ' + yellow + str(munny) + '🔸 munny!')
             player.munny += munny
+    ###EXP
             print('You gained ' + str(heartless[enemy]['exp']) + ' exp!')
             player.exp += heartless[enemy]['exp']
-
             if player.exp >= levelUp[player.level]['next']:
               player.level+=1
               print('Level Up!\nLevel: ' + str(player.level))
               levelUP()
-
+    ###DROP
             dropNumber = random.randint(1, 100)
             for drop in heartless[enemy]['drop']:
               if dropNumber <= drop:
@@ -311,250 +321,254 @@ def battle(enemy):                 ###BATTLE
                   player.stock.append(heartless[enemy]['drop'][drop])
                   print('Your item pouch is full, item send to stock!!')
                 break
-            
+    ###MP RECOVER
+            recoverMPNumber = random.randint(1, 100)
+            if 'MP Haste' in player.abilities: recoverMPNumberNeeded = 55
+            else: recoverMPNumberNeeded = 75
+            if 'MP Rage' in player.abilities: recoverMP = math.ceil(player.TotalMP/4) + math.ceil((player.TotalMP-player.MP)/4)
+            else: recoverMP = math.ceil(player.TotalMP/4)
+
+            if recoverMPNumber > recoverMPNumberNeeded:
+              print('\nYou recovered ' + blue + str(recoverMP) + ' ● ' + white + '!')
+              player.MP += recoverMP
+              if player.MP > player.TotalMP: player.MP = player.TotalMP
 
             return 'victory'
 
-#################       MAIN
-
+#################
 player = player()
+while True:                        ###MAIN
+  with open('utilities/saveFile.txt', 'r') as f:
+    saves = ast.literal_eval(f.read())
 
-with open('utilities/saveFile.txt', 'r') as f:
-  saves = ast.literal_eval(f.read())
+  #COLOR
+    colorama_init(autoreset=True)
+    colors = dict(Fore.__dict__.items())
+    red = player.colors['RED']
+    white = player.colors['WHITE']
+    blue = player.colors['BLUE']
+    yellow = player.colors['YELLOW']
+    green = player.colors['GREEN']
 
-#COLOR
-colorama_init(autoreset=True)
-colors = dict(Fore.__dict__.items())
-red = player.colors['RED']
-white = player.colors['WHITE']
-blue = player.colors['BLUE']
-yellow = player.colors['YELLOW']
-green = player.colors['GREEN']
+  alreadyBattled = 0
 
-alreadyBattled = 0
+  titleScreen(player, saves)
 
-titleScreen(player, saves)
+  player.calculateHealth()
+  player.HP = player.TotalHP
+  player.MP = player.TotalMP
 
-player.calculateHealth()
-player.HP = player.TotalHP
-player.MP = player.TotalMP
+  if player.tutorial == {}:
+    player.tutorial = tutorials
 
-if player.tutorial == {}:
-  player.tutorial = tutorials
+  currentRoom = rooms[player.world][0]
+  previusRoom = currentRoom
 
-currentRoom = rooms[player.world][0]
-previusRoom = currentRoom
+  showInstructions()
 
-showInstructions()
+  while True:
+    showStatus()
 
-while True:
-  showStatus()
+    move = ''
+    while move == '':  
+      move = input('>')
 
-  #get the player's next 'move'
-  #.split() breaks it up into an list array
-  #eg typing 'go up' would give the list:
-  #['go','up']
+    move = move.lower().split()
 
-  move = ''
-  while move == '':  
-    move = input('>')
+    if 'map' in move:                                   ##### OPEN MAP
+      if player.tutorial['open map'] == 0:
+        print('The first time opening a map may glitch out and refuse to open, just close the map and open it again!')
+        player.tutorial['open map'] = 1
+      
+      print('Opening map...\n')
+      from PIL import Image
+      img = Image.open('images/' + player.world + '/Map' + str(maps[player.world][player.map]) + '.jpg')
+      img.show()
 
-  move = move.lower().split()
+    elif 'test' in move:                                ##### TEST
 
-  if 'map' in move:        ##### OPEN MAP
-    if player.tutorial['open map'] == 0:
-      print('The first time opening a map may glitch out and refuse to open, just close the map and open it again!')
-      player.tutorial['open map'] = 1
-    
-    print('Opening map...\n')
-    from PIL import Image
-    img = Image.open('images/' + player.world + '/Map' + str(maps[player.world][player.map]) + '.jpg')
-    img.show()
-
-
-  elif 'test' in move:        ##### TEST
-
-    if any(item in player.abilities for item in finishersList):
+      print(math.ceil(1.5*3))
       print('\ntested!\n')
-
-  
-  elif 'treasure' in move:        ##### TREASURE
-    if 'treasure' in rooms[player.world][currentRoom]:
-      if rooms[player.world][currentRoom]['treasure']['treasure'] == 'item':
-        print('Obtained a "' + rooms[player.world][currentRoom]['treasure']['item'] + '"!')
-        if len(player.item) < player.itemPouch:
-          player.item.append(rooms[player.world][currentRoom]['treasure']['item'])
-        else:
-          player.stock.append(rooms[player.world][currentRoom]['treasure']['item'])
-          print('Your item pouch is full, item send to stock!!')
-
-      if rooms[player.world][currentRoom]['treasure']['treasure'] == 'key item':
-        print('Obtained the "' + rooms[player.world][currentRoom]['treasure']['key item'] + '" key item!')
-        player.keyItems.append(rooms[player.world][currentRoom]['treasure']['key item'])
-
-      if rooms[player.world][currentRoom]['treasure']['treasure'] == 'mapUpdate':
-        player.map = player.map + rooms[player.world][currentRoom]['treasure']['mapUpdate']
-        print(player.world + ' map updated!')
-        if player.tutorial['open map'] == 0:
-          print(Fore.YELLOW + "tutorial: " + Fore.WHITE + tutorialSpeech['open map'])
-          player.tutorial['open map'] = 1
-
-      del rooms[player.world][currentRoom]['treasure']
-    else:
-      print('There\'s no treasure chest in this room!')
-
-  elif 'menu' in move:        ##### SHOW MENU
-      player.menu()
-
-  elif 'equipment' in move:    ##### TRADE EQUIPMENT
-      player.tradeEquipment()
-
-  elif 'keyblade' in move:    ##### TRADE KEYBLADE
-      player.tradeKeyblade()
-
-  elif 'status' in move:        ##### SHOW MENU
-      player.status()
-
-  elif 'tutorials' in move:        ##### SHOW TUTORIALS
-      player.showTutorials()
-
-  elif 'save' in move:
-    if 'Shop' in currentRoom:
-      saveScreen(player, saves)
-    else:
-      print('There is no save point here!')
-
-  elif move[0] == 'buy':        ##### BUY IN SHOP
-    if len(move)>2: move[1]=move[1]+' '+move[2]
-    print(move[1])
-    if 'Shop' in currentRoom:
-      if move[1] in shops[currentRoom]:
-        if player.munny >= shops[currentRoom][move[1]]:
-            print('\nMoogle: Thanks for shopping here, Kupo!!\nObtained a ' + move[1] + '!')
-            player.munny = player.munny - shops[currentRoom][move[1]]
-            if move[1] in items:
-              if len(player.item) < player.itemPouch:
-                player.item.append(move[1])
-              else:
-                player.stock.append(move[1])
-                print('Your item pouch is full, item send to stock!!')
-            else:
-              player.equipmentList.append(move[1])
-        else:
-            print('\nMoogle: You don\'t have enough munny for this item, Kupo!!')
-      else:
-          print('\nMoogle: I\'m sorry, I don\'t have this item, Kupo!')
-    else:
-      print('You are not in a shop!')
-
-
-  elif move[0] == 'use':        ##### USE ITEM
-    if not player.item:
-        print('You have no items!')
-    else:
-        try:
-            if move[1] in player.item:
-                useItem(move[1])
-            else:
-                print("You don\'t have any ", move[1])
-        except IndexError:
-            print('try: use [item]')
-        command = ''
-
-
-  elif move[0] == 'cast':        ##### MAGIC
-    if not player.magic:
-        print('Magic is still a mystery to you!')
-
-    else:
-      if move[1] in player.magic:
-        if 'cur' not in move[1]:
-          print('You can\'t cast that now!')
-        else:
-          if player.MP >= magics[move[1]]['MP']:
-            print('You used ' + blue + str(magics[move[1]]['MP']) +' ● ' + white + '!')
-            print("You cast " + green + move[1].capitalize() + white + " and restore " + red + magics[move[1]]['speech'][1] + white + magics[move[1]]['speech'][2])
-            player.MP = player.MP - magics[move[1]]['MP']
-            player.HP = player.HP + magics[move[1]]['heal']
-            if player.HP > player.TotalHP: player.HP = player.TotalHP
+    
+    elif 'treasure' in move:                            ##### TREASURE
+      if 'treasure' in rooms[player.world][currentRoom]:
+        if rooms[player.world][currentRoom]['treasure']['treasure'] == 'item':
+          print('Obtained a "' + rooms[player.world][currentRoom]['treasure']['item'] + '"!')
+          if len(player.item) < player.itemPouch:
+            player.item.append(rooms[player.world][currentRoom]['treasure']['item'])
           else:
-            print('Not enough MP!')
+            player.stock.append(rooms[player.world][currentRoom]['treasure']['item'])
+            print('Your item pouch is full, item send to stock!!')
 
+        if rooms[player.world][currentRoom]['treasure']['treasure'] == 'key item':
+          print('Obtained the "' + rooms[player.world][currentRoom]['treasure']['key item'] + '" key item!')
+          player.keyItems.append(rooms[player.world][currentRoom]['treasure']['key item'])
 
-  #if they type 'go' first
-  elif move[0] == 'go' or move[0] == 'enter':        ##### MOVE
-    #check that they are allowed wherever they want to go
-    if move[1] in rooms[player.world][currentRoom]:
-      #set the current room to the new room
-      alreadyBattled = 0
-      previusRoom = currentRoom
-      currentRoom = rooms[player.world][currentRoom][move[1]]
-      for room in rooms[player.world][currentRoom]['resetHeartless']:
-        if rooms[player.world][room]['heartless']['status'] == 0:
-          rooms[player.world][room]['heartless']['status'] = rooms[player.world][room]['heartless']['waves']
-    #there is no door (link) to the new room
-    elif move[1] == 'back':
+        if rooms[player.world][currentRoom]['treasure']['treasure'] == 'mapUpdate':
+          player.map = player.map + rooms[player.world][currentRoom]['treasure']['mapUpdate']
+          print(player.world + ' map updated!')
+          if player.tutorial['open map'] == 0:
+            print(Fore.YELLOW + "tutorial: " + Fore.WHITE + tutorialSpeech['open map'])
+            player.tutorial['open map'] = 1
+
+        del rooms[player.world][currentRoom]['treasure']
+      else:
+        print('There\'s no treasure chest in this room!')
+
+    elif 'menu' in move:                                ##### SHOW MENU
+        player.menu()
+
+    elif 'equipment' in move:                           ##### TRADE EQUIPMENT
+        player.tradeEquipment()
+
+    elif 'keyblade' in move:                            ##### TRADE KEYBLADE
+        player.tradeKeyblade()
+
+    elif 'status' in move:                              ##### SHOW MENU
+        player.status()
+
+    elif 'tutorials' in move:                           ##### SHOW TUTORIALS
+        player.showTutorials()
+
+    elif 'save' in move:                                ##### SAVE
+      if 'Shop' in currentRoom:
+        saveScreen(player, saves)
+      else:
+        print('There is no save point here!')
+
+    elif 'quit' in move:                                ##### QUIT
+      answer = input('Are you sure you want to quit the game and return to the Title Screen? (All unsaved progress will be lost)\n')
+      if 'yes' in answer.lower() :
+        player.__init__()
+        print('\n\n\n')
+        break
+
+    elif move[0] == 'buy':                              ##### BUY IN SHOP
+      if len(move)>2: move[1]=move[1]+' '+move[2]
+      print(move[1])
+      if 'Shop' in currentRoom:
+        if move[1] in shops[currentRoom]:
+          if player.munny >= shops[currentRoom][move[1]]:
+              print('\nMoogle: Thanks for shopping here, Kupo!!\nObtained a ' + move[1] + '!')
+              player.munny = player.munny - shops[currentRoom][move[1]]
+              if move[1] in items:
+                if len(player.item) < player.itemPouch:
+                  player.item.append(move[1])
+                else:
+                  player.stock.append(move[1])
+                  print('Your item pouch is full, item send to stock!!')
+              else:
+                player.equipmentList.append(move[1])
+          else:
+              print('\nMoogle: You don\'t have enough munny for this item, Kupo!!')
+        else:
+            print('\nMoogle: I\'m sorry, I don\'t have this item, Kupo!')
+      else:
+        print('You are not in a shop!')
+
+    elif move[0] == 'use':                              ##### USE ITEM
+      if not player.item:
+          print('You have no items!')
+      else:
+          try:
+              if move[1] in player.item:
+                  useItem(move[1])
+              else:
+                  print("You don\'t have any ", move[1])
+          except IndexError:
+              print('try: use [item]')
+          command = ''
+
+    elif move[0] == 'cast':                             ##### MAGIC
+      if not player.magic:
+          print('Magic is still a mystery to you!')
+
+      else:
+        if move[1] in player.magic:
+          if 'cur' not in move[1]:
+            print('You can\'t cast that now!')
+          else:
+            if player.MP >= magics[move[1]]['MP']:
+              print('You used ' + blue + str(magics[move[1]]['MP']) +' ● ' + white + '!')
+              print("You cast " + green + move[1].capitalize() + white + " and restore " + red + magics[move[1]]['speech'][1] + white + magics[move[1]]['speech'][2])
+              player.MP = player.MP - magics[move[1]]['MP']
+              player.HP = player.HP + magics[move[1]]['heal']
+              if player.HP > player.TotalHP: player.HP = player.TotalHP
+            else:
+              print('Not enough MP!')
+
+    elif move[0] == 'go' or move[0] == 'enter':         ##### MOVE
+      #check that they are allowed wherever they want to go
+      if move[1] in rooms[player.world][currentRoom]:
+        #set the current room to the new room
         alreadyBattled = 0
-        temp = currentRoom
-        currentRoom = previusRoom
-        previusRoom = temp
+        previusRoom = currentRoom
+        currentRoom = rooms[player.world][currentRoom][move[1]]
         for room in rooms[player.world][currentRoom]['resetHeartless']:
           if rooms[player.world][room]['heartless']['status'] == 0:
             rooms[player.world][room]['heartless']['status'] = rooms[player.world][room]['heartless']['waves']
-    else:
-      print('You can\'t go that way!')
-
-  #if they type 'talk' first
-  elif move[0] == 'talk' :        ##### TALK WITH PERSON
-    #if the room contains an person
-    if 'person' in rooms[player.world][currentRoom] and move[1] in rooms[player.world][currentRoom]['person'].lower():
-      #falar com a pessoa
-      print(people[rooms[player.world][currentRoom]['person']]['speech'])
-      reward = people[rooms[player.world][currentRoom]['person']]['reward']
-      if reward == 'story':
-        if player.story == (people[rooms[player.world][currentRoom]['person']]['story']-1):
-          player.story += 1
-          print()
-
-      elif reward == 'key item':
-        player.keyItems.append(people[rooms[player.world][currentRoom]['person']]['key item'])
-        print('You got the "' + people[rooms[player.world][currentRoom]['person']]['key item'] + '" key item!')
-
-      elif reward == 'item':
-        print('You got a "' + people[rooms[player.world][currentRoom]['person']]['item'] + '"!')
-        if len(player.item) < player.itemPouch:
-          player.item.append(people[rooms[player.world][currentRoom]['person']]['item'])
-        else:
-          player.stock.append(people[rooms[player.world][currentRoom]['person']]['item'])
-          print('Your item pouch is full, item send to stock!!')
-      people[rooms[player.world][currentRoom]['person']]['reward'] = 'no'
-      if rooms[player.world][currentRoom]['person'].lower() == 'moogle':
-          shop(currentRoom)
-
-    else:
-      #tell them they can't talk
-      print('Can\'t talk to ' + move[1] + '!')
-
-
-  if 'heartless' in rooms[player.world][currentRoom] and alreadyBattled == 0:           ###### BATTLE
-    status = rooms[player.world][currentRoom]['heartless']['status']
-    if status > 0:
-      result = battle(rooms[player.world][currentRoom]['heartless']['wave'][status])  
-      if result == 'victory':
-        alreadyBattled = 1
-        rooms[player.world][currentRoom]['heartless']['status'] = (status - 1)
-      elif result == 'run':
+      #there is no door (link) to the new room
+      elif move[1] == 'back':
+          alreadyBattled = 0
           temp = currentRoom
           currentRoom = previusRoom
           previusRoom = temp
-      elif result == 'defeat':
-          print("---------------------------")
-          print('Your HP has dropped to zero!\nGAME OVER')
-          break
-    player.calculateHealth()
+          for room in rooms[player.world][currentRoom]['resetHeartless']:
+            if rooms[player.world][room]['heartless']['status'] == 0:
+              rooms[player.world][room]['heartless']['status'] = rooms[player.world][room]['heartless']['waves']
+      else:
+        print('You can\'t go that way!')
+
+    elif move[0] == 'talk' :                            ##### TALK WITH PERSON
+      #if the room contains an person
+      if 'person' in rooms[player.world][currentRoom] and move[1] in rooms[player.world][currentRoom]['person'].lower():
+        #falar com a pessoa
+        print(people[rooms[player.world][currentRoom]['person']]['speech'])
+        reward = people[rooms[player.world][currentRoom]['person']]['reward']
+        if reward == 'story':
+          if player.story == (people[rooms[player.world][currentRoom]['person']]['story']-1):
+            player.story += 1
+            print()
+
+        elif reward == 'key item':
+          player.keyItems.append(people[rooms[player.world][currentRoom]['person']]['key item'])
+          print('You got the "' + people[rooms[player.world][currentRoom]['person']]['key item'] + '" key item!')
+
+        elif reward == 'item':
+          print('You got a "' + people[rooms[player.world][currentRoom]['person']]['item'] + '"!')
+          if len(player.item) < player.itemPouch:
+            player.item.append(people[rooms[player.world][currentRoom]['person']]['item'])
+          else:
+            player.stock.append(people[rooms[player.world][currentRoom]['person']]['item'])
+            print('Your item pouch is full, item send to stock!!')
+        people[rooms[player.world][currentRoom]['person']]['reward'] = 'no'
+        if rooms[player.world][currentRoom]['person'].lower() == 'moogle':
+            shop(currentRoom)
+
+      else:
+        #tell them they can't talk
+        print('Can\'t talk to ' + move[1] + '!')
 
 
-  # player wins if they get to the Third District
-  if currentRoom == 'Third District' and  player.story == 1:
-    print('You found Donald & Goofy... YOU WIN!')
-    break
+    if 'heartless' in rooms[player.world][currentRoom] and alreadyBattled == 0:           ###### BATTLE
+      status = rooms[player.world][currentRoom]['heartless']['status']
+      if status > 0:
+        result = battle(rooms[player.world][currentRoom]['heartless']['wave'][status])  
+        if result == 'victory':
+          alreadyBattled = 1
+          rooms[player.world][currentRoom]['heartless']['status'] = (status - 1)
+        elif result == 'run':
+            temp = currentRoom
+            currentRoom = previusRoom
+            previusRoom = temp
+        elif result == 'defeat':
+            print("---------------------------")
+            print('Your HP has dropped to zero!\nGAME OVER')
+            break
+      player.calculateHealth()
+
+
+    # player wins if they get to the Third District
+    if currentRoom == 'Third District' and  player.story == 1:
+      print('You found Donald & Goofy... YOU WIN!')
+      break

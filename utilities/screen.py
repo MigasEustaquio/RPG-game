@@ -137,7 +137,7 @@ def editSaveFile(player):
 def titleScreen(player, saves):
 
   while True:
-    print('---------------------------')
+    print('\n\n---------------------------')
     print('''
 KINGDOM HEARTS🤍
 
@@ -154,7 +154,7 @@ Load Game
     option = option.lower()
 
     if 'new' in option or 'New' in option:
-      print('New game starting')
+      print('\n\n\nNew game starting')
       break
 
     elif 'load' in option or 'Load' in option:

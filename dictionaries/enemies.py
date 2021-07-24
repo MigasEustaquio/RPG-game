@@ -221,3 +221,16 @@ heartless = {
             
 }
 
+bosses = {
+
+        'xemnas' : {'commands' : {'attack' : 'phisical attack?',
+                                        'magic' : 'magical damage?',
+                                        },
+
+                    'HP': 20 , 'damage': 5, 'defense' : 5,
+                    'exp' : 10000,
+                    'drop' : {},
+        },
+
+}
+

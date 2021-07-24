@@ -325,7 +325,7 @@ DEF: ''' + str(equipments[self.equipmentList[j]]['DEF']) + '''
 
         self.calculateHealth()
 
-
+#####TRADE KEYBLADES 
     def tradeKeyblade(self):
         option = ''
         i=0

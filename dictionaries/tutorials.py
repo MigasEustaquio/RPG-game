@@ -38,6 +38,8 @@ tutorialSpeech = {
 
             'keyblade' : 'To equip a keyblade just type \'keyblade\'',
 
+            'quit' : 'To quit a game and return to the title screen just type \'quit\', (but don\'t forget to save beforehand!)',
+
             
 
 }
