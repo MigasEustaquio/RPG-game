@@ -1,3 +1,4 @@
+from random import randint
 from colorama import Fore
 from colorama import init as colorama_init
 
@@ -17,8 +18,6 @@ class Heartless:
 
         self.MaxHP = heartless[name]['HP']
         self.HP = self.MaxHP  ## full: ♥,  empty: ♡
-        # self.MaxMP = heartless[name]['MP']
-        # self.MP = self.MaxMP  ## full: ●,  empty: ○
 
         self.totalDamage = heartless[name]['damage']
         self.damage = self.totalDamage
@@ -27,9 +26,11 @@ class Heartless:
         except:
             self.defense = 0
 
+        self.commandTurn = 0
+        self.commandName = ''
+
         self.statusEffect = 'none'
         self.statusDuration = 99
-
 
         self.exp = heartless[name]['exp']
         self.munny = heartless[name]['munny']
@@ -40,30 +41,32 @@ class Heartless:
         self.colors = dict(Fore.__dict__.items())
 
 
+    def statusEffectEnd(self):                    ###STATUS EFFECT END
+      if self.statusDuration == 0 and self.statusEffect != 'none':
+        print('\nThe ' + self.colors[magics[self.statusEffect]['speech'][4]] + magics[self.statusEffect]['status']['name'] + Fore.WHITE + ' effect has passed\n')
+        self.statusEffect = 'none'
+        self.statusDuration = 99
+      print("---------------------------")
 
     def statusEffectDuration(self):               ###STATUS EFFECT DURATION
-        if self.statusDuration == 0 and self.statusEffect != 'none':
-          print('\nThe ' + self.colors[magics[self.statusEffect]['speech'][4]] + magics[self.statusEffect]['status']['name'] + Fore.WHITE + ' effect has passed\n')
-          self.statusEffect = 'none'
-          self.statusDuration = 99
+      if 'blizza' in self.statusEffect or 'thund' in self.statusEffect:
+        self.damage = self.damage - magics[self.statusEffect]['status']['reduction']
+        self.statusDuration = self.statusDuration - 1
+      print("---------------------------")
 
-        if 'blizza' in self.statusEffect or 'thund' in self.statusEffect:
-          self.damage = self.damage - magics[self.statusEffect]['status']['reduction']
-          self.statusDuration = self.statusDuration - 1
-
-        print("---------------------------")
-
-    
     def statusEffectDamage(self):                 ###STATUS EFFECT DAMAGE
       print(magics[self.statusEffect]['status']['speech'][0] + self.colors[magics[self.statusEffect]['speech'][4]] + magics[self.statusEffect]['status']['speech'][1] + Fore.WHITE + magics[self.statusEffect]['status']['speech'][2] + Fore.RED + magics[self.statusEffect]['status']['speech'][3] + Fore.WHITE + magics[self.statusEffect]['status']['speech'][4])
-      self.HP = self.HP - magics[self.statusEffect]['status']['damage']
-      self.statusDuration = self.statusDuration - 1
-
-
+      if 'fir' in self.statusEffect:
+        self.HP = self.HP - magics[self.statusEffect]['status']['damage']
+        self.statusDuration = self.statusDuration - 1
+      
     def calculateDamage(self, player, defense):   ###CALCULATE DAMAGE DEALT
       damageDealt = self.damage-defense
       if damageDealt < 0: damageDealt = 0
-      print("The Heartless attacks you!\nYou lost " + Fore.RED + str(damageDealt) + ' ♥ ' + Fore.WHITE + '!')
+      if self.commandTurn == 0: 
+        print("The Heartless attacks you!\nYou lost " + Fore.RED + str(damageDealt) + ' ♥ ' + Fore.WHITE + '!')
+      else:
+        print("The Heartless used " + self.commandName.capitalize() + "!\nYou lost " + Fore.RED + str(damageDealt) + ' ♥ ' + Fore.WHITE + '!')
       oldHP = player.HP
       player.HP = player.HP - damageDealt
       if 'Second Chance' in player.abilities:                ###SECOND CHANCE
@@ -71,7 +74,20 @@ class Heartless:
           player.HP = 1
           print('Second Chance')
 
-
-    def selectCommand(self, player, defense):     ###JUST ATTACK FOR NOW
-
+    def useCommand(self, player, defense):        ###CALCULATE COMMAND DETAILS
+      self.commandName = heartless[self.name]['commands'][1]
       self.calculateDamage(player, defense)
+      if self.commandTurn == 0:
+        self.commandTurn = commands[self.commandName]['turns']
+      self.defense = commands[self.commandName][self.commandTurn]['defense']
+      self.totalDamage = commands[self.commandName][self.commandTurn]['damage']
+      self.commandTurn = self.commandTurn-1
+
+    def selectCommand(self, player, defense):     ###SELECT COMMAND
+      if self.commandTurn == 0:
+        if heartless[self.name]['commands'] != 'attack':
+          if randint(1, 100) <= 30:
+            self.useCommand(player, defense)
+          else: self.calculateDamage(player, defense)
+        else: self.calculateDamage(player, defense)
+      else: self.useCommand(player, defense)

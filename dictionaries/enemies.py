@@ -30,7 +30,7 @@ heartless = {
             },
 
             'angel star' : {'commands' : 'attack', 
-                    'HP': 10 , 'damage': 5,
+                    'HP': 10 , 'damage': 5, 'defense': 1,
                     'munny' : [2,6],
                     'exp' : 20,
                     'drop' : {}
@@ -128,7 +128,7 @@ heartless = {
             },
 
             'invisible' : {'commands' : ['attack', 'invisible strike'], 
-                    'HP': 2 , 'damage': 4,
+                    'HP': 10 , 'damage': 4,
                     'munny' : [2,6],
                     'exp' : 20,
                     'drop' : {}
@@ -234,9 +234,10 @@ bosses = {
 
 commands = {
 
-        'invisible strike' : {'turns': 2,
-         1 : {'defense' : 99, 'damage' : 0},
+        'invisible strike' : {'turns': 3,
+         3 : {'defense' : 99, 'damage' : 0},
          2 : {'defense' : 0, 'damage' : 6},
+         1 : {'defense' : 0, 'damage' : 4},
          },
 
         'barrier' : {}

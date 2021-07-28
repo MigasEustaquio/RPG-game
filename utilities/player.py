@@ -121,6 +121,12 @@ class player:
             defense += equipments[accessory]['DEF']
         return damage, defense
 
+    def startingGame(self):
+        self.calculateHealth()
+        self.HP = self.TotalHP
+        self.MP = self.TotalMP
+        if self.tutorial == {}: self.tutorial = tutorials
+
     def showBattleStatus(self):
         #print the player's current battle status
 

@@ -2,12 +2,11 @@
 # from os import X_OK
 import random
 import math
-from utilities.enemyClasses import Heartless
-
+from utilities.enemyClasses import *
+from utilities.screen import *
 from dictionaries.people import *
 from dictionaries.location import *
 from dictionaries.enemies import *
-from utilities.screen import *
 
 def showInstructions():
     #print a main menu and the commands
@@ -116,29 +115,36 @@ def scan(enemy):                      ###SCAN
 def finishAttack(enemy, damage):      ###FINISHERS
   finish = player.finishers[random.randint(0, (len(player.finishers)-1))]
   if finish == 'Blitz':
-    print("You used " + yellow + "Blitz" + white + " and dealt " + yellow + "critical" + white + " damage!" + ' You caused ' + red + str(math.ceil(1.5*damage)) + ' ♥ ' + white + 'of damage!')
-    enemy.HP = enemy.HP - math.ceil(0.5*damage) ######SEGUIR ESSE Q ESTÁ PRONTO
+    print("You used " + yellow + "Blitz" + white + " and dealt " + yellow + "critical" + white + " damage!")
+    damageDealt = math.ceil(1.5*damage)-enemy.defense
   elif finish == 'Gravity Break':
-    print("You used " + blue + "Gravity Break" + white + " and the gravity pull stunned the enemy!" + ' You caused ' + red + str(damage) + ' ♥ ' + white + 'of damage!')
+    print("You used " + blue + "Gravity Break" + white + " and the gravity pull stunned the enemy!")
     enemy.damage = 0
+    damageDealt = damage-enemy.defense
   elif finish == 'Hurricane Blast':   ##NOT IMPLEMENTED
     # print("You used Zantetsuken and dealt " + yellow + "triple" + white + " damage!" + ' You caused ' + red + str(3*damage) + ' ♥ ' + white + 'of damage!')
     print('Hurricane Blast (not implemented)')
   elif finish == 'Ripple Drive':   ##HALF IMPLEMENTED
     if 'Kingdom' in player.keyblade:
-      print("You used " + blue + "Ripple Drive" + white + " and activated the " + blue + "Defender" + white + " ability!" + ' You caused ' + red + str(damage) + ' ♥ ' + white + 'of damage!')
+      print("You used " + blue + "Ripple Drive" + white + " and activated the " + blue + "Defender" + white + " ability!")
       enemy.damage = enemy.damage-1
+      damageDealt = damage-enemy.defense
     elif 'Oathkeeper' in player.keyblade:
-      print("You used " + green + "Ripple Drive" + white + " and restore " + red + str(math.ceil(player.TotalMP/4)) + ' ♥'+ white + " !" + ' You caused ' + red + str(damage) + ' ♥ ' + white + 'of damage!')
+      print("You used " + green + "Ripple Drive" + white + " and restore " + red + str(math.ceil(player.TotalMP/4)) + ' ♥'+ white + " !")
       player.HP += math.ceil(player.TotalMP/4)
+      damageDealt = damage-enemy.defense
     else:
       print('Not implemented')
+      damageDealt = damage-enemy.defense
   elif finish == 'Stun Impact':   ##NOT IMPLEMENTED
     # print("You used Zantetsuken and dealt " + yellow + "triple" + white + " damage!" + ' You caused ' + red + str(3*damage) + ' ♥ ' + white + 'of damage!')
     print('Stun Impact (not implemented)')
   elif finish == 'Zantetsuken':
-    print("You used " + yellow + "Zantetsuken" + white + " and dealt " + yellow + "double" + white + " damage!" + ' You caused ' + red + str(2*damage) + ' ♥ ' + white + 'of damage!')
-    enemy.HP = enemy.HP - damage
+    print("You used " + yellow + "Zantetsuken" + white + " and dealt " + yellow + "double" + white + " damage!")
+    damageDealt = 2*damage-enemy.defense
+  if damageDealt<0: damageDealt=0
+  print('You caused ' + red + str(damageDealt) + ' ♥ ' + white + 'of damage!')
+  enemy.HP = enemy.HP - damageDealt
 
 def battle(enemyName):                ###BATTLE
   ###
@@ -194,10 +200,13 @@ def battle(enemyName):                ###BATTLE
               finishCount = 0
             else:
               finishCount += 1
-              print('You attacked and caused ' + red + str(damage) + ' ♥ ' + white + 'of damage!')
-            enemy.HP = enemy.HP - damage
+              damageDealt = (damage-enemy.defense)
+              if damageDealt < 0: damageDealt=0
+              print('You attacked and caused ' + red + str(damageDealt) + ' ♥ ' + white + 'of damage!')
+              enemy.HP = enemy.HP - damageDealt
     ### Status effect
-            if 'fir' in enemy.statusEffect:
+            if enemy.statusEffect != 'none':
+            # if 'fir' in enemy.statusEffect:
               enemy.statusEffectDamage()
     ### Calculate damage
             enemy.selectCommand(player, defense)
@@ -314,7 +323,7 @@ def battle(enemyName):                ###BATTLE
               if player.MP > player.TotalMP: player.MP = player.TotalMP
 
             return 'victory'
-        enemy.statusEffectDuration()
+        enemy.statusEffectEnd()
 
 
 
@@ -323,39 +332,29 @@ player = player()
 while True:                        ###MAIN
   with open('utilities/saveFile.txt', 'r') as f:
     saves = ast.literal_eval(f.read())
-
-  #COLOR
-    colorama_init(autoreset=True)
-    colors = dict(Fore.__dict__.items())
-    red = player.colors['RED']
-    white = player.colors['WHITE']
-    blue = player.colors['BLUE']
-    yellow = player.colors['YELLOW']
-    green = player.colors['GREEN']
-
+#COLOR
+  colorama_init(autoreset=True)
+  colors = dict(Fore.__dict__.items())
+  red = player.colors['RED']
+  white = player.colors['WHITE']
+  blue = player.colors['BLUE']
+  yellow = player.colors['YELLOW']
+  green = player.colors['GREEN']
+#CONFIGURE PARAMETERS
+  titleScreen(player, saves)      ### NEW/LOAD GAME
+  player.startingGame()
+#INITIALIZE VARIABLES
   alreadyBattled = 0
-
-  titleScreen(player, saves)
-
-  player.calculateHealth()
-  player.HP = player.TotalHP
-  player.MP = player.TotalMP
-
-  if player.tutorial == {}:
-    player.tutorial = tutorials
-
   currentRoom = rooms[player.world][0]
   previusRoom = currentRoom
-
+#
   showInstructions()
-
   while True:
     showStatus()
 
     move = ''
     while move == '':  
       move = input('>')
-
     move = move.lower().split()
 
     if 'map' in move:                                   ##### OPEN MAP
