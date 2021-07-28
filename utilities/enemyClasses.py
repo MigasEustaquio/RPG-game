@@ -12,19 +12,26 @@ from dictionaries.tutorials import *
 from dictionaries.abilities import *
 from dictionaries.enemies import *
 class Heartless:
-    def __init__(self, name):
+    def __init__(self, name, bossBattle):
 
         self.name = name
+        self.bossBattle = bossBattle
 
-        self.MaxHP = heartless[name]['HP']
+        if bossBattle == False: self.MaxHP = heartless[name]['HP']
+        else: self.MaxHP = bosses[name]['HP']
         self.HP = self.MaxHP  ## full: ♥,  empty: ♡
 
-        self.totalDamage = heartless[name]['damage']
+        if bossBattle == False: self.totalDamage = heartless[name]['damage']
+        else: self.totalDamage = bosses[name]['damage']
+
         self.damage = self.totalDamage
-        try:
-            self.defense = heartless[name]['defense']
-        except:
-            self.defense = 0
+        
+        if bossBattle == False:
+          try:
+              self.defense = heartless[name]['defense']
+          except:
+              self.defense = 0
+        else: self.defense = bosses[name]['defense']
 
         self.commandTurn = 0
         self.commandName = ''
@@ -32,9 +39,14 @@ class Heartless:
         self.statusEffect = 'none'
         self.statusDuration = 99
 
-        self.exp = heartless[name]['exp']
-        self.munny = heartless[name]['munny']
-        self.drop = heartless[name]['drop']
+        if bossBattle == False:
+          self.exp = heartless[name]['exp']
+          self.munny = heartless[name]['munny']
+          self.drop = heartless[name]['drop']
+        else:
+          self.exp = bosses[name]['exp']
+          self.munny = bosses[name]['munny']
+          self.drop = bosses[name]['drop']
 
 
         colorama_init(autoreset=True)
@@ -63,10 +75,12 @@ class Heartless:
     def calculateDamage(self, player, defense):   ###CALCULATE DAMAGE DEALT
       damageDealt = self.damage-defense
       if damageDealt < 0: damageDealt = 0
-      if self.commandTurn == 0: 
-        print("The Heartless attacks you!\nYou lost " + Fore.RED + str(damageDealt) + ' ♥ ' + Fore.WHITE + '!')
+      if self.commandTurn == 0:
+        if self.bossBattle == False: print("The Heartless attacks you!\nYou lost " + Fore.RED + str(damageDealt) + ' ♥ ' + Fore.WHITE + '!')
+        else: print(self.name + " attacks you!\nYou lost " + Fore.RED + str(damageDealt) + ' ♥ ' + Fore.WHITE + '!')
       else:
-        print("The Heartless used " + self.commandName.capitalize() + "!\nYou lost " + Fore.RED + str(damageDealt) + ' ♥ ' + Fore.WHITE + '!')
+        if self.bossBattle == False: print("The Heartless used " + self.commandName.capitalize() + "!\nYou lost " + Fore.RED + str(damageDealt) + ' ♥ ' + Fore.WHITE + '!')
+        else: print(self.name + " used " + self.commandName.capitalize() + "!\nYou lost " + Fore.RED + str(damageDealt) + ' ♥ ' + Fore.WHITE + '!')
       oldHP = player.HP
       player.HP = player.HP - damageDealt
       if 'Second Chance' in player.abilities:                ###SECOND CHANCE
@@ -75,7 +89,7 @@ class Heartless:
           print('Second Chance')
 
     def useCommand(self, player, defense):        ###CALCULATE COMMAND DETAILS
-      self.commandName = heartless[self.name]['commands'][1]
+      if self.bossBattle == False:  self.commandName = heartless[self.name]['commands'][1]
       self.calculateDamage(player, defense)
       if self.commandTurn == 0:
         self.commandTurn = commands[self.commandName]['turns']
@@ -91,3 +105,18 @@ class Heartless:
           else: self.calculateDamage(player, defense)
         else: self.calculateDamage(player, defense)
       else: self.useCommand(player, defense)
+
+
+    def selectCommandBoss(self, player, defense):     ###SELECT COMMAND BOSS
+      if self.commandTurn == 0:
+        commandNumber=randint(0, len(bosses[self.name]['commands']))
+        if commandNumber == 0 or commandNumber == len(bosses[self.name]['commands']):
+          self.calculateDamage(player, defense)
+        else:
+          self.commandName = bosses[self.name]['commands'][commandNumber]
+          self.useCommand(player, defense)
+      else: self.useCommand(player, defense)
+
+
+
+###USE COMMAND AND SELECT COMMAND DIFFERENT FOR BOSSES (if else in the game to call different method)

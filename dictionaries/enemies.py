@@ -223,11 +223,12 @@ heartless = {
 
 bosses = {
 
-        'xemnas' : {'commands' : ['attack' ,'barrier'],
-
+        'Xemnas' : {'commands' : ['attack' ,'barrier', 'energy sphere'],
                     'HP': 20 , 'damage': 5, 'defense' : 5,
-                    'exp' : 10000,
+                    'munny' : [0,0],
+                    'exp' : 1000,
                     'drop' : {},
+                    'story' : 2,
         },
 
 }
@@ -240,6 +241,14 @@ commands = {
          1 : {'defense' : 0, 'damage' : 4},
          },
 
-        'barrier' : {}
+        'barrier' : {'turns': 2,
+         2 : {'defense' : 8, 'damage' : 3},
+         1 : {'defense' : 5, 'damage' : 5}
+         },
+
+        'energy sphere' : {'turns': 2,
+         2 : {'defense' : 5, 'damage' : 10},
+         1 : {'defense' : 5, 'damage' : 5}
+         },
 
 }

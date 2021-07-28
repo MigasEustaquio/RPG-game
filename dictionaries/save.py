@@ -28,7 +28,7 @@ saves = {
 
 
                 2 : { 
-                'keyblade': 'Kingdom Key',
+                'keyblade': 'Oblivion',
                 'HP' : 10,
                 'MP' : 2,
                 'STR' : 1,

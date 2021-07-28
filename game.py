@@ -167,10 +167,7 @@ def battle(enemyName):                ###BATTLE
       print('Boss Battle! ' + enemyName  + '!')
     print('commands: \n\nattack \nmagic [magic name] \nitem [item name] \nrun')
     
-    if bossBattle ==  False:
-      enemy = Heartless(enemyName)
-    # else:
-    #   enemy = Boss(enemyName)
+    enemy = Heartless(enemyName, bossBattle)
 
     finishCount = 0
     command = ''
@@ -209,7 +206,8 @@ def battle(enemyName):                ###BATTLE
             # if 'fir' in enemy.statusEffect:
               enemy.statusEffectDamage()
     ### Calculate damage
-            enemy.selectCommand(player, defense)
+            if bossBattle == False: enemy.selectCommand(player, defense)
+            else: enemy.selectCommandBoss(player, defense)
   ###MAGIC
     ###
         elif "magic" in command:       ###MAGIC
@@ -242,7 +240,8 @@ def battle(enemyName):                ###BATTLE
                 else:
                   enemy.HP = enemy.HP - magics[command[1]]['damage']
                 player.HP = player.HP + magics[command[1]]['heal']
-                enemy.selectCommand(player, defense)
+                if bossBattle == False: enemy.selectCommand(player, defense)
+                else: enemy.selectCommandBoss(player, defense)
     ### Start status effect
                 if 'cur' not in command[1]:
                   enemy.statusEffect = command[1]
@@ -267,7 +266,8 @@ def battle(enemyName):                ###BATTLE
                 if 'fir' in enemy.statusEffect:
                   enemy.statusEffectDamage()
     ###Calculate damage
-                enemy.selectCommand(player, defense)
+                if bossBattle == False: enemy.selectCommand(player, defense)
+                else: enemy.selectCommandBoss(player, defense)
               else:
                 print("You don\'t have any ", command[1])
             except IndexError:
@@ -275,9 +275,13 @@ def battle(enemyName):                ###BATTLE
           command = ''
   ###RUN
         elif "run" in command:       ###RUN
+          if bossBattle == False:
             command = ''
             print('You got away successfully!')
             return 'run'
+          else:
+            print('You can\'t run from a boss battle!')
+            command = ''
   ###ERROR
         else:       ###ERROR
           command = ''
@@ -295,9 +299,9 @@ def battle(enemyName):                ###BATTLE
     ###EXP
             print('You gained ' + str(enemy.exp) + ' exp!')
             player.exp += enemy.exp
-            if player.exp >= levelUp[player.level]['next']:
+            while player.exp >= levelUp[player.level]['next']:
               player.level+=1
-              print('Level Up!\nLevel: ' + str(player.level))
+              print('\nLevel Up!\nLevel: ' + str(player.level))
               levelUP()
     ###DROP
             dropNumber = random.randint(1, 100)
@@ -369,7 +373,7 @@ while True:                        ###MAIN
 
     elif 'test' in move:                                ##### TEST
 
-      print(math.ceil(1.5*3))
+      print('Story: ' + str(player.story))
       print('\ntested!\n')
     
     elif 'treasure' in move:                            ##### TREASURE
@@ -548,6 +552,16 @@ while True:                        ###MAIN
             print("---------------------------")
             print('Your HP has dropped to zero!\nGAME OVER')
             break
+      player.calculateHealth()
+
+    elif 'boss' in rooms[player.world][currentRoom] and player.story < bosses[rooms[player.world][currentRoom]['boss']]['story']:           ###### BOSS BATTLE
+      result = battle(rooms[player.world][currentRoom]['boss'])
+      if result == 'victory':
+        player.story = bosses[rooms[player.world][currentRoom]['boss']]['story']
+      elif result == 'defeat':
+          print("---------------------------")
+          print('Your HP has dropped to zero!\nGAME OVER')
+          break
       player.calculateHealth()
 
 

@@ -145,6 +145,7 @@ class player:
         itemsDisplay = self.buildStockDisplay()
 
         self.showBattleStatus()
+        print("Keyblade: " + self.keyblade)
         print("Level: " + str(self.level))
         print('\nMunny: ' + str(self.munny) + '🔸')
         print("Items in stock: ", itemsDisplay)
@@ -163,7 +164,6 @@ class player:
 
         self.menu()
         print(Fore.GREEN + "---------------------------")
-        print("Keyblade: " + self.keyblade)
         print("Keyblade List: ", *self.keyblades)
         print("\nEquipment: " + str(self.equipment))
         print("Number of equipable equipment: " + str(self.equipmentNumber))
