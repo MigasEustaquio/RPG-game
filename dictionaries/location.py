@@ -99,6 +99,9 @@ rooms = {
 
       '5th Floor' : {'left' : '4th Floor',
                   'up' : '1st Floor',
+                  'heartless'  : { 
+                    'waves' : 1, 'status' : 1, 'wave' : { 1 : 'invisible'}
+                  },
                   'resetHeartless' : []
       },
 

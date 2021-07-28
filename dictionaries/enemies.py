@@ -127,8 +127,8 @@ heartless = {
                     'drop' : {}
             },
 
-            'invisible' : {'commands' : 'attack', 
-                    'HP': 2 , 'damage': 1,
+            'invisible' : {'commands' : ['attack', 'invisible strike'], 
+                    'HP': 2 , 'damage': 4,
                     'munny' : [2,6],
                     'exp' : 20,
                     'drop' : {}
@@ -223,9 +223,7 @@ heartless = {
 
 bosses = {
 
-        'xemnas' : {'commands' : {'attack' : 'phisical attack?',
-                                        'magic' : 'magical damage?',
-                                        },
+        'xemnas' : {'commands' : ['attack' ,'barrier'],
 
                     'HP': 20 , 'damage': 5, 'defense' : 5,
                     'exp' : 10000,
@@ -234,3 +232,13 @@ bosses = {
 
 }
 
+commands = {
+
+        'invisible strike' : {'turns': 2,
+         1 : {'defense' : 99, 'damage' : 0},
+         2 : {'defense' : 0, 'damage' : 6},
+         },
+
+        'barrier' : {}
+
+}

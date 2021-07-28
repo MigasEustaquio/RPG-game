@@ -1,3 +1,5 @@
+enemy commands
+
 select abilities? (brain storming)
 
 add enemies (half done)

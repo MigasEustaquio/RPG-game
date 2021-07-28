@@ -2,6 +2,7 @@
 # from os import X_OK
 import random
 import math
+from utilities.enemyClasses import Heartless
 
 from dictionaries.people import *
 from dictionaries.location import *
@@ -25,7 +26,7 @@ Commands:
   menu
 ''')
 
-def showStatus():                         ###SHOW STATUS
+def showStatus():                     ###SHOW STATUS
   #print the player's current status
   print(Fore.RED + '\n---------------------------')
   print(Fore.WHITE + 'You are in the ' + currentRoom)
@@ -52,11 +53,11 @@ def showStatus():                         ###SHOW STATUS
       player.tutorial['treasure chest'] = 1
   print(Fore.RED + "---------------------------")
 
-def shop(currentRoom):                    ###SHOP
+def shop(currentRoom):                ###SHOP
     for item in shops[currentRoom]:
         print(item, '   \tcost:', shops[currentRoom][item], 'munny!')
 
-def levelUP():                            ###LEVEL UP
+def levelUP():                        ###LEVEL UP
   if levelUp[player.level]['ability'] != 'none':
     player.abilities.append(levelUp[player.level]['ability'])
     print('\nObtained ' + levelUp[player.level]['ability'] + '!')
@@ -77,7 +78,7 @@ def levelUP():                            ###LEVEL UP
     player.DEF += levelUp[player.level]['DEF']
     print('Defense increased!')
 
-def useItem(item):                        ###USE ITEM
+def useItem(item):                    ###USE ITEM
   del player.item[player.item.index(item)]
 
   if str(item) == 'ether' or str(item) == 'elixir':
@@ -97,73 +98,55 @@ def useItem(item):                        ###USE ITEM
   player.MP = player.MP + items[item]['MP']
   if player.MP > player.TotalMP: player.MP = player.TotalMP
 
-
-def scan(enemy, heartlessHealth):         ###SCAN
+def scan(enemy):                      ###SCAN
   heartlessHealthDisplay = ''
   i=0
-  while i<heartless[enemy]['HP']:
-    if i<heartlessHealth:
+  while i< enemy.MaxHP:
+    if i<enemy.HP:
       heartlessHealthDisplay += '♥'
     else:
       heartlessHealthDisplay += '♡'
     i+=1
 
   print(Fore.MAGENTA + '\n---------------------------')
-  print("Scan : " + enemy)
+  print("Scan : " + enemy.name)
   print("HP : " + red + heartlessHealthDisplay)
   print(Fore.MAGENTA + "---------------------------")
 
-
-def statusEffectDamage(statusEffect, heartlessHealth, statusDuration):           ###STATUS EFFECT DAMAGE
-  print(magics[statusEffect]['status']['speech'][0] + player.colors[magics[statusEffect]['speech'][4]] + magics[statusEffect]['status']['speech'][1] + white + magics[statusEffect]['status']['speech'][2] + red + magics[statusEffect]['status']['speech'][3] + white + magics[statusEffect]['status']['speech'][4])
-  return heartlessHealth-magics[statusEffect]['status']['damage'], statusDuration - 1
-
-def calculateDamage (heartlessHealth, heartlessDamage, damage, defense):         ###CALCULATE DAMAGE TAKEN
-  damageTaken = heartlessDamage-defense
-  if damageTaken < 0: damageTaken = 0
-  print("You lost " + red + str(damageTaken) + ' ♥ ' + white + '!')
-  oldHP = player.HP
-  player.HP = player.HP - damageTaken
-  if 'Second Chance' in player.abilities:                                    ###SECOND CHANCE
-    if player.HP < 1 and oldHP > 1:
-      player.HP = 1
-      print('Second Chance')
-  return heartlessHealth-damage
-
-def finishAttack(heartlessHealth, damage, heartlessDamage):                      ###FINISHERS
+def finishAttack(enemy, damage):      ###FINISHERS
   finish = player.finishers[random.randint(0, (len(player.finishers)-1))]
   if finish == 'Blitz':
     print("You used " + yellow + "Blitz" + white + " and dealt " + yellow + "critical" + white + " damage!" + ' You caused ' + red + str(math.ceil(1.5*damage)) + ' ♥ ' + white + 'of damage!')
-    return (heartlessHealth - math.ceil(0.5*damage)), heartlessDamage
+    enemy.HP = enemy.HP - math.ceil(0.5*damage) ######SEGUIR ESSE Q ESTÁ PRONTO
   elif finish == 'Gravity Break':
     print("You used " + blue + "Gravity Break" + white + " and the gravity pull stunned the enemy!" + ' You caused ' + red + str(damage) + ' ♥ ' + white + 'of damage!')
-    return heartlessHealth, 0
+    enemy.damage = 0
   elif finish == 'Hurricane Blast':   ##NOT IMPLEMENTED
     # print("You used Zantetsuken and dealt " + yellow + "triple" + white + " damage!" + ' You caused ' + red + str(3*damage) + ' ♥ ' + white + 'of damage!')
     print('Hurricane Blast (not implemented)')
-    return heartlessHealth, heartlessDamage
   elif finish == 'Ripple Drive':   ##HALF IMPLEMENTED
     if 'Kingdom' in player.keyblade:
       print("You used " + blue + "Ripple Drive" + white + " and activated the " + blue + "Defender" + white + " ability!" + ' You caused ' + red + str(damage) + ' ♥ ' + white + 'of damage!')
-      return heartlessHealth, heartlessDamage-1
+      enemy.damage = enemy.damage-1
     elif 'Oathkeeper' in player.keyblade:
       print("You used " + green + "Ripple Drive" + white + " and restore " + red + str(math.ceil(player.TotalMP/4)) + ' ♥'+ white + " !" + ' You caused ' + red + str(damage) + ' ♥ ' + white + 'of damage!')
       player.HP += math.ceil(player.TotalMP/4)
-      return heartlessHealth, heartlessDamage
     else:
       print('Not implemented')
-      return heartlessHealth, heartlessDamage
   elif finish == 'Stun Impact':   ##NOT IMPLEMENTED
     # print("You used Zantetsuken and dealt " + yellow + "triple" + white + " damage!" + ' You caused ' + red + str(3*damage) + ' ♥ ' + white + 'of damage!')
     print('Stun Impact (not implemented)')
-    return heartlessHealth, heartlessDamage
   elif finish == 'Zantetsuken':
     print("You used " + yellow + "Zantetsuken" + white + " and dealt " + yellow + "double" + white + " damage!" + ' You caused ' + red + str(2*damage) + ' ♥ ' + white + 'of damage!')
-    return (heartlessHealth - damage), heartlessDamage
+    enemy.HP = enemy.HP - damage
 
-
-def battle(enemy):                 ###BATTLE
+def battle(enemyName):                ###BATTLE
   ###
+    if enemyName in bosses:
+      bossBattle = True
+    elif enemyName in heartless:
+      bossBattle = False
+
     damage = keybladeStatus[player.keyblade]['damage'] + player.STR
     defense = player.DEF
 
@@ -172,56 +155,54 @@ def battle(enemy):                 ###BATTLE
       defense += equipments[accessory]['DEF']
 
     print("---------------------------")
-    print('You see a ' + red + 'Heartless' + white +'! It\'s a '+ red + enemy + white + '!')
+    if bossBattle == False:
+      print('You see a ' + red + 'Heartless' + white +'! It\'s a '+ red + enemyName + white + '!')
+    else:
+      print('Boss Battle! ' + enemyName  + '!')
     print('commands: \n\nattack \nmagic [magic name] \nitem [item name] \nrun')
     
-    heartlessHealth = int(heartless[enemy]['HP'])
-    statusEffect = 'none'
-    statusDuration = 99
+    if bossBattle ==  False:
+      enemy = Heartless(enemyName)
+    # else:
+    #   enemy = Boss(enemyName)
+
     finishCount = 0
     command = ''
 
     while True:
         player.showBattleStatus()
-        heartlessDamage = int(heartless[enemy]['damage'])
+        enemy.damage = enemy.totalDamage
 
         if 'Scan' in player.abilities:
-          scan(enemy, heartlessHealth)
+          scan(enemy)
 
         while command == '':
             command = input('>')
         command = command.lower()
-  ### Status effect duration
-        if statusDuration == 0:
-          print('\nThe ' + player.colors[magics[statusEffect]['speech'][4]] + magics[statusEffect]['status']['name'] + white + ' effect has passed\n')
-          statusEffect = 'none'
-          statusDuration = 99
-
-        if 'blizza' in statusEffect or 'thund' in statusEffect:
-          heartlessDamage = heartlessDamage - magics[statusEffect]['status']['reduction']
-          statusDuration = statusDuration - 1
-    ###
-        print("---------------------------")
+  ###Status effect duration      #INCLUDE BLIZZARD AND THUNDER
+        enemy.statusEffectDuration()
   ###ATTACK
+    ###
         if command == 'attack':       ###ATTACK
             command = ''
     ### Finishers
             if any(item in player.abilities for item in finishersList) and finishCount == 3:
-              heartlessHealth, heartlessDamage = finishAttack(heartlessHealth, damage, heartlessDamage)
+              finishAttack(enemy, damage)
               finishCount = 0
             elif any(item in player.abilities for item in finishersList) and 'Negative Combo' in player.abilities and finishCount == 2:
-              heartlessHealth, heartlessDamage = finishAttack(heartlessHealth, damage, heartlessDamage)
+              finishAttack(enemy, damage)
               finishCount = 0
             else:
               finishCount += 1
-              print('You and the heartless attack each other!')
-              print('You caused ' + red + str(damage) + ' ♥ ' + white + 'of damage!')
-      ### Status effect
-            if 'fir' in statusEffect:
-              heartlessHealth, statusDuration = statusEffectDamage(statusEffect, heartlessHealth, statusDuration)
+              print('You attacked and caused ' + red + str(damage) + ' ♥ ' + white + 'of damage!')
+            enemy.HP = enemy.HP - damage
+    ### Status effect
+            if 'fir' in enemy.statusEffect:
+              enemy.statusEffectDamage()
     ### Calculate damage
-            heartlessHealth = calculateDamage(heartlessHealth, heartlessDamage, damage, defense)
+            enemy.selectCommand(player, defense)
   ###MAGIC
+    ###
         elif "magic" in command:       ###MAGIC
           command = command.lower().split()
           if 'Combo Master' not in player.abilities or finishCount == 3:
@@ -242,27 +223,28 @@ def battle(enemy):                 ###BATTLE
                   print("You cast " + green + command[1].capitalize() + white + " and restore " + red + magicText[1] + white + magicText[2])
                 player.MP = player.MP - magics[command[1]]['MP']
     ### Status effect
-                if statusEffect != 'none':
-                  heartlessHealth, statusDuration = statusEffectDamage(statusEffect, heartlessHealth, statusDuration)
+                if 'fir' in enemy.statusEffect:
+                  enemy.statusEffectDamage()
     ###Calculate damage
-                print("The heartless attacks you!")
-                player.HP = player.HP + magics[command[1]]['heal']
                 if player.HP > player.TotalHP: player.HP = player.TotalHP
                 if 'Leaf Bracer' in player.abilities and 'cur' in command[1]:
                   print(green + 'Leaf Bracer' + white +' protects you from damage while casting a Cure spell!')
-                  heartlessHealth = calculateDamage(heartlessHealth, 0, magics[command[1]]['damage'], defense)
+                  enemy.damage = 0
                 else:
-                  heartlessHealth = calculateDamage(heartlessHealth, heartlessDamage, magics[command[1]]['damage'], defense)
+                  enemy.HP = enemy.HP - magics[command[1]]['damage']
+                player.HP = player.HP + magics[command[1]]['heal']
+                enemy.selectCommand(player, defense)
     ### Start status effect
                 if 'cur' not in command[1]:
-                  statusEffect = command[1]
-                  statusDuration = magics[statusEffect]['status']['duration']
+                  enemy.statusEffect = command[1]
+                  enemy.statusDuration = magics[command[1]]['status']['duration']
     ###
               else:
                 print('Not enough MP!')
 
           command = ''
   ###ITEM
+    ###
         elif "item" in command:       ###ITEM
           command = command.lower().split()
           finishCount = 0
@@ -273,52 +255,50 @@ def battle(enemy):                 ###BATTLE
               if command[1] in player.item:
                 useItem(command[1])
     ### Status effect
-                if statusEffect != 'none':
-                  heartlessHealth, statusDuration = statusEffectDamage(statusEffect, heartlessHealth, statusDuration)
+                if 'fir' in enemy.statusEffect:
+                  enemy.statusEffectDamage()
     ###Calculate damage
-                print("The heartless attacks you!")
-                heartlessHealth = calculateDamage(heartlessHealth, heartlessDamage, 0, defense)
-
+                enemy.selectCommand(player, defense)
               else:
                 print("You don\'t have any ", command[1])
             except IndexError:
                 print('try: item [item name]')
           command = ''
-
+  ###RUN
         elif "run" in command:       ###RUN
             command = ''
             print('You got away successfully!')
             return 'run'
-
+  ###ERROR
         else:       ###ERROR
           command = ''
           print('Command not found!')
-
+  ###DEFEAT
         if player.HP < 1:       ###DEFEAT
             return 'defeat'
   ###VICTORY
-        if heartlessHealth <= 0:       ###VICTORY
+        if enemy.HP <= 0:       ###VICTORY
     ###MUNNY
-            munny = 3 * random.randint(heartless[enemy]['munny'][0], heartless[enemy]['munny'][1])
+            munny = 3 * random.randint(enemy.munny[0], enemy.munny[1])
             print('\nYou defeated the Heartless!\nCONGRATULATIONS!')
             print('\nYou obtained ' + yellow + str(munny) + '🔸 munny!')
             player.munny += munny
     ###EXP
-            print('You gained ' + str(heartless[enemy]['exp']) + ' exp!')
-            player.exp += heartless[enemy]['exp']
+            print('You gained ' + str(enemy.exp) + ' exp!')
+            player.exp += enemy.exp
             if player.exp >= levelUp[player.level]['next']:
               player.level+=1
               print('Level Up!\nLevel: ' + str(player.level))
               levelUP()
     ###DROP
             dropNumber = random.randint(1, 100)
-            for drop in heartless[enemy]['drop']:
+            for drop in enemy.drop:
               if dropNumber <= drop:
-                print("Obtained a " + green + heartless[enemy]['drop'][drop] + white + "!")
+                print("Obtained a " + green + enemy.drop[drop] + white + "!")
                 if len(player.item) < player.itemPouch:
-                  player.item.append(heartless[enemy]['drop'][drop])
+                  player.item.append(enemy.drop[drop])
                 else:
-                  player.stock.append(heartless[enemy]['drop'][drop])
+                  player.stock.append(enemy.drop[drop])
                   print('Your item pouch is full, item send to stock!!')
                 break
     ###MP RECOVER
@@ -334,6 +314,9 @@ def battle(enemy):                 ###BATTLE
               if player.MP > player.TotalMP: player.MP = player.TotalMP
 
             return 'victory'
+        enemy.statusEffectDuration()
+
+
 
 #################
 player = player()
@@ -553,7 +536,8 @@ while True:                        ###MAIN
     if 'heartless' in rooms[player.world][currentRoom] and alreadyBattled == 0:           ###### BATTLE
       status = rooms[player.world][currentRoom]['heartless']['status']
       if status > 0:
-        result = battle(rooms[player.world][currentRoom]['heartless']['wave'][status])  
+        # result = battle(rooms[player.world][currentRoom]['heartless']['wave'][status])
+        result = battle(rooms[player.world][currentRoom]['heartless']['wave'][status])
         if result == 'victory':
           alreadyBattled = 1
           rooms[player.world][currentRoom]['heartless']['status'] = (status - 1)
