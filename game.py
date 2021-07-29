@@ -79,6 +79,7 @@ def levelUP():                        ###LEVEL UP
 
 def useItem(item):                    ###USE ITEM
   del player.item[player.item.index(item)]
+  player.itemBKP.append(item)
 
   if str(item) == 'ether' or str(item) == 'elixir':
     print('\nUsed an ' + green + str(item))
@@ -148,6 +149,7 @@ def finishAttack(enemy, damage):      ###FINISHERS
 
 def battle(enemyName):                ###BATTLE
   ###
+    player.createBKP()
     if enemyName in bosses:
       bossBattle = True
     elif enemyName in heartless:
@@ -184,6 +186,15 @@ def battle(enemyName):                ###BATTLE
         command = command.lower()
   ###Status effect duration      #INCLUDE BLIZZARD AND THUNDER
         enemy.statusEffectDuration()
+  ###PassTurn
+        if command == 'pass':
+          command = ''
+          print('Turn passed!\n')
+          if enemy.statusEffect != 'none':
+            enemy.statusEffectDamage()
+    ### Calculate damage
+          if bossBattle == False: enemy.selectCommand(player, defense)
+          else: enemy.selectCommandBoss(player, defense)
   ###ATTACK
     ###
         if command == 'attack':       ###ATTACK
@@ -203,7 +214,6 @@ def battle(enemyName):                ###BATTLE
               enemy.HP = enemy.HP - damageDealt
     ### Status effect
             if enemy.statusEffect != 'none':
-            # if 'fir' in enemy.statusEffect:
               enemy.statusEffectDamage()
     ### Calculate damage
             if bossBattle == False: enemy.selectCommand(player, defense)
@@ -329,24 +339,50 @@ def battle(enemyName):                ###BATTLE
             return 'victory'
         enemy.statusEffectEnd()
 
+def gameOver():                       ###GAME OVER
+  print('\n\nKINGDOM HEARTS🤍\n\nretry?\ncontinue?\nload game?\n\n')
+  command = ''
+  while True:
+    command = input('>').lower()
+    if 'retry' in command:
+      player.restoreBKP()
+      return ''
+    elif 'continue' in command:
+      player.restoreBKP()
+      return 'run'
+    elif 'load' in command:
+      with open('utilities/saveFile.txt', 'r') as f:
+        saves = ast.literal_eval(f.read())
+      loadScreen(player, saves)
+      return 'load'
+    else:
+      print('Command not found!\n')
+      command = ''
 
-def determineBattle(story, currentRoom, previusRoom, alreadyBattled):
+def determineBattle(story, currentRoom, previusRoom):   ###DETERMINE ENEMY TO BATTLE
     status = rooms[player.world][currentRoom]['heartless'][story]['status']
     if status > 0:
-      result = battle(rooms[player.world][currentRoom]['heartless'][story]['wave'][status])
-      if result == 'victory':
-        alreadyBattled = 1
-        rooms[player.world][currentRoom]['heartless'][story]['status'] = (status - 1)
-      elif result == 'run':
-        temp = currentRoom
-        currentRoom = previusRoom
-        previusRoom = temp
-      elif result == 'defeat':
-        print("---------------------------")
-        print('Your HP has dropped to zero!\nGAME OVER')
-        # break                                       ######GAME OVER
-    player.calculateHealth()
-    return alreadyBattled
+      while True:
+        result = battle(rooms[player.world][currentRoom]['heartless'][story]['wave'][status])
+        if result == 'victory':
+          rooms[player.world][currentRoom]['heartless'][story]['status'] = (status - 1)
+          player.calculateHealth()
+          return 1, currentRoom, previusRoom
+        if result == 'defeat':
+          print("---------------------------")
+          print('Your HP has dropped to zero!\nGAME OVER')
+          result = gameOver()
+        if result == 'run':
+          temp = currentRoom
+          currentRoom = previusRoom
+          previusRoom = temp
+          player.calculateHealth()
+          return 0, currentRoom, previusRoom
+        if result == 'load':
+          player.HP = player.TotalHP
+          player.MP = player.TotalMP
+          return 0, rooms[player.world][0], rooms[player.world][0]
+
   
 
 
@@ -368,6 +404,7 @@ while True:                        ###MAIN
   player.startingGame()
 #INITIALIZE VARIABLES
   alreadyBattled = 0
+  retryBoss = False
   previusStory = 0
   currentRoom = rooms[player.world][0]
   previusRoom = currentRoom
@@ -376,10 +413,11 @@ while True:                        ###MAIN
   while True:
     showStatus()
 
-    move = ''
-    while move == '':  
-      move = input('>')
-    move = move.lower().split()
+    if retryBoss == False:
+      move = ''
+      while move == '':  
+        move = input('>')
+      move = move.lower().split()
 
     if 'map' in move:                                   ##### OPEN MAP
       if player.tutorial['open map'] == 0:
@@ -552,7 +590,8 @@ while True:                        ###MAIN
 
 
       else:
-        print('You can\'t go that way!')
+        if retryBoss == False:
+          print('You can\'t go that way!')
 
     elif move[0] == 'talk' :                            ##### TALK WITH PERSON
       #if the room contains an person
@@ -586,6 +625,7 @@ while True:                        ###MAIN
 
 
     if 'boss' in rooms[player.world][currentRoom] and player.story == (bosses[rooms[player.world][currentRoom]['boss']]['story']-1):           ###### BOSS BATTLE
+      retryBoss = False
       result = battle(rooms[player.world][currentRoom]['boss'])
       if result == 'victory':
         player.story = bosses[rooms[player.world][currentRoom]['boss']]['story']
@@ -609,22 +649,34 @@ while True:                        ###MAIN
       elif result == 'defeat':
           print("---------------------------")
           print('Your HP has dropped to zero!\nGAME OVER')
-          break
+          result = gameOver()
+          if result == '':
+            retryBoss = True
+          if result == 'run':
+            temp = currentRoom
+            currentRoom = previusRoom
+            previusRoom = temp
+            player.calculateHealth()
+          if result == 'load':
+            player.HP = player.TotalHP
+            player.MP = player.TotalMP
+            currentRoom = rooms[player.world][0]
+            previusRoom = currentRoom
       player.calculateHealth()
 
     elif 'heartless' in rooms[player.world][currentRoom] and alreadyBattled == 0:           ###### BATTLE
       if player.story > list(rooms[player.world][currentRoom]['heartless'])[-1]:
-        alreadyBattled = determineBattle(list(rooms[player.world][currentRoom]['heartless'])[-1], currentRoom, previusRoom, alreadyBattled)
+        alreadyBattled, currentRoom, previusRoom = determineBattle(list(rooms[player.world][currentRoom]['heartless'])[-1], currentRoom, previusRoom)
       elif player.story < list(rooms[player.world][currentRoom]['heartless'])[0]:
         pass
       else:
         for story in rooms[player.world][currentRoom]['heartless']:
           if story == player.story:
-            alreadyBattled = determineBattle(story, currentRoom, previusRoom, alreadyBattled)
+            alreadyBattled, currentRoom, previusRoom = determineBattle(story, currentRoom, previusRoom)
             break
           else:
             if story > player.story:
-              alreadyBattled = determineBattle(previusStory, currentRoom, previusRoom, alreadyBattled)
+              alreadyBattled, currentRoom, previusRoom = determineBattle(previusStory, currentRoom, previusRoom)
               break
             else:
               previusStory = story

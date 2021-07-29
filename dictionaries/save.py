@@ -29,7 +29,7 @@ saves = {
 
                 2 : { 
                 'keyblade': 'Oblivion',
-                'HP' : 10,
+                'HP' : 1,
                 'MP' : 2,
                 'STR' : 1,
                 'DEF' : 1,

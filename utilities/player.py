@@ -50,10 +50,24 @@ class player:
         self.saveFile = 0
         self.editedSaves = saves
 
+        self.HPBKP = 0
+        self.MPBKP = 0
+        self.itemBKP = []
+
+
         colorama_init(autoreset=True)
         self.colors = dict(Fore.__dict__.items())
 
-
+    def createBKP(self):
+        self.HPBKP = self.HP
+        self.MPBKP = self.MP
+        self.itemBKP = []
+        # print('create')
+    def restoreBKP(self):
+        self.HP = self.HPBKP
+        self.MP = self.MPBKP
+        self.item = self.item + self.itemBKP
+        # print('restore')
     def calculateHealth(self):
         self.TotalHP = self.MaxHP
         self.TotalMP = self.MaxMP

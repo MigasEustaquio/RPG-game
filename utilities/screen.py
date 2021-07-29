@@ -75,7 +75,10 @@ def loadScreen(player, saves):
   option = ''
   i=1
   while option == '':
-    print('Select a save file or navigate with \'next\' or \'previous\'. (0 to cancel)\n')
+    if player.HPBKP == 0:
+      print('Select a save file or navigate with \'next\' or \'previous\'. (0 to cancel)\n')
+    else:
+      print('Select a save file or navigate with \'next\' or \'previous\'.\n')
     if 2 in saves:
       if 3 in saves:
         print(Fore.BLUE + '''
@@ -111,7 +114,7 @@ def loadScreen(player, saves):
       else:
         print(Fore.RED + 'No save file previous to this!')
       option=''
-    elif option == '0':
+    elif option == '0' and player.HPBKP == 0:
       titleScreen(player, saves)
     elif option.isnumeric():
         if int(option) in saves:
@@ -123,6 +126,7 @@ def loadScreen(player, saves):
     else:
       print(Fore.RED + 'Save file not found')
       option=''
+
 
 
 def editSaveFile(player):
