@@ -330,6 +330,25 @@ def battle(enemyName):                ###BATTLE
         enemy.statusEffectEnd()
 
 
+def determineBattle(story, currentRoom, previusRoom, alreadyBattled):
+    status = rooms[player.world][currentRoom]['heartless'][story]['status']
+    if status > 0:
+      result = battle(rooms[player.world][currentRoom]['heartless'][story]['wave'][status])
+      if result == 'victory':
+        alreadyBattled = 1
+        rooms[player.world][currentRoom]['heartless'][story]['status'] = (status - 1)
+      elif result == 'run':
+        temp = currentRoom
+        currentRoom = previusRoom
+        previusRoom = temp
+      elif result == 'defeat':
+        print("---------------------------")
+        print('Your HP has dropped to zero!\nGAME OVER')
+        # break                                       ######GAME OVER
+    player.calculateHealth()
+    return alreadyBattled
+  
+
 
 #################
 player = player()
@@ -349,6 +368,7 @@ while True:                        ###MAIN
   player.startingGame()
 #INITIALIZE VARIABLES
   alreadyBattled = 0
+  previusStory = 0
   currentRoom = rooms[player.world][0]
   previusRoom = currentRoom
 #
@@ -374,6 +394,7 @@ while True:                        ###MAIN
     elif 'test' in move:                                ##### TEST
 
       print('Story: ' + str(player.story))
+      # print(list(rooms[player.world]['2nd Floor']['heartless']))
       print('\ntested!\n')
     
     elif 'treasure' in move:                            ##### TREASURE
@@ -491,8 +512,21 @@ while True:                        ###MAIN
         previusRoom = currentRoom
         currentRoom = rooms[player.world][currentRoom][move[1]]
         for room in rooms[player.world][currentRoom]['resetHeartless']:
-          if rooms[player.world][room]['heartless']['status'] == 0:
-            rooms[player.world][room]['heartless']['status'] = rooms[player.world][room]['heartless']['waves']
+            if player.story in rooms[player.world][room]['heartless']:
+              if rooms[player.world][room]['heartless'][player.story]['status'] == 0:
+                rooms[player.world][room]['heartless'][player.story]['status'] = rooms[player.world][room]['heartless'][player.story]['waves']
+            else:
+              if player.story > list(rooms[player.world][room]['heartless'])[-1]:
+                rooms[player.world][room]['heartless'][list(rooms[player.world][room]['heartless'])[-1]]['status'] = rooms[player.world][room]['heartless'][list(rooms[player.world][room]['heartless'])[-1]]['waves']
+              elif player.story < list(rooms[player.world][room]['heartless'])[0]:
+                pass
+              else:
+                for story in rooms[player.world][room]['heartless']:
+                  if story > player.story:
+                    rooms[player.world][room]['heartless'][previusStory]['status'] = rooms[player.world][room]['heartless'][previusStory]['waves']
+                    break
+                  else:
+                    previusStory = story
       #there is no door (link) to the new room
       elif move[1] == 'back':
           alreadyBattled = 0
@@ -500,8 +534,23 @@ while True:                        ###MAIN
           currentRoom = previusRoom
           previusRoom = temp
           for room in rooms[player.world][currentRoom]['resetHeartless']:
-            if rooms[player.world][room]['heartless']['status'] == 0:
-              rooms[player.world][room]['heartless']['status'] = rooms[player.world][room]['heartless']['waves']
+            if player.story in rooms[player.world][room]['heartless']:
+              if rooms[player.world][room]['heartless'][player.story]['status'] == 0:
+                rooms[player.world][room]['heartless'][player.story]['status'] = rooms[player.world][room]['heartless'][player.story]['waves']
+            else:
+              if player.story > list(rooms[player.world][room]['heartless'])[-1]:
+                rooms[player.world][room]['heartless'][list(rooms[player.world][room]['heartless'])[-1]]['status'] = rooms[player.world][room]['heartless'][list(rooms[player.world][room]['heartless'])[-1]]['waves']
+              elif player.story < list(rooms[player.world][room]['heartless'])[0]:
+                pass
+              else:
+                for story in rooms[player.world][room]['heartless']:
+                  if story > player.story:
+                    rooms[player.world][room]['heartless'][previusStory]['status'] = rooms[player.world][room]['heartless'][previusStory]['waves']
+                    break
+                  else:
+                    previusStory = story
+
+
       else:
         print('You can\'t go that way!')
 
@@ -536,33 +585,49 @@ while True:                        ###MAIN
         print('Can\'t talk to ' + move[1] + '!')
 
 
-    if 'heartless' in rooms[player.world][currentRoom] and alreadyBattled == 0:           ###### BATTLE
-      status = rooms[player.world][currentRoom]['heartless']['status']
-      if status > 0:
-        # result = battle(rooms[player.world][currentRoom]['heartless']['wave'][status])
-        result = battle(rooms[player.world][currentRoom]['heartless']['wave'][status])
-        if result == 'victory':
-          alreadyBattled = 1
-          rooms[player.world][currentRoom]['heartless']['status'] = (status - 1)
-        elif result == 'run':
-            temp = currentRoom
-            currentRoom = previusRoom
-            previusRoom = temp
-        elif result == 'defeat':
-            print("---------------------------")
-            print('Your HP has dropped to zero!\nGAME OVER')
-            break
-      player.calculateHealth()
-
-    elif 'boss' in rooms[player.world][currentRoom] and player.story < bosses[rooms[player.world][currentRoom]['boss']]['story']:           ###### BOSS BATTLE
+    if 'boss' in rooms[player.world][currentRoom] and player.story == (bosses[rooms[player.world][currentRoom]['boss']]['story']-1):           ###### BOSS BATTLE
       result = battle(rooms[player.world][currentRoom]['boss'])
       if result == 'victory':
         player.story = bosses[rooms[player.world][currentRoom]['boss']]['story']
+    ###RESET HEARTLESS STATUS SO PLAYER WON'T FIGHT RIGHT AWAY
+        if 'heartless' in rooms[player.world][currentRoom]:
+          if player.story > list(rooms[player.world][currentRoom]['heartless'])[-1]:
+            rooms[player.world][currentRoom]['heartless'][list(rooms[player.world][currentRoom]['heartless'])[-1]]['status'] = 0
+          elif player.story < list(rooms[player.world][currentRoom]['heartless'])[0]:
+            pass
+          else:
+            for story in rooms[player.world][currentRoom]['heartless']:
+              if story == player.story:
+                rooms[player.world][currentRoom]['heartless'][story]['status'] = 0
+              else:
+                if story > player.story:
+                  rooms[player.world][currentRoom]['heartless'][previusStory]['status'] = 0
+                  break
+                else:
+                  previusStory = story
+    ###DEFEAT
       elif result == 'defeat':
           print("---------------------------")
           print('Your HP has dropped to zero!\nGAME OVER')
           break
       player.calculateHealth()
+
+    elif 'heartless' in rooms[player.world][currentRoom] and alreadyBattled == 0:           ###### BATTLE
+      if player.story > list(rooms[player.world][currentRoom]['heartless'])[-1]:
+        alreadyBattled = determineBattle(list(rooms[player.world][currentRoom]['heartless'])[-1], currentRoom, previusRoom, alreadyBattled)
+      elif player.story < list(rooms[player.world][currentRoom]['heartless'])[0]:
+        pass
+      else:
+        for story in rooms[player.world][currentRoom]['heartless']:
+          if story == player.story:
+            alreadyBattled = determineBattle(story, currentRoom, previusRoom, alreadyBattled)
+            break
+          else:
+            if story > player.story:
+              alreadyBattled = determineBattle(previusStory, currentRoom, previusRoom, alreadyBattled)
+              break
+            else:
+              previusStory = story
 
 
     # player wins if they get to the Third District

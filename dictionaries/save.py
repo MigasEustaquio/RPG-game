@@ -50,7 +50,7 @@ saves = {
                 'world' : 'CastleOblivion',
                 'map' : '',
                 'tutorial' : {'use item': 1, 'cast magic': 1, 'talk': 1, 'save': 0, 'treasure chest': 0, 'open map': 0, 'equipment': 0, 'keyblade': 0},
-                'story' : 0,
+                'story' : 1,
                 },
 
                 

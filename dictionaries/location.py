@@ -1,4 +1,7 @@
 #a dictionary linking a room to other room positions
+
+# 'heartless' : (story)
+
 rooms = {
   'TraverseTown' : {
 
@@ -70,7 +73,7 @@ rooms = {
       '1st Floor' : { 'right' : '2nd Floor',
                   'down' : '5th Floor',
                   'shop' : '1st Floor Shop',
-                  'resetHeartless' : []
+                  'resetHeartless' : ['2nd Floor', '5th Floor']
       }, 
 
       '2nd Floor' : { 'right' : '3rd Floor',
@@ -78,7 +81,13 @@ rooms = {
                   'up' : '1st Floor',
                   'down' : '5th Floor',
                   'heartless'  : { 
+                    1 : {
+                    'waves' : 2, 'status' : 2, 'wave' : {
+                       2 : 'soldier', 1 : 'shadow'}
+                    },
+                    3 : {
                     'waves' : 1, 'status' : 1, 'wave' : { 1 : 'angel star'}
+                    },
                   },
                   'resetHeartless' : []
       },
@@ -100,9 +109,11 @@ rooms = {
       '5th Floor' : {'left' : '4th Floor',
                   'up' : '1st Floor',
                   'boss' : 'Xemnas',
-                  # 'heartless'  : { 
-                  #   'waves' : 1, 'status' : 1, 'wave' : { 1 : 'invisible'}
-                  # },
+                  'heartless'  : { 
+                    2: {
+                      'waves' : 1, 'status' : 1, 'wave' : { 1 : 'invisible'}
+                    },
+                  },
                   'resetHeartless' : []
       },
 

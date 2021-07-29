@@ -1,4 +1,6 @@
-enemy commands
+make 'game over' function
+
+enemy commands (started)
 
 select abilities? (brain storming)
 
