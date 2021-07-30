@@ -1,4 +1,6 @@
-make 'game over' function
+get keyblade function
+
+world map
 
 enemy commands (started)
 
@@ -13,7 +15,5 @@ add abilities (half done)
 synthesize?
 
 enemy drops (half done)
-
-enemy commands?
 
 exp equipment

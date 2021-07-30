@@ -2,11 +2,13 @@
 # from os import X_OK
 import random
 import math
+import time
 from utilities.enemyClasses import *
 from utilities.screen import *
 from dictionaries.people import *
 from dictionaries.location import *
 from dictionaries.enemies import *
+from dictionaries.scenes import *
 
 def showInstructions():
     #print a main menu and the commands
@@ -25,14 +27,64 @@ Commands:
   menu
 ''')
 
+# def getKeyblade(method, holder):
+
+#   if method == 'person':
+
+#     print()
+#   elif method == 'boss':
+#     print()
+#   elif method == 'treasure':
+#     print()
+
+def verifyPersonStory(peolpeInRoom):
+  peopleToTalk = []
+  storyToTalk = []
+  for person in peolpeInRoom:
+      if player.story > list(people[person])[-1]:
+        if people[person][list(people[person])[-1]]['present'] == 'yes':
+          peopleToTalk.append(person)
+          storyToTalk.append(list(people[person])[-1])
+      elif player.story < list(people[person])[0]:
+        pass
+      else:
+        for story in people[person]:
+          if story == player.story:
+            if people[person][story]['present'] == 'yes':
+              peopleToTalk.append(person)
+              storyToTalk.append(story)
+            break
+          else:
+            if story > player.story:
+              if people[person][previusStory]['present'] == 'yes':
+                peopleToTalk.append(person)
+                storyToTalk.append(previusStory)
+              break
+            else:
+              previusStory = story
+  return peopleToTalk, storyToTalk
+
+def bossScene(enemyName):             ###Print Scenes
+  skip = input('Skip scene?(yes/no)\n>')
+  print()
+  if skip.lower() == 'yes':
+    pass
+  else:
+    for phrase in bossScenes[enemyName]:
+     print(phrase)
+     time.sleep(3)
+    print()
+
 def showStatus():                     ###SHOW STATUS
   #print the player's current status
   print(Fore.RED + '\n---------------------------')
   print(Fore.WHITE + 'You are in the ' + currentRoom)
   if "person" in rooms[player.world][currentRoom]:
-    print('You see ' + rooms[player.world][currentRoom]['person'])
-    if rooms[player.world][currentRoom]['person'].lower() not in player.map:
-      player.map = player.map + people[rooms[player.world][currentRoom]['person']]['mapUpdate']
+    peopleToTalk, storyToTalk = verifyPersonStory(rooms[player.world][currentRoom]['person'])
+    for person in peopleToTalk:
+      print('You see ' + person)
+      if person.lower() not in player.map:
+        player.map = player.map + people[person][999]['mapUpdate']
   if "shop" in rooms[player.world][currentRoom] and (currentRoom+' Shop location') in player.keyItems:
     print('You see the ' + rooms[player.world][currentRoom]['shop'] + ', try: \'enter shop\'')
   if "Shop" in currentRoom:
@@ -435,6 +487,13 @@ while True:                        ###MAIN
       # print(list(rooms[player.world]['2nd Floor']['heartless']))
       print('\ntested!\n')
     
+    elif 'upgrade' in move:                                ##### TEST 2
+
+      player.story += 1
+      print('Story: ' + str(player.story))
+      # print(list(rooms[player.world]['2nd Floor']['heartless']))
+      print('\ntested!\n')
+    
     elif 'treasure' in move:                            ##### TREASURE
       if 'treasure' in rooms[player.world][currentRoom]:
         if rooms[player.world][currentRoom]['treasure']['treasure'] == 'item':
@@ -494,7 +553,7 @@ while True:                        ###MAIN
       if 'Shop' in currentRoom:
         if move[1] in shops[currentRoom]:
           if player.munny >= shops[currentRoom][move[1]]:
-              print('\nMoogle: Thanks for shopping here, Kupo!!\nObtained a ' + move[1] + '!')
+              print('\nMoogle: Thanks for shopping here, Kupo!!\nObtained a ' + green + move[1] + white + '!')
               player.munny = player.munny - shops[currentRoom][move[1]]
               if move[1] in items:
                 if len(player.item) < player.itemPouch:
@@ -588,36 +647,42 @@ while True:                        ###MAIN
                   else:
                     previusStory = story
 
-
       else:
         if retryBoss == False:
           print('You can\'t go that way!')
 
     elif move[0] == 'talk' :                            ##### TALK WITH PERSON
       #if the room contains an person
-      if 'person' in rooms[player.world][currentRoom] and move[1] in rooms[player.world][currentRoom]['person'].lower():
-        #falar com a pessoa
-        print(people[rooms[player.world][currentRoom]['person']]['speech'])
-        reward = people[rooms[player.world][currentRoom]['person']]['reward']
-        if reward == 'story':
-          if player.story == (people[rooms[player.world][currentRoom]['person']]['story']-1):
-            player.story += 1
-            print()
+      peopleToTalk, storyToTalk = verifyPersonStory(rooms[player.world][currentRoom]['person'])
 
-        elif reward == 'key item':
-          player.keyItems.append(people[rooms[player.world][currentRoom]['person']]['key item'])
-          print('You got the "' + people[rooms[player.world][currentRoom]['person']]['key item'] + '" key item!')
+      if 'person' in rooms[player.world][currentRoom] and move[1].capitalize() in peopleToTalk:
+        i=0
+        for person in peopleToTalk:
+          if move[1].capitalize() == person:
+            #falar com a pessoa
+            print(people[person][storyToTalk[i]]['speech'])
+            reward = people[person][storyToTalk[i]]['reward']
+            if reward == 'story':
+              if player.story == (people[person][storyToTalk[i]]['story']-1):
+                player.story += 1
+                print()
 
-        elif reward == 'item':
-          print('You got a "' + people[rooms[player.world][currentRoom]['person']]['item'] + '"!')
-          if len(player.item) < player.itemPouch:
-            player.item.append(people[rooms[player.world][currentRoom]['person']]['item'])
-          else:
-            player.stock.append(people[rooms[player.world][currentRoom]['person']]['item'])
-            print('Your item pouch is full, item send to stock!!')
-        people[rooms[player.world][currentRoom]['person']]['reward'] = 'no'
-        if rooms[player.world][currentRoom]['person'].lower() == 'moogle':
-            shop(currentRoom)
+            elif reward == 'key item':
+              player.keyItems.append(people[person][storyToTalk[i]]['key item'])
+              print('You got the "' + people[person][storyToTalk[i]]['key item'] + '" key item!')
+
+            elif reward == 'item':
+              print('You got a ' + green + people[person][storyToTalk[i]]['item'] + white + '!')
+              if len(player.item) < player.itemPouch:
+                player.item.append(people[person][storyToTalk[i]]['item'])
+              else:
+                player.stock.append(people[person][storyToTalk[i]]['item'])
+                print('Your item pouch is full, item send to stock!!')
+            people[person][storyToTalk[i]]['reward'] = 'no'
+            if 'Moogle' in rooms[player.world][currentRoom]['person']:
+                shop(currentRoom)
+
+          i+=1
 
       else:
         #tell them they can't talk
@@ -626,10 +691,11 @@ while True:                        ###MAIN
 
     if 'boss' in rooms[player.world][currentRoom] and player.story == (bosses[rooms[player.world][currentRoom]['boss']]['story']-1):           ###### BOSS BATTLE
       retryBoss = False
+      bossScene(rooms[player.world][currentRoom]['boss'])
       result = battle(rooms[player.world][currentRoom]['boss'])
       if result == 'victory':
         player.story = bosses[rooms[player.world][currentRoom]['boss']]['story']
-    ###RESET HEARTLESS STATUS SO PLAYER WON'T FIGHT RIGHT AWAY
+      ###RESET HEARTLESS STATUS SO PLAYER WON'T FIGHT RIGHT AWAY
         if 'heartless' in rooms[player.world][currentRoom]:
           if player.story > list(rooms[player.world][currentRoom]['heartless'])[-1]:
             rooms[player.world][currentRoom]['heartless'][list(rooms[player.world][currentRoom]['heartless'])[-1]]['status'] = 0
@@ -645,7 +711,7 @@ while True:                        ###MAIN
                   break
                 else:
                   previusStory = story
-    ###DEFEAT
+      ###DEFEAT
       elif result == 'defeat':
           print("---------------------------")
           print('Your HP has dropped to zero!\nGAME OVER')

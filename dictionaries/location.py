@@ -17,8 +17,14 @@ rooms = {
                   'left' : 'Hotel',
                   'treasure' : {'treasure' : 'item', 'item' : 'potion'},
                   'heartless'  : { 
+                    0:{
                     'waves' : 2, 'status' : 2, 'wave' : {
                        2 : 'soldier', 1 : 'shadow'}
+                    },
+                    1:{
+                    'waves' : 2, 'status' : 2, 'wave' : {
+                       2 : 'soldier', 1 : 'shadow'}
+                    },
                   },
                   'resetHeartless' : ['Alleyway']
                 },
@@ -31,21 +37,27 @@ rooms = {
                     'left' : 'Green Room',
                     'up' : 'Red Room',
                     'heartless'  : { 
-                    'waves' : 1, 'status' : 1, 'wave' : {
-                        1 : 'shadow'}
+                      0:{
+                      'waves' : 1, 'status' : 1, 'wave' : {
+                          1 : 'shadow'}
+                      },
+                      1:{
+                      'waves' : 1, 'status' : 1, 'wave' : {
+                          1 : 'shadow'}
+                      },
                     },
                     'resetHeartless' : ['Alleyway']
              },
 
              'Green Room' : { 'right' : 'Hotel',
                   'up' : 'Alleyway',
-                  'person'  : 'Leon',
+                  'person'  : ['Leon'],
                   'resetHeartless' : ['Second District']
                 },
 
               'Red Room' : { 'down' : 'Hotel',
                   'left' : 'Alleyway',
-                  'person'  : 'Yuffie',
+                  'person'  : ['Yuffie'],
                   'resetHeartless' : ['Second District']
                 },
 
@@ -53,8 +65,14 @@ rooms = {
                   'right' : 'Red Room',
                   'treasure' : {'treasure' : 'mapUpdate', 'mapUpdate' : 'heartless '},
                   'heartless'  : { 
-                    'waves' : 3, 'status' : 3, 'wave' : {
-                       3 : 'soldier', 2 : 'shadow', 1 : 'shadow'}
+                    0:{
+                      'waves' : 3, 'status' : 3, 'wave' : {
+                        3 : 'soldier', 2 : 'shadow', 1 : 'shadow'}
+                    },
+                    1:{
+                      'waves' : 3, 'status' : 3, 'wave' : {
+                        3 : 'soldier', 2 : 'shadow', 1 : 'shadow'}
+                    },
                   },
                   'resetHeartless' : ['Second District', 'Hotel']
                 },
@@ -73,22 +91,23 @@ rooms = {
       '1st Floor' : { 'right' : '2nd Floor',
                   'down' : '5th Floor',
                   'shop' : '1st Floor Shop',
-                  'resetHeartless' : ['2nd Floor', '5th Floor']
+                  'resetHeartless' : []
       }, 
 
       '2nd Floor' : { 'right' : '3rd Floor',
                   'left' : '1st Floor',
                   'up' : '1st Floor',
                   'down' : '5th Floor',
-                  'heartless'  : { 
-                    1 : {
-                    'waves' : 2, 'status' : 2, 'wave' : {
-                       2 : 'soldier', 1 : 'shadow'}
-                    },
-                    3 : {
-                    'waves' : 1, 'status' : 1, 'wave' : { 1 : 'angel star'}
-                    },
-                  },
+                  'person'  : ['Roxas', 'Axel'],
+                  # 'heartless'  : { 
+                  #   1 : {
+                  #   'waves' : 2, 'status' : 2, 'wave' : {
+                  #      2 : 'soldier', 1 : 'shadow'}
+                  #   },
+                  #   3 : {
+                  #   'waves' : 1, 'status' : 1, 'wave' : { 1 : 'angel star'}
+                  #   },
+                  # },
                   'resetHeartless' : []
       },
 
@@ -117,7 +136,7 @@ rooms = {
                   'resetHeartless' : []
       },
 
-      '1st Floor Shop' : { 'person'  : 'Moogle',
+      '1st Floor Shop' : { 'person'  : ['Moogle'],
                   'resetHeartless' : []
                 },
 

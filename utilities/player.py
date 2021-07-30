@@ -284,6 +284,8 @@ DEF: ''' + str(equipments[self.equipmentList[j]]['DEF']) + '''
                         j+=1
                     else:
                         print(Fore.RED + 'No more equipments after these!')
+                else:
+                    print('usage: next [equipped/unequipped]!')
                 option=''
 
             elif option[0] == 'previous':
@@ -297,6 +299,8 @@ DEF: ''' + str(equipments[self.equipmentList[j]]['DEF']) + '''
                         j-=1
                     else:
                         print(Fore.RED + 'No more equipments previous to these!')
+                else:
+                    print('usage: previous [equipped/unequipped]!')
                 option=''
 
             elif option == '0' or option[0] == '0':
