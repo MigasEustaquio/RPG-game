@@ -62,12 +62,10 @@ class player:
         self.HPBKP = self.HP
         self.MPBKP = self.MP
         self.itemBKP = []
-        # print('create')
     def restoreBKP(self):
         self.HP = self.HPBKP
         self.MP = self.MPBKP
         self.item = self.item + self.itemBKP
-        # print('restore')
     def calculateHealth(self):
         self.TotalHP = self.MaxHP
         self.TotalMP = self.MaxMP
@@ -159,7 +157,7 @@ class player:
         itemsDisplay = self.buildStockDisplay()
 
         self.showBattleStatus()
-        print("Keyblade: " + self.keyblade)
+        print("Keyblade: " + Fore.CYAN +  self.keyblade + Fore.WHITE)
         print("Level: " + str(self.level))
         print('\nMunny: ' + str(self.munny) + '🔸')
         print("Items in stock: ", itemsDisplay)
@@ -392,7 +390,8 @@ MP: ''' + str(keybladeStatus[self.keyblades[i]]['MP']) + '''
 
             option = input('>')
             option = option.lower().split()
-            if len(option)>2: option[1] = option[1].capitalize() + ' ' + option[2].capitalize()
+            if len(option)>3: option[1] = option[1].capitalize() + ' ' + option[2].capitalize() + ' ' + option[3].capitalize()
+            elif len(option)>2: option[1] = option[1].capitalize() + ' ' + option[2].capitalize()
             elif len(option)>1: option[1] = option[1].capitalize()
 
             if 'next' in option:

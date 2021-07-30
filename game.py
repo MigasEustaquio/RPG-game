@@ -27,17 +27,8 @@ Commands:
   menu
 ''')
 
-# def getKeyblade(method, holder):
 
-#   if method == 'person':
-
-#     print()
-#   elif method == 'boss':
-#     print()
-#   elif method == 'treasure':
-#     print()
-
-def verifyPersonStory(peolpeInRoom):
+def verifyPersonStory(peolpeInRoom):  ###Check person's speech and reward based on story
   peopleToTalk = []
   storyToTalk = []
   for person in peolpeInRoom:
@@ -369,12 +360,16 @@ def battle(enemyName):                ###BATTLE
             dropNumber = random.randint(1, 100)
             for drop in enemy.drop:
               if dropNumber <= drop:
-                print("Obtained a " + green + enemy.drop[drop] + white + "!")
-                if len(player.item) < player.itemPouch:
-                  player.item.append(enemy.drop[drop])
-                else:
-                  player.stock.append(enemy.drop[drop])
-                  print('Your item pouch is full, item send to stock!!')
+                if enemy.drop[drop] in items:
+                  print("\nObtained a " + green + enemy.drop[drop] + white + "!")
+                  if len(player.item) < player.itemPouch:
+                    player.item.append(enemy.drop[drop])
+                  else:
+                    player.stock.append(enemy.drop[drop])
+                    print('Your item pouch is full, item send to stock!!')
+                elif enemy.drop[drop] in keybladeStatus:
+                  player.keyblades.append(enemy.drop[drop])
+                  print('\nObtained the ' + cyan + enemy.drop[drop] + white + ' Keyblade!')
                 break
     ###MP RECOVER
             recoverMPNumber = random.randint(1, 100)
@@ -434,7 +429,7 @@ def determineBattle(story, currentRoom, previusRoom):   ###DETERMINE ENEMY TO BA
           player.HP = player.TotalHP
           player.MP = player.TotalMP
           return 0, rooms[player.world][0], rooms[player.world][0]
-
+    else: return 0, currentRoom, previusRoom
   
 
 
@@ -449,6 +444,7 @@ while True:                        ###MAIN
   red = player.colors['RED']
   white = player.colors['WHITE']
   blue = player.colors['BLUE']
+  cyan = player.colors['CYAN']
   yellow = player.colors['YELLOW']
   green = player.colors['GREEN']
 #CONFIGURE PARAMETERS
@@ -504,16 +500,20 @@ while True:                        ###MAIN
             player.stock.append(rooms[player.world][currentRoom]['treasure']['item'])
             print('Your item pouch is full, item send to stock!!')
 
-        if rooms[player.world][currentRoom]['treasure']['treasure'] == 'key item':
+        elif rooms[player.world][currentRoom]['treasure']['treasure'] == 'key item':
           print('Obtained the "' + rooms[player.world][currentRoom]['treasure']['key item'] + '" key item!')
           player.keyItems.append(rooms[player.world][currentRoom]['treasure']['key item'])
 
-        if rooms[player.world][currentRoom]['treasure']['treasure'] == 'mapUpdate':
+        elif rooms[player.world][currentRoom]['treasure']['treasure'] == 'mapUpdate':
           player.map = player.map + rooms[player.world][currentRoom]['treasure']['mapUpdate']
           print(player.world + ' map updated!')
           if player.tutorial['open map'] == 0:
             print(Fore.YELLOW + "tutorial: " + Fore.WHITE + tutorialSpeech['open map'])
             player.tutorial['open map'] = 1
+
+        elif rooms[player.world][currentRoom]['treasure']['treasure'] == 'keyblade':
+          print('Obtained the ' + cyan + rooms[player.world][currentRoom]['treasure']['keyblade'] + white + ' Keyblade!')
+          player.keyblades.append(rooms[player.world][currentRoom]['treasure']['keyblade'])
 
         del rooms[player.world][currentRoom]['treasure']
       else:
@@ -666,11 +666,12 @@ while True:                        ###MAIN
               if player.story == (people[person][storyToTalk[i]]['story']-1):
                 player.story += 1
                 print()
-
+            elif reward == 'keyblade':
+              player.keyblades.append(people[person][storyToTalk[i]]['keyblade'])
+              print('You got the ' + cyan + people[person][storyToTalk[i]]['keyblade'] + white + ' Keyblade!')
             elif reward == 'key item':
               player.keyItems.append(people[person][storyToTalk[i]]['key item'])
               print('You got the "' + people[person][storyToTalk[i]]['key item'] + '" key item!')
-
             elif reward == 'item':
               print('You got a ' + green + people[person][storyToTalk[i]]['item'] + white + '!')
               if len(player.item) < player.itemPouch:
@@ -705,6 +706,7 @@ while True:                        ###MAIN
             for story in rooms[player.world][currentRoom]['heartless']:
               if story == player.story:
                 rooms[player.world][currentRoom]['heartless'][story]['status'] = 0
+                break
               else:
                 if story > player.story:
                   rooms[player.world][currentRoom]['heartless'][previusStory]['status'] = 0

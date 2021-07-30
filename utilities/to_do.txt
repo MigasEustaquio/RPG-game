@@ -1,5 +1,3 @@
-get keyblade function
-
 world map
 
 enemy commands (started)

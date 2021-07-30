@@ -224,10 +224,10 @@ heartless = {
 bosses = {
 
         'Xemnas' : {'commands' : ['attack' ,'barrier', 'energy sphere'],
-                    'HP': 20 , 'damage': 5, 'defense' : 5,
+                    'HP': 1 , 'damage': 5, 'defense' : 5,
                     'munny' : [0,0],
                     'exp' : 1000,
-                    'drop' : {},
+                    'drop' : {100 : 'Kingdom Key D'},
                     'story' : 2,
         },
 

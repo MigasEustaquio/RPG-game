@@ -137,6 +137,11 @@ keybladeStatus = {
                     'damage' : 6, 
                     'MP': 4 
             },
+
+            'Kingdom Key D' : {
+                    'damage' : 8, 
+                    'MP': 4 
+            },
 }
 
 equipments = {

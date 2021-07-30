@@ -46,8 +46,8 @@ people = {
 
             'Axel' : {
                     0: {'speech' : 'Axel: Here is a pot!',
-                      'reward' : 'item',
-                      'item' : 'potion',
+                      'reward' : 'keyblade',
+                      'keyblade' : 'Kingdom Key D',
                       'present' : 'yes',
                     },
                     1: {'speech' : 'Axel: Here is an ether!',

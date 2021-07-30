@@ -98,6 +98,7 @@ rooms = {
                   'left' : '1st Floor',
                   'up' : '1st Floor',
                   'down' : '5th Floor',
+                  'treasure' : {'treasure' : 'keyblade', 'keyblade' : 'Kingdom Key D'},
                   'person'  : ['Roxas', 'Axel'],
                   # 'heartless'  : { 
                   #   1 : {
@@ -130,6 +131,9 @@ rooms = {
                   'boss' : 'Xemnas',
                   'heartless'  : { 
                     2: {
+                      'waves' : 1, 'status' : 1, 'wave' : { 1 : 'invisible'}
+                    },
+                    3: {
                       'waves' : 1, 'status' : 1, 'wave' : { 1 : 'invisible'}
                     },
                   },
