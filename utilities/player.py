@@ -55,6 +55,7 @@ class player:
 
         self.saveFile = 0
         self.editedSaves = saves
+        self.currentRoom = 'First District'
 
         self.HPBKP = 0
         self.MPBKP = 0

@@ -30,6 +30,7 @@ def save(file, y, saves):
   x['map'] = y.map
   x['tutorial'] = y.tutorial
   x['treasures'] = y.treasures
+  x['currentRoom'] = y.currentRoom
   x['story'] = y.story
   y.saveFile = file
 
@@ -68,6 +69,7 @@ def load(file, y, saves):
   y.map = x['map']
   y.tutorial = x['tutorial']
   y.treasures = x['treasures']
+  y.currentRoom = x['currentRoom']
   y.story = x['story']
   y.saveFile = file
   y.HP = y.MaxHP

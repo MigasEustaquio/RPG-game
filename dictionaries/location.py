@@ -84,7 +84,8 @@ rooms = {
                   'map number' : '1'
                 },
 
-            'First District Shop' : { 'person'  : ['Moogle'],
+            'First District Shop' : { 'leave' : 'First District',              
+                  'person'  : ['Moogle'],
                                     'resetHeartless' : ['Second District', 'Hotel', 'Alleyway'],
                   'map number' : '1'
                 },
@@ -153,7 +154,8 @@ rooms = {
                   'map number' : '1'
       },
 
-      '1st Floor Shop' : { 'person'  : ['Moogle'],
+      '1st Floor Shop' : { 'leave' : '1st Floor',              
+                  'person'  : ['Moogle'],
                   'resetHeartless' : [],
                   'map number' : '1'
                 },

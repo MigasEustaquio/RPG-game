@@ -37,6 +37,7 @@ saves = {
                         'EndOfTheWorld' : {'1': 'incomplete'}
                         },
                 'tutorial' : {'use item': 1, 'cast magic': 1, 'talk': 1, 'save': 0, 'treasure chest': 0, 'open map': 0, 'equipment': 0, 'keyblade': 0},
+                'treasures': {'TraverseTown': {'Second District': {'treasure': 'item', 'item': 'potion', 'status': 'closed'}, 'Alleyway': {'treasure': 'mapUpdate', 'mapUpdate': '1', 'status': 'closed'}}, 'CastleOblivion': {'2nd Floor': {'treasure': 'keyblade', 'keyblade': 'Kingdom Key D', 'status': 'closed'}}},
                 'story' : 0,
                 },
 
@@ -64,6 +65,8 @@ saves = {
                 'world' : 'CastleOblivion',
                 'map' : {'CastleOblivion' : {'1': 'complete'}},
                 'tutorial' : {'use item': 1, 'cast magic': 1, 'talk': 1, 'save': 0, 'treasure chest': 0, 'open map': 0, 'equipment': 0, 'keyblade': 0},
+                'treasures': {'CastleOblivion': {'2nd Floor': {'treasure': 'keyblade', 'keyblade': 'Kingdom Key D', 'status': 'closed'}}},
+                'currentRoom': '1st Floor Shop',
                 'story' : 1,
                 },
 

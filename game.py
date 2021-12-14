@@ -85,7 +85,7 @@ def showStatus():                     ###SHOW STATUS
         print(Fore.YELLOW + "tutorial: " + Fore.WHITE + tutorialSpeech['quit'])
         player.tutorial['save'] = 1
         player.tutorial['quit'] = 1
-      print('To get out of the shop type: \'go back\'')
+      print('To get out of the shop type: \'leave\'')
   if 'treasure' in rooms[player.world][currentRoom] and player.treasures[player.world][currentRoom]['status']=='closed':
     print('You see a treasure chest!')
     if player.tutorial['treasure chest'] == 0:
@@ -452,7 +452,7 @@ while True:                        ###MAIN
   alreadyBattled = 0
   retryBoss = False
   previusStory = 0
-  currentRoom = rooms[player.world][0]
+  currentRoom = player.currentRoom
   previusRoom = currentRoom
 #
   showInstructions()
@@ -536,6 +536,7 @@ while True:                        ###MAIN
 
     elif 'save' in move:                                ##### SAVE
       if 'Shop' in currentRoom:
+        player.currentRoom = currentRoom
         with open('utilities/saveFile.txt', 'r') as f:
           saves = ast.literal_eval(f.read())
         saveScreen(player, saves)
@@ -604,7 +605,10 @@ while True:                        ###MAIN
             else:
               print('Not enough MP!')
 
-    elif move[0] == 'go' or move[0] == 'enter':         ##### MOVE
+    elif move[0] == 'go' or move[0] == 'enter' or 'leave' in move:         ##### MOVE
+      if 'leave' in move:
+        move = "leave leave"
+        move=move.lower().split()
       #check that they are allowed wherever they want to go
       if move[1] in rooms[player.world][currentRoom]:
         #set the current room to the new room
