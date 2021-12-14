@@ -1,0 +1,5 @@
+primeiro dígito = número do mapa do mundo
+segundo dígito = mapa incompleto/completo
+"terceiro dígito = localização atual do player" ?
+
+para adicionar o terceiro dígito basta adicionar uma informação em cada room e ler essa informação ao mostrar o mapa

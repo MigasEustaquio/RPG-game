@@ -42,7 +42,7 @@ class player:
 
         #STORY RELATED
         self.world = 'TraverseTown'
-        self.map = str(worldMaps[self.world])   ############### WHEN CHANGE WORLDS HAVE TO UPDATE THE worldMaps DICTIONARY
+        self.map = worldMaps[self.world]   ############### WHEN CHANGE WORLDS HAVE TO UPDATE THE worldMaps DICTIONARY
         self.story = 0
 
         self.tutorial = tutorials

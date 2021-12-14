@@ -1,3 +1,5 @@
+change map to only complete/incomplete !!!
+
 world map
 
 enemy commands (started)
@@ -8,7 +10,7 @@ add enemies (half done)
 
 add worlds
 
-add abilities (half done)
+add abilities (almost done)
 
 synthesize?
 

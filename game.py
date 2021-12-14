@@ -74,8 +74,6 @@ def showStatus():                     ###SHOW STATUS
     peopleToTalk, storyToTalk = verifyPersonStory(rooms[player.world][currentRoom]['person'])
     for person in peopleToTalk:
       print('You see ' + person)
-      if person.lower() not in player.map:
-        player.map = player.map + people[person][999]['mapUpdate']
   if "shop" in rooms[player.world][currentRoom] and (currentRoom+' Shop location') in player.keyItems:
     print('You see the ' + rooms[player.world][currentRoom]['shop'] + ', try: \'enter shop\'')
   if "Shop" in currentRoom:
@@ -474,7 +472,8 @@ while True:                        ###MAIN
       
       print('Opening map...\n')
       from PIL import Image
-      img = Image.open('images/' + player.world + '/Map' + str(maps[player.world][player.map]) + '.jpg')
+      mapNumber = rooms[player.world][currentRoom]['map number']
+      img = Image.open('images/' + player.world + '/Map' + maps[player.world][mapNumber][player.map[mapNumber]] + '.jpg')
       img.show()
 
     elif 'test' in move:                                ##### TEST
@@ -505,7 +504,7 @@ while True:                        ###MAIN
           player.keyItems.append(rooms[player.world][currentRoom]['treasure']['key item'])
 
         elif rooms[player.world][currentRoom]['treasure']['treasure'] == 'mapUpdate':
-          player.map = player.map + rooms[player.world][currentRoom]['treasure']['mapUpdate']
+          player.map[rooms[player.world][currentRoom]['treasure']['mapUpdate']] = 'complete'
           print(player.world + ' map updated!')
           if player.tutorial['open map'] == 0:
             print(Fore.YELLOW + "tutorial: " + Fore.WHITE + tutorialSpeech['open map'])

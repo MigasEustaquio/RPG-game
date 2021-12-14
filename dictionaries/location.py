@@ -9,7 +9,8 @@ rooms = {
 
             'First District' : { 'up' : 'Second District',
                   'shop' : 'First District Shop',
-                  'resetHeartless' : ['Hotel', 'Alleyway']
+                  'resetHeartless' : ['Hotel', 'Alleyway'],
+                  'map number' : '1'
             },        
 
             'Second District' : { 'down' : 'First District',
@@ -26,11 +27,13 @@ rooms = {
                        2 : 'soldier', 1 : 'shadow'}
                     },
                   },
-                  'resetHeartless' : ['Alleyway']
+                  'resetHeartless' : ['Alleyway'],
+                  'map number' : '1'
                 },
                 
             'Third District' : { 'left'  : 'Second District',
-                                'resetHeartless' : ['Hotel', 'Alleyway']
+                                'resetHeartless' : ['Hotel', 'Alleyway'],
+                  'map number' : '1'
                 },
                 
             'Hotel' : { 'right' : 'Second District',
@@ -46,24 +49,27 @@ rooms = {
                           1 : 'shadow'}
                       },
                     },
-                    'resetHeartless' : ['Alleyway']
+                    'resetHeartless' : ['Alleyway'],
+                  'map number' : '1'
              },
 
              'Green Room' : { 'right' : 'Hotel',
                   'up' : 'Alleyway',
                   'person'  : ['Leon'],
-                  'resetHeartless' : ['Second District']
+                  'resetHeartless' : ['Second District'],
+                  'map number' : '1'
                 },
 
               'Red Room' : { 'down' : 'Hotel',
                   'left' : 'Alleyway',
                   'person'  : ['Yuffie'],
-                  'resetHeartless' : ['Second District']
+                  'resetHeartless' : ['Second District'],
+                  'map number' : '1'
                 },
 
               'Alleyway' : { 'down' : 'Green Room',
                   'right' : 'Red Room',
-                  'treasure' : {'treasure' : 'mapUpdate', 'mapUpdate' : 'heartless '},
+                  'treasure' : {'treasure' : 'mapUpdate', 'mapUpdate' : '1'},
                   'heartless'  : { 
                     0:{
                       'waves' : 3, 'status' : 3, 'wave' : {
@@ -74,11 +80,13 @@ rooms = {
                         3 : 'soldier', 2 : 'shadow', 1 : 'shadow'}
                     },
                   },
-                  'resetHeartless' : ['Second District', 'Hotel']
+                  'resetHeartless' : ['Second District', 'Hotel'],
+                  'map number' : '1'
                 },
 
             'First District Shop' : { 'person'  : 'Moogle',
-                                    'resetHeartless' : ['Second District', 'Hotel', 'Alleyway']
+                                    'resetHeartless' : ['Second District', 'Hotel', 'Alleyway'],
+                  'map number' : '1'
                 },
 
   },
@@ -91,7 +99,8 @@ rooms = {
       '1st Floor' : { 'right' : '2nd Floor',
                   'down' : '5th Floor',
                   'shop' : '1st Floor Shop',
-                  'resetHeartless' : []
+                  'resetHeartless' : [],
+                  'map number' : '1'
       }, 
 
       '2nd Floor' : { 'right' : '3rd Floor',
@@ -109,21 +118,24 @@ rooms = {
                   #   'waves' : 1, 'status' : 1, 'wave' : { 1 : 'angel star'}
                   #   },
                   # },
-                  'resetHeartless' : []
+                  'resetHeartless' : [],
+                  'map number' : '1'
       },
 
       '3rd Floor' : { 'right' : '4th Floor',
                   'left' : '2nd Floor',
                   'up' : '1st Floor',
                   'down' : '5th Floor',
-                  'resetHeartless' : []
+                  'resetHeartless' : [],
+                  'map number' : '1'
       },
 
       '4th Floor' : { 'right' : '5th Floor',
                   'left' : '3rd Floor',
                   'up' : '1st Floor',
                   'down' : '5th Floor',
-                  'resetHeartless' : []
+                  'resetHeartless' : [],
+                  'map number' : '1'
       },
 
       '5th Floor' : {'left' : '4th Floor',
@@ -137,11 +149,13 @@ rooms = {
                       'waves' : 1, 'status' : 1, 'wave' : { 1 : 'invisible'}
                     },
                   },
-                  'resetHeartless' : []
+                  'resetHeartless' : [],
+                  'map number' : '1'
       },
 
       '1st Floor Shop' : { 'person'  : ['Moogle'],
-                  'resetHeartless' : []
+                  'resetHeartless' : [],
+                  'map number' : '1'
                 },
 
   }

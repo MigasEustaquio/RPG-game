@@ -6,7 +6,6 @@ people = {
                       'story' : 1,
                       'present' : 'yes',
                 },
-                999: {'mapUpdate' : 'leon '}
             },
             'Yuffie' : {
                 0: {'speech' : 'Yuffie: Hi there, Sora!\nDid you know that there\'s a shop in the Fisrt District?\n Try typing \'enter shop\'',
@@ -14,14 +13,12 @@ people = {
                         'key item' : 'First District Shop location',
                         'present' : 'yes',
                 },
-                999: {'mapUpdate' : 'yuffie '}
             },
             'Moogle' : {
                     0: {'speech' : 'Moogle: Hi there, Kupo!\nTo buy an item just type \'buy [item]\'\n\nHere\'s what I have in stock:',
                         'reward' : 'no',
                         'present' : 'yes',
                     },
-                    999: {'mapUpdate' : 'moogle '},
             },
 
 
@@ -41,7 +38,6 @@ people = {
                       'item' : 'elixir',
                       'present' : 'no',
                     },
-                    999: {'mapUpdate' : 'roxas '}
             },
 
             'Axel' : {
@@ -60,7 +56,6 @@ people = {
                       'item' : 'ether',
                       'present' : 'yes',
                     },
-                    999: {'mapUpdate' : 'axel '}
             },
 
 }
