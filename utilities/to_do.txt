@@ -1,5 +1,3 @@
-change map to only complete/incomplete !!!
-
 world map
 
 enemy commands (started)

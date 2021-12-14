@@ -1,12 +1,17 @@
 from colorama import Fore, Style
 from colorama import init as colorama_init
 
+import copy
+
 from dictionaries.itemsNmagic import *
 from dictionaries.exp import *
 from dictionaries.maps import *
 from dictionaries.save import *
 from dictionaries.tutorials import *
+from dictionaries.treasures import *
 from dictionaries.abilities import *
+
+from utilities.locationbk import *
 class player:
     def __init__(self):
 
@@ -42,10 +47,11 @@ class player:
 
         #STORY RELATED
         self.world = 'TraverseTown'
-        self.map = worldMaps[self.world]   ############### WHEN CHANGE WORLDS HAVE TO UPDATE THE worldMaps DICTIONARY
+        self.map = worldMaps   ############### WHEN CHANGE WORLDS HAVE TO UPDATE THE worldMaps DICTIONARY
         self.story = 0
 
         self.tutorial = tutorials
+        self.treasures = treasureList
 
         self.saveFile = 0
         self.editedSaves = saves

@@ -86,7 +86,7 @@ def showStatus():                     ###SHOW STATUS
         player.tutorial['save'] = 1
         player.tutorial['quit'] = 1
       print('To get out of the shop type: \'go back\'')
-  if 'treasure' in rooms[player.world][currentRoom]:
+  if 'treasure' in rooms[player.world][currentRoom] and player.treasures[player.world][currentRoom]['status']=='closed':
     print('You see a treasure chest!')
     if player.tutorial['treasure chest'] == 0:
       print(Fore.YELLOW + "tutorial: " + Fore.WHITE + tutorialSpeech['treasure chest'])
@@ -473,12 +473,12 @@ while True:                        ###MAIN
       print('Opening map...\n')
       from PIL import Image
       mapNumber = rooms[player.world][currentRoom]['map number']
-      img = Image.open('images/' + player.world + '/Map' + maps[player.world][mapNumber][player.map[mapNumber]] + '.jpg')
+      img = Image.open('images/' + player.world + '/Map' + maps[player.world][mapNumber][player.map[player.world][mapNumber]] + '.jpg')
       img.show()
 
     elif 'test' in move:                                ##### TEST
 
-      print('Story: ' + str(player.story))
+      print(player.treasures)
       # print(list(rooms[player.world]['2nd Floor']['heartless']))
       print('\ntested!\n')
     
@@ -490,7 +490,7 @@ while True:                        ###MAIN
       print('\ntested!\n')
     
     elif 'treasure' in move:                            ##### TREASURE
-      if 'treasure' in rooms[player.world][currentRoom]:
+      if 'treasure' in rooms[player.world][currentRoom] and player.treasures[player.world][currentRoom]['status']=='closed':
         if rooms[player.world][currentRoom]['treasure']['treasure'] == 'item':
           print('Obtained a "' + rooms[player.world][currentRoom]['treasure']['item'] + '"!')
           if len(player.item) < player.itemPouch:
@@ -504,7 +504,7 @@ while True:                        ###MAIN
           player.keyItems.append(rooms[player.world][currentRoom]['treasure']['key item'])
 
         elif rooms[player.world][currentRoom]['treasure']['treasure'] == 'mapUpdate':
-          player.map[rooms[player.world][currentRoom]['treasure']['mapUpdate']] = 'complete'
+          player.map[player.world][rooms[player.world][currentRoom]['treasure']['mapUpdate']] = 'complete'
           print(player.world + ' map updated!')
           if player.tutorial['open map'] == 0:
             print(Fore.YELLOW + "tutorial: " + Fore.WHITE + tutorialSpeech['open map'])
@@ -515,6 +515,7 @@ while True:                        ###MAIN
           player.keyblades.append(rooms[player.world][currentRoom]['treasure']['keyblade'])
 
         del rooms[player.world][currentRoom]['treasure']
+        player.treasures[player.world][currentRoom]['status']='opened'
       else:
         print('There\'s no treasure chest in this room!')
 
@@ -535,6 +536,8 @@ while True:                        ###MAIN
 
     elif 'save' in move:                                ##### SAVE
       if 'Shop' in currentRoom:
+        with open('utilities/saveFile.txt', 'r') as f:
+          saves = ast.literal_eval(f.read())
         saveScreen(player, saves)
       else:
         print('There is no save point here!')
@@ -543,6 +546,7 @@ while True:                        ###MAIN
       answer = input('Are you sure you want to quit the game and return to the Title Screen? (All unsaved progress will be lost)\n')
       if 'yes' in answer.lower() :
         player.__init__()
+        rooms=copy.copy(roomsbk)
         print('\n\n\n')
         break
 

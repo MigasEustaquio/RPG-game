@@ -106,13 +106,6 @@ heartless = {
                     'drop' : {}
             },
 
-            'soldier' : {'commands' : 'attack', 
-                    'HP': 2 , 'damage': 1,
-                    'munny' : [2,6],
-                    'exp' : 20,
-                    'drop' : {}
-            },
-
             'gargoyle' : {'commands' : 'attack', 
                     'HP': 2 , 'damage': 1,
                     'munny' : [2,6],
