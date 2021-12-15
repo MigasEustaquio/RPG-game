@@ -1,6 +1,7 @@
 #a dictionary linking a room to other room positions
 
 # 'heartless' : (story)
+# 'unlock' : {'magic to unlock(?)':['direction', 'message after unlocking', 'unlock other area', 'direction of the other area']}
 
 rooms = {
 
@@ -66,6 +67,7 @@ rooms = {
             'Second District' : { 'down' : 'First District',
                   'right' : 'Third District',
                   'left' : 'Hotel',
+                  'up' : 'Gizmo Shop',
                   'treasure' : {'treasure' : 'item', 'item' : 'potion'},
                   'heartless'  : { 
                     0:{
@@ -77,17 +79,37 @@ rooms = {
                        2 : 'soldier', 1 : 'shadow'}
                     },
                   },
-                  'resetHeartless' : ['Alleyway'],
+                  'resetHeartless' : ['Alleyway', 'Third District Upper Side'],
                   'map number' : '1',
                   'restricted' : {}
                 },
                 
-            'Third District' : { 'left'  : 'Second District',
-                                 'down' : 'First District',
-                                'resetHeartless' : ['Hotel', 'Alleyway'],
+            'Third District' : { 'down' : 'First District',
+                  'left'  : 'Second District',
+                  'up' : 'Mystical House',
+                  'right' : 'Small House',
+                  'resetHeartless' : ['Hotel', 'Alleyway'],
                   'map number' : '1',
-                  'restricted' : {'down' : 'The door seems to be blocked...\nThere appears to be some sparkles coming out of a severed power cord near the door...'},
-                  'unlock' : {'thu':['down', ' and hit the power cord. Some mechanisms inside the door seems to be moving now!', 'First District', 'right']}
+                  'restricted' : {'down' : 'The door seems to be blocked...\nThere appears to be some sparkles coming out of a severed power cord near the door...',
+                                  'up' : 'There is a black wall with a symbol that resembles fire...',
+                  },
+                  'unlock' : {'thu':['down', ' and hit the power cord. Some mechanisms inside the door seems to be moving now!', 'First District', 'right'],
+                              'fir':['up', ' and the fire symbol on the wall glows red. It opens before you!']
+                              }
+                },
+
+            'Small House' : { 'left' : 'Third District',
+                  'person'  : ['Leon'],
+                  'resetHeartless' : ['Second District'],
+                  'map number' : '1',
+                  'restricted' : {}
+                },
+
+            'Dalmatian House' : { 'leave' : 'Second District',
+                  'person'  : ['Pongo'],
+                  'resetHeartless' : ['Gizmo Shop', 'Third District', 'Hotel'],
+                  'map number' : '1',
+                  'restricted' : {}
                 },
                 
             'Hotel' : { 'right' : 'Second District',
@@ -139,6 +161,86 @@ rooms = {
                   },
                   'resetHeartless' : ['Second District', 'Hotel'],
                   'map number' : '1',
+                  'restricted' : {}
+                },
+
+              'Gizmo Shop' : { 'down' : 'Second District',
+                    'up' : 'Second District Upper Side',
+                    'heartless'  : { 
+                      0:{
+                      'waves' : 1, 'status' : 1, 'wave' : {
+                          1 : 'shadow'}
+                      },
+                      1:{
+                      'waves' : 1, 'status' : 1, 'wave' : {
+                          1 : 'shadow'}
+                      },
+                    },
+                    'resetHeartless' : ['Third District Upper Side', 'Hotel', 'Third District'],
+                  'map number' : '1',
+                  'restricted' : {}
+             },
+
+             'Second District Upper Side' : { 'down' : 'Gizmo Shop',
+                    'right' : 'Third District Upper Side',
+                    'jump' : 'Second District',
+                    'heartless'  : { 
+                      0:{
+                      'waves' : 1, 'status' : 1, 'wave' : {
+                          1 : 'shadow'}
+                      },
+                      1:{
+                      'waves' : 1, 'status' : 1, 'wave' : {
+                          1 : 'shadow'}
+                      },
+                    },
+                    'resetHeartless' : ['Second District'],
+                  'map number' : '1',
+                  'restricted' : {}
+             },
+
+             'Third District Upper Side' : { 'left' : 'Second District Upper Side',
+                    'jump' : 'Third District',
+                    'heartless'  : { 
+                      0:{
+                      'waves' : 1, 'status' : 1, 'wave' : {
+                          1 : 'shadow'}
+                      },
+                      1:{
+                      'waves' : 1, 'status' : 1, 'wave' : {
+                          1 : 'shadow'}
+                      },
+                    },
+                    'resetHeartless' : ['Gizmo Shop'],
+                  'map number' : '1',
+                  'restricted' : {}
+             },
+
+             'Mystical House' : { 'down' : 'Third District',
+                  'up' : 'Magician\'s Study',
+                  'resetHeartless' : ['Second District'],
+                  'map number' : '2',
+                  'restricted' : {}
+                },
+
+              'Magician\'s Study' : { 'down' : 'Mystical House',
+                  'elevator' : 'Cavern',
+                  'person'  : ['Merlin', 'Fairy Godmother'],
+                  'resetHeartless' : ['Third District', 'Alleyway'],
+                  'map number' : '2',
+                  'restricted' : {}
+                },
+
+              '?' : { 'Merlin' : 'Magician\'s Study',
+                  'person'  : ['Merlin'],
+                  'map number' : '2',
+                  'restricted' : {}
+                },
+
+              'Cavern' : { 'down' : 'Alleyway',
+                  'elevator' : 'Magician\'s Study',
+                  'person'  : ['Kairi'],
+                  'map number' : '2',
                   'restricted' : {}
                 },
 

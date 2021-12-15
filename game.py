@@ -430,7 +430,7 @@ def determineBattle(story, currentRoom, previusRoom):   ###DETERMINE ENEMY TO BA
           return 0, rooms[player.world][0], rooms[player.world][0]
     else: return 0, currentRoom, previusRoom
   
-def unrestrict(currentRoom):
+def unrestrict(currentRoom):          ###UNRESTRICT AREAS
 
   if len(rooms[player.world][currentRoom]['unlock'][x])>2:
     del rooms[player.world][rooms[player.world][currentRoom]['unlock'][x][2]]['restricted'][rooms[player.world][currentRoom]['unlock'][x][3]]
