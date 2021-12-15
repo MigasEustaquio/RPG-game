@@ -14,7 +14,8 @@ rooms = {
                   'up' : 'Seaside Shack',
                   'person'  : ['Kairi'],
                   'resetHeartless' : [],
-                  'map number' : '1'
+                  'map number' : '1',
+                  'restricted' : {}
       }, 
 
       'Cove' : { 'left' : 'Seashore',
@@ -22,26 +23,30 @@ rooms = {
                   # 'treasure' : {'treasure' : 'item', 'item' : 'potion'},
                   'person'  : ['Riku', 'Kairi'],
                   'resetHeartless' : [],
-                  'map number' : '1'
+                  'map number' : '1',
+                  'restricted' : {}
       },
 
       'Seaside Shack' : { 'right' : 'Cove',
                   'down' : 'Seashore',
                   'resetHeartless' : [],
                   'Save':'',
-                  'map number' : '1'
+                  'map number' : '1',
+                  'restricted' : {}
       },
 
       'Paopu Tree' : { 'up' : 'Seashore',
                   'person'  : ['Riku'],
                   'resetHeartless' : [],
-                  'map number' : '1'
+                  'map number' : '1',
+                  'restricted' : {}
       },
 
       'Secret Place' : {'down' : 'Seashore',
                   'right' : 'Seashore',
                   'resetHeartless' : [],
-                  'map number' : '1'
+                  'map number' : '1',
+                  'restricted' : {}
       },
 
   },
@@ -51,9 +56,11 @@ rooms = {
     0 : 'First District',
 
             'First District' : { 'up' : 'Second District',
+                  'right' : 'Third District',
                   'shop' : 'First District Shop',
                   'resetHeartless' : ['Hotel', 'Alleyway'],
-                  'map number' : '1'
+                  'map number' : '1',
+                  'restricted' : {'right' : 'The door seems to be blocked...'}
             },        
 
             'Second District' : { 'down' : 'First District',
@@ -71,12 +78,16 @@ rooms = {
                     },
                   },
                   'resetHeartless' : ['Alleyway'],
-                  'map number' : '1'
+                  'map number' : '1',
+                  'restricted' : {}
                 },
                 
             'Third District' : { 'left'  : 'Second District',
+                                 'down' : 'First District',
                                 'resetHeartless' : ['Hotel', 'Alleyway'],
-                  'map number' : '1'
+                  'map number' : '1',
+                  'restricted' : {'down' : 'The door seems to be blocked...\nThere appears to be some sparkles coming out of a severed power cord near the door...'},
+                  'unlock' : {'thu':['down', ' and hit the power cord. Some mechanisms inside the door seems to be moving now!', 'First District', 'right']}
                 },
                 
             'Hotel' : { 'right' : 'Second District',
@@ -93,21 +104,24 @@ rooms = {
                       },
                     },
                     'resetHeartless' : ['Alleyway'],
-                  'map number' : '1'
+                  'map number' : '1',
+                  'restricted' : {}
              },
 
              'Green Room' : { 'right' : 'Hotel',
                   'up' : 'Alleyway',
                   'person'  : ['Leon'],
                   'resetHeartless' : ['Second District'],
-                  'map number' : '1'
+                  'map number' : '1',
+                  'restricted' : {}
                 },
 
               'Red Room' : { 'down' : 'Hotel',
                   'left' : 'Alleyway',
                   'person'  : ['Yuffie'],
                   'resetHeartless' : ['Second District'],
-                  'map number' : '1'
+                  'map number' : '1',
+                  'restricted' : {}
                 },
 
               'Alleyway' : { 'down' : 'Green Room',
@@ -124,13 +138,15 @@ rooms = {
                     },
                   },
                   'resetHeartless' : ['Second District', 'Hotel'],
-                  'map number' : '1'
+                  'map number' : '1',
+                  'restricted' : {}
                 },
 
             'First District Shop' : { 'leave' : 'First District',              
                   'person'  : ['Moogle'],
                                     'resetHeartless' : ['Second District', 'Hotel', 'Alleyway'],
-                  'map number' : '1'
+                  'map number' : '1',
+                  'restricted' : {}
                 },
 
   },
@@ -144,7 +160,8 @@ rooms = {
                   'down' : '5th Floor',
                   'shop' : '1st Floor Shop',
                   'resetHeartless' : [],
-                  'map number' : '1'
+                  'map number' : '1',
+                  'restricted' : {}
       }, 
 
       '2nd Floor' : { 'right' : '3rd Floor',
@@ -163,7 +180,8 @@ rooms = {
                   #   },
                   # },
                   'resetHeartless' : [],
-                  'map number' : '1'
+                  'map number' : '1',
+                  'restricted' : {}
       },
 
       '3rd Floor' : { 'right' : '4th Floor',
@@ -171,7 +189,8 @@ rooms = {
                   'up' : '1st Floor',
                   'down' : '5th Floor',
                   'resetHeartless' : [],
-                  'map number' : '1'
+                  'map number' : '1',
+                  'restricted' : {}
       },
 
       '4th Floor' : { 'right' : '5th Floor',
@@ -179,7 +198,8 @@ rooms = {
                   'up' : '1st Floor',
                   'down' : '5th Floor',
                   'resetHeartless' : [],
-                  'map number' : '1'
+                  'map number' : '1',
+                  'restricted' : {}
       },
 
       '5th Floor' : {'left' : '4th Floor',
@@ -194,13 +214,15 @@ rooms = {
                     },
                   },
                   'resetHeartless' : [],
-                  'map number' : '1'
+                  'map number' : '1',
+                  'restricted' : {}
       },
 
       '1st Floor Shop' : { 'leave' : '1st Floor',              
                   'person'  : ['Moogle'],
                   'resetHeartless' : [],
-                  'map number' : '1'
+                  'map number' : '1',
+                  'restricted' : {}
                 },
 
   }

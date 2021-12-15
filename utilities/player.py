@@ -8,10 +8,9 @@ from dictionaries.exp import *
 from dictionaries.maps import *
 from dictionaries.save import *
 from dictionaries.tutorials import *
-from dictionaries.treasures import *
+from dictionaries.treasuresNrestrictions import *
 from dictionaries.abilities import *
 
-from utilities.locationbk import *
 class player:
     def __init__(self):
 
@@ -52,6 +51,7 @@ class player:
 
         self.tutorial = tutorials
         self.treasures = treasureList
+        self.restrictionLifted = restrictionLiftedList
 
         self.saveFile = 0
         self.editedSaves = saves

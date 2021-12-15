@@ -430,6 +430,21 @@ def determineBattle(story, currentRoom, previusRoom):   ###DETERMINE ENEMY TO BA
           return 0, rooms[player.world][0], rooms[player.world][0]
     else: return 0, currentRoom, previusRoom
   
+def unrestrict(currentRoom):
+
+  if len(rooms[player.world][currentRoom]['unlock'][x])>2:
+    del rooms[player.world][rooms[player.world][currentRoom]['unlock'][x][2]]['restricted'][rooms[player.world][currentRoom]['unlock'][x][3]]
+    if rooms[player.world][currentRoom]['unlock'][x][2] in player.restrictionLifted[player.world]:
+      player.restrictionLifted[player.world][rooms[player.world][currentRoom]['unlock'][x][2]].append(rooms[player.world][currentRoom]['unlock'][x][3])
+    else:
+      player.restrictionLifted[player.world][rooms[player.world][currentRoom]['unlock'][x][2]]=[rooms[player.world][currentRoom]['unlock'][x][3]]
+  del rooms[player.world][currentRoom]['restricted'][rooms[player.world][currentRoom]['unlock'][x][0]]
+
+  if currentRoom in player.restrictionLifted[player.world]:
+    player.restrictionLifted[player.world][currentRoom].append(rooms[player.world][currentRoom]['unlock'][x][0])
+  else:
+    player.restrictionLifted[player.world][currentRoom]=[rooms[player.world][currentRoom]['unlock'][x][0]]
+
 
 
 #################
@@ -449,7 +464,13 @@ while True:                        ###MAIN
 #CONFIGURE PARAMETERS
   titleScreen(player, saves)      ### NEW/LOAD GAME
   player.startingGame()
+  roomsbk=copy.deepcopy(rooms)
   peoplebk=copy.copy(people)
+
+  for world in player.restrictionLifted:
+    for room in player.restrictionLifted[world]:
+      for direction in player.restrictionLifted[world][room]:
+        del rooms[world][room]['restricted'][direction]
 #INITIALIZE VARIABLES
   alreadyBattled = 0
   retryBoss = False
@@ -475,16 +496,20 @@ while True:                        ###MAIN
       print('Opening map...\n')
       from PIL import Image
       mapNumber = rooms[player.world][currentRoom]['map number']
-      img = Image.open('images/' + player.world + '/Map' + maps[player.world][mapNumber][player.map[player.world][mapNumber]] + '.jpg')
-      img.show()
+      if player.map[player.world][mapNumber] == 'no':
+        print(red +'You have no map of this area!' + white)
+      else:
+        img = Image.open('images/' + player.world + '/Map' + maps[player.world][mapNumber][player.map[player.world][mapNumber]] + '.jpg')
+        img.show()
 
     elif 'test' in move:                                ##### TEST
 
-      print(player.treasures)
-      # print(list(rooms[player.world]['2nd Floor']['heartless']))
+      print(player.restrictionLifted)
+      print()
+      print(rooms['TraverseTown']['First District'])
       print('\ntested!\n')
     
-    elif 'upgrade' in move:                                ##### TEST 2
+    elif 'upgrade' in move:                             ##### TEST 2
 
       player.story += 1
       print('Story: ' + str(player.story))
@@ -506,8 +531,12 @@ while True:                        ###MAIN
           player.keyItems.append(rooms[player.world][currentRoom]['treasure']['key item'])
 
         elif rooms[player.world][currentRoom]['treasure']['treasure'] == 'mapUpdate':
-          player.map[player.world][rooms[player.world][currentRoom]['treasure']['mapUpdate']] = 'complete'
-          print(player.world + ' map updated!')
+          if player.map[player.world][rooms[player.world][currentRoom]['treasure']['mapUpdate']] == 'no':
+            player.map[player.world][rooms[player.world][currentRoom]['treasure']['mapUpdate']] = 'incomplete'
+            print('Obtained ' + player.world + ' ' + rooms[player.world][currentRoom]['treasure']['mapUpdate'] + ' map!')
+          elif player.map[player.world][rooms[player.world][currentRoom]['treasure']['mapUpdate']] == 'incomplete':
+            player.map[player.world][rooms[player.world][currentRoom]['treasure']['mapUpdate']] = 'complete'
+            print(player.world + ' ' + rooms[player.world][currentRoom]['treasure']['mapUpdate'] + ' map updated!')
           if player.tutorial['open map'] == 0:
             print(Fore.YELLOW + "tutorial: " + Fore.WHITE + tutorialSpeech['open map'])
             player.tutorial['open map'] = 1
@@ -549,7 +578,7 @@ while True:                        ###MAIN
       answer = input('Are you sure you want to quit the game and return to the Title Screen? (All unsaved progress will be lost)\n')
       if 'yes' in answer.lower() :
         player.__init__()
-        rooms=copy.copy(roomsbk)
+        rooms=copy.deepcopy(roomsbk)
         people=copy.copy(peoplebk)
         print('\n\n\n')
         break
@@ -596,7 +625,44 @@ while True:                        ###MAIN
 
       else:
         if move[1] in player.magic:
-          if 'cur' not in move[1]:
+
+          if 'unlock' in rooms[player.world][currentRoom]:
+            unlockCast='no'
+            for x in rooms[player.world][currentRoom]['unlock']:
+              if x in move[1]:
+                unlockCast = 'yes'
+                if player.MP >= magics[move[1]]['MP']:
+                  magicText = magics[move[1]]['speech']
+                  print('You used ' + blue + str(magics[move[1]]['MP']) +' ● ' + white + '!')
+
+                  if 'cur' not in move[1]:
+                    print("You cast " + player.colors[magicText[4]] + move[1].capitalize() + white + rooms[player.world][currentRoom]['unlock'][x][1])
+                  else:
+                    print("You cast " + green + move[1].capitalize() + white + rooms[player.world][currentRoom]['unlock'][x][1])
+                  
+                  player.MP = player.MP - magics[move[1]]['MP']
+                  player.HP = player.HP + magics[move[1]]['heal']
+                  if player.HP > player.TotalHP: player.HP = player.TotalHP
+
+                  unrestrict(currentRoom)
+
+                else:
+                  print('Not enough MP!')
+
+            if unlockCast == 'no':
+              if 'cur' not in move[1]:
+                print('You can\'t cast that now!')
+              else:
+                if player.MP >= magics[move[1]]['MP']:
+                  print('You used ' + blue + str(magics[move[1]]['MP']) +' ● ' + white + '!')
+                  print("You cast " + green + move[1].capitalize() + white + " and restore " + red + magics[move[1]]['speech'][1] + white + magics[move[1]]['speech'][2])
+                  player.MP = player.MP - magics[move[1]]['MP']
+                  player.HP = player.HP + magics[move[1]]['heal']
+                  if player.HP > player.TotalHP: player.HP = player.TotalHP
+                else:
+                  print('Not enough MP!')
+
+          elif 'cur' not in move[1]:
             print('You can\'t cast that now!')
           else:
             if player.MP >= magics[move[1]]['MP']:
@@ -613,53 +679,56 @@ while True:                        ###MAIN
         move = "leave leave"
         move=move.lower().split()
       #check that they are allowed wherever they want to go
-      if move[1] in rooms[player.world][currentRoom]:
-        #set the current room to the new room
-        alreadyBattled = 0
-        previusRoom = currentRoom
-        currentRoom = rooms[player.world][currentRoom][move[1]]
-        for room in rooms[player.world][currentRoom]['resetHeartless']:
-            if player.story in rooms[player.world][room]['heartless']:
-              if rooms[player.world][room]['heartless'][player.story]['status'] == 0:
-                rooms[player.world][room]['heartless'][player.story]['status'] = rooms[player.world][room]['heartless'][player.story]['waves']
-            else:
-              if player.story > list(rooms[player.world][room]['heartless'])[-1]:
-                rooms[player.world][room]['heartless'][list(rooms[player.world][room]['heartless'])[-1]]['status'] = rooms[player.world][room]['heartless'][list(rooms[player.world][room]['heartless'])[-1]]['waves']
-              elif player.story < list(rooms[player.world][room]['heartless'])[0]:
-                pass
-              else:
-                for story in rooms[player.world][room]['heartless']:
-                  if story > player.story:
-                    rooms[player.world][room]['heartless'][previusStory]['status'] = rooms[player.world][room]['heartless'][previusStory]['waves']
-                    break
-                  else:
-                    previusStory = story
-      #there is no door (link) to the new room
-      elif move[1] == 'back':
-          alreadyBattled = 0
-          temp = currentRoom
-          currentRoom = previusRoom
-          previusRoom = temp
-          for room in rooms[player.world][currentRoom]['resetHeartless']:
-            if player.story in rooms[player.world][room]['heartless']:
-              if rooms[player.world][room]['heartless'][player.story]['status'] == 0:
-                rooms[player.world][room]['heartless'][player.story]['status'] = rooms[player.world][room]['heartless'][player.story]['waves']
-            else:
-              if player.story > list(rooms[player.world][room]['heartless'])[-1]:
-                rooms[player.world][room]['heartless'][list(rooms[player.world][room]['heartless'])[-1]]['status'] = rooms[player.world][room]['heartless'][list(rooms[player.world][room]['heartless'])[-1]]['waves']
-              elif player.story < list(rooms[player.world][room]['heartless'])[0]:
-                pass
-              else:
-                for story in rooms[player.world][room]['heartless']:
-                  if story > player.story:
-                    rooms[player.world][room]['heartless'][previusStory]['status'] = rooms[player.world][room]['heartless'][previusStory]['waves']
-                    break
-                  else:
-                    previusStory = story
-
+      if move[1] in rooms[player.world][currentRoom]['restricted']:
+        print(rooms[player.world][currentRoom]['restricted'][move[1]])
       else:
-        if retryBoss == False:
-          print('You can\'t go that way!')
+        if move[1] in rooms[player.world][currentRoom]:
+          #set the current room to the new room
+          alreadyBattled = 0
+          previusRoom = currentRoom
+          currentRoom = rooms[player.world][currentRoom][move[1]]
+          for room in rooms[player.world][currentRoom]['resetHeartless']:
+              if player.story in rooms[player.world][room]['heartless']:
+                if rooms[player.world][room]['heartless'][player.story]['status'] == 0:
+                  rooms[player.world][room]['heartless'][player.story]['status'] = rooms[player.world][room]['heartless'][player.story]['waves']
+              else:
+                if player.story > list(rooms[player.world][room]['heartless'])[-1]:
+                  rooms[player.world][room]['heartless'][list(rooms[player.world][room]['heartless'])[-1]]['status'] = rooms[player.world][room]['heartless'][list(rooms[player.world][room]['heartless'])[-1]]['waves']
+                elif player.story < list(rooms[player.world][room]['heartless'])[0]:
+                  pass
+                else:
+                  for story in rooms[player.world][room]['heartless']:
+                    if story > player.story:
+                      rooms[player.world][room]['heartless'][previusStory]['status'] = rooms[player.world][room]['heartless'][previusStory]['waves']
+                      break
+                    else:
+                      previusStory = story
+        #there is no door (link) to the new room
+        elif move[1] == 'back':
+            alreadyBattled = 0
+            temp = currentRoom
+            currentRoom = previusRoom
+            previusRoom = temp
+            for room in rooms[player.world][currentRoom]['resetHeartless']:
+              if player.story in rooms[player.world][room]['heartless']:
+                if rooms[player.world][room]['heartless'][player.story]['status'] == 0:
+                  rooms[player.world][room]['heartless'][player.story]['status'] = rooms[player.world][room]['heartless'][player.story]['waves']
+              else:
+                if player.story > list(rooms[player.world][room]['heartless'])[-1]:
+                  rooms[player.world][room]['heartless'][list(rooms[player.world][room]['heartless'])[-1]]['status'] = rooms[player.world][room]['heartless'][list(rooms[player.world][room]['heartless'])[-1]]['waves']
+                elif player.story < list(rooms[player.world][room]['heartless'])[0]:
+                  pass
+                else:
+                  for story in rooms[player.world][room]['heartless']:
+                    if story > player.story:
+                      rooms[player.world][room]['heartless'][previusStory]['status'] = rooms[player.world][room]['heartless'][previusStory]['waves']
+                      break
+                    else:
+                      previusStory = story
+
+        else:
+          if retryBoss == False:
+            print('You can\'t go that way!')
 
     elif move[0] == 'talk' :                            ##### TALK WITH PERSON
       #if the room contains an person
@@ -671,11 +740,22 @@ while True:                        ###MAIN
           if move[1].capitalize() == person:
             #falar com a pessoa
             print(people[currentRoom][person][storyToTalk[i]]['speech'])
-            reward = people[currentRoom][person][storyToTalk[i]]['reward']
+            event = people[currentRoom][person][storyToTalk[i]]
+            reward = event['reward']
             if reward == 'story':
               if player.story == (people[currentRoom][person][storyToTalk[i]]['story']-1):
                 player.story += 1
                 print()
+            elif reward == 'mapUpdate':
+              if player.map[player.world][event['mapUpdate']] == 'no':
+                player.map[player.world][event['mapUpdate']] = 'incomplete'
+                print('Obtained ' + player.world + ' ' + event['mapUpdate'] + ' map!')
+              elif player.map[player.world][event['mapUpdate']] == 'incomplete':
+                player.map[player.world][event['mapUpdate']] = 'complete'
+                print(player.world + ' ' + event['mapUpdate'] + ' map updated!')
+              if player.tutorial['open map'] == 0:
+                print(Fore.YELLOW + "tutorial: " + Fore.WHITE + tutorialSpeech['open map'])
+                player.tutorial['open map'] = 1
             elif reward == 'keyblade':
               player.keyblades.append(people[currentRoom][person][storyToTalk[i]]['keyblade'])
               print('You got the ' + cyan + people[currentRoom][person][storyToTalk[i]]['keyblade'] + white + ' Keyblade!')

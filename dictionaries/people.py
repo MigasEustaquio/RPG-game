@@ -30,9 +30,9 @@ people = {
 
             'Green Room' : {
               'Leon' : {
-                  0: {'speech' : 'Leon: Donald & Goofy are in the Third District!',
-                        'reward' : 'story',
-                        'story' : 1,
+                  0: {'speech' : 'Leon: Here\'s the map of the town!',
+                        'reward' : 'mapUpdate',
+                        'mapUpdate' : '1',
                         'present' : 'yes',
                   },
               },
@@ -47,11 +47,13 @@ people = {
                   },
               },
             },
-            'Moogle' : {
-                    0: {'speech' : 'Moogle: Hi there, Kupo!\nTo buy an item just type \'buy [item]\'\n\nHere\'s what I have in stock:',
-                        'reward' : 'no',
-                        'present' : 'yes',
-                    },
+            'First District Shop' :{
+              'Moogle' : {
+                      0: {'speech' : 'Moogle: Hi there, Kupo!\nTo buy an item just type \'buy [item]\'\n\nHere\'s what I have in stock:',
+                          'reward' : 'no',
+                          'present' : 'yes',
+                      },
+              },
             },
 
             '2nd Floor' : {
