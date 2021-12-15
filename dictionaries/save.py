@@ -20,7 +20,7 @@ saves = {
                 'keyblades' : ['Kingdom Key'],
                 'abilities' : [],
                 'finishers' : [],
-                'world' : 'TraverseTown',
+                'world' : 'DestinyIslands',
                 'map' : {'DestinyIslands' : {'1': 'incomplete'},
                         'TraverseTown' : {'1': 'incomplete',
                                         '2': 'incomplete'},
@@ -38,6 +38,7 @@ saves = {
                         },
                 'tutorial' : {'use item': 1, 'cast magic': 1, 'talk': 1, 'save': 0, 'treasure chest': 0, 'open map': 0, 'equipment': 0, 'keyblade': 0},
                 'treasures': {'TraverseTown': {'Second District': {'treasure': 'item', 'item': 'potion', 'status': 'closed'}, 'Alleyway': {'treasure': 'mapUpdate', 'mapUpdate': '1', 'status': 'closed'}}, 'CastleOblivion': {'2nd Floor': {'treasure': 'keyblade', 'keyblade': 'Kingdom Key D', 'status': 'closed'}}},
+                'currentRoom': 'Secret Place',
                 'story' : 0,
                 },
 

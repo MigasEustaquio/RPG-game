@@ -3,6 +3,49 @@
 # 'heartless' : (story)
 
 rooms = {
+
+  'DestinyIslands': {
+
+    0 : 'Seashore',
+
+      'Seashore' : { 'right' : 'Cove',
+                  'down' : 'Paopu Tree',
+                  'left' : 'Secret Place',
+                  'up' : 'Seaside Shack',
+                  'person'  : ['Kairi'],
+                  'resetHeartless' : [],
+                  'map number' : '1'
+      }, 
+
+      'Cove' : { 'left' : 'Seashore',
+                  'up' : 'Seaside Shack',
+                  # 'treasure' : {'treasure' : 'item', 'item' : 'potion'},
+                  'person'  : ['Riku', 'Kairi'],
+                  'resetHeartless' : [],
+                  'map number' : '1'
+      },
+
+      'Seaside Shack' : { 'right' : 'Cove',
+                  'down' : 'Seashore',
+                  'resetHeartless' : [],
+                  'Save':'',
+                  'map number' : '1'
+      },
+
+      'Paopu Tree' : { 'up' : 'Seashore',
+                  'person'  : ['Riku'],
+                  'resetHeartless' : [],
+                  'map number' : '1'
+      },
+
+      'Secret Place' : {'down' : 'Seashore',
+                  'right' : 'Seashore',
+                  'resetHeartless' : [],
+                  'map number' : '1'
+      },
+
+  },
+
   'TraverseTown' : {
 
     0 : 'First District',

@@ -32,22 +32,22 @@ def verifyPersonStory(peolpeInRoom):  ###Check person's speech and reward based 
   peopleToTalk = []
   storyToTalk = []
   for person in peolpeInRoom:
-      if player.story > list(people[person])[-1]:
-        if people[person][list(people[person])[-1]]['present'] == 'yes':
+      if player.story > list(people[currentRoom][person])[-1]:
+        if people[currentRoom][person][list(people[currentRoom][person])[-1]]['present'] == 'yes':
           peopleToTalk.append(person)
-          storyToTalk.append(list(people[person])[-1])
-      elif player.story < list(people[person])[0]:
+          storyToTalk.append(list(people[currentRoom][person])[-1])
+      elif player.story < list(people[currentRoom][person])[0]:
         pass
       else:
-        for story in people[person]:
+        for story in people[currentRoom][person]:
           if story == player.story:
-            if people[person][story]['present'] == 'yes':
+            if people[currentRoom][person][story]['present'] == 'yes':
               peopleToTalk.append(person)
               storyToTalk.append(story)
             break
           else:
             if story > player.story:
-              if people[person][previusStory]['present'] == 'yes':
+              if people[currentRoom][person][previusStory]['present'] == 'yes':
                 peopleToTalk.append(person)
                 storyToTalk.append(previusStory)
               break
@@ -76,7 +76,7 @@ def showStatus():                     ###SHOW STATUS
       print('You see ' + person)
   if "shop" in rooms[player.world][currentRoom] and (currentRoom+' Shop location') in player.keyItems:
     print('You see the ' + rooms[player.world][currentRoom]['shop'] + ', try: \'enter shop\'')
-  if "Shop" in currentRoom:
+  if "Shop" in currentRoom or "Save" in rooms[player.world][currentRoom]:
       player.HP = player.TotalHP
       player.MP = player.TotalMP
       print('\nYou see a Save point, HP and MP restored!')
@@ -85,7 +85,8 @@ def showStatus():                     ###SHOW STATUS
         print(Fore.YELLOW + "tutorial: " + Fore.WHITE + tutorialSpeech['quit'])
         player.tutorial['save'] = 1
         player.tutorial['quit'] = 1
-      print('To get out of the shop type: \'leave\'')
+      if "Shop" in currentRoom:
+        print('To get out of the shop type: \'leave\'')
   if 'treasure' in rooms[player.world][currentRoom] and player.treasures[player.world][currentRoom]['status']=='closed':
     print('You see a treasure chest!')
     if player.tutorial['treasure chest'] == 0:
@@ -448,6 +449,7 @@ while True:                        ###MAIN
 #CONFIGURE PARAMETERS
   titleScreen(player, saves)      ### NEW/LOAD GAME
   player.startingGame()
+  peoplebk=copy.copy(people)
 #INITIALIZE VARIABLES
   alreadyBattled = 0
   retryBoss = False
@@ -535,7 +537,7 @@ while True:                        ###MAIN
         player.showTutorials()
 
     elif 'save' in move:                                ##### SAVE
-      if 'Shop' in currentRoom:
+      if 'Shop' in currentRoom or 'Save' in rooms[player.world][currentRoom]:
         player.currentRoom = currentRoom
         with open('utilities/saveFile.txt', 'r') as f:
           saves = ast.literal_eval(f.read())
@@ -548,6 +550,7 @@ while True:                        ###MAIN
       if 'yes' in answer.lower() :
         player.__init__()
         rooms=copy.copy(roomsbk)
+        people=copy.copy(peoplebk)
         print('\n\n\n')
         break
 
@@ -667,26 +670,26 @@ while True:                        ###MAIN
         for person in peopleToTalk:
           if move[1].capitalize() == person:
             #falar com a pessoa
-            print(people[person][storyToTalk[i]]['speech'])
-            reward = people[person][storyToTalk[i]]['reward']
+            print(people[currentRoom][person][storyToTalk[i]]['speech'])
+            reward = people[currentRoom][person][storyToTalk[i]]['reward']
             if reward == 'story':
-              if player.story == (people[person][storyToTalk[i]]['story']-1):
+              if player.story == (people[currentRoom][person][storyToTalk[i]]['story']-1):
                 player.story += 1
                 print()
             elif reward == 'keyblade':
-              player.keyblades.append(people[person][storyToTalk[i]]['keyblade'])
-              print('You got the ' + cyan + people[person][storyToTalk[i]]['keyblade'] + white + ' Keyblade!')
+              player.keyblades.append(people[currentRoom][person][storyToTalk[i]]['keyblade'])
+              print('You got the ' + cyan + people[currentRoom][person][storyToTalk[i]]['keyblade'] + white + ' Keyblade!')
             elif reward == 'key item':
-              player.keyItems.append(people[person][storyToTalk[i]]['key item'])
-              print('You got the "' + people[person][storyToTalk[i]]['key item'] + '" key item!')
+              player.keyItems.append(people[currentRoom][person][storyToTalk[i]]['key item'])
+              print('You got the "' + people[currentRoom][person][storyToTalk[i]]['key item'] + '" key item!')
             elif reward == 'item':
-              print('You got a ' + green + people[person][storyToTalk[i]]['item'] + white + '!')
+              print('You got a ' + green + people[currentRoom][person][storyToTalk[i]]['item'] + white + '!')
               if len(player.item) < player.itemPouch:
-                player.item.append(people[person][storyToTalk[i]]['item'])
+                player.item.append(people[currentRoom][person][storyToTalk[i]]['item'])
               else:
-                player.stock.append(people[person][storyToTalk[i]]['item'])
+                player.stock.append(people[currentRoom][person][storyToTalk[i]]['item'])
                 print('Your item pouch is full, item send to stock!!')
-            people[person][storyToTalk[i]]['reward'] = 'no'
+            people[currentRoom][person][storyToTalk[i]]['reward'] = 'no'
             if 'Moogle' in rooms[player.world][currentRoom]['person']:
                 shop(currentRoom)
 

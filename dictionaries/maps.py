@@ -1,5 +1,10 @@
 maps = {
 
+            'DestinyIslands' : {
+                    '1' : {'incomplete' : '10', 'complete' : '11'},
+                    
+            },        
+
             'TraverseTown' : {
                     '1' : {'incomplete' : '10', 'complete' : '11'},
                     '2' : {'incomplete' : '20', 'complete' : '21'},
