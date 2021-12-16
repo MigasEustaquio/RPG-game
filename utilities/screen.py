@@ -33,6 +33,8 @@ def save(file, y, saves):
   x['restrictionLifted'] = y.restrictionLifted
   x['currentRoom'] = y.currentRoom
   x['story'] = y.story
+  x['shipUnlocked'] = y.shipUnlocked
+  x['unlockedWorlds'] = y.unlockedWorlds
   y.saveFile = file
 
   saves[file]=x
@@ -73,6 +75,8 @@ def load(file, y, saves):
   y.restrictionLifted = x['restrictionLifted']
   y.currentRoom = x['currentRoom']
   y.story = x['story']
+  y.shipUnlocked = x['shipUnlocked']
+  y.unlockedWorlds = x['unlockedWorlds']
   y.saveFile = file
   y.HP = y.MaxHP
   y.MP = y.MaxMP

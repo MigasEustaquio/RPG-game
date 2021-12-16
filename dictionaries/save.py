@@ -44,6 +44,8 @@ saves = {
                         'Neverland': {}, 'HollowBastion': {}, 'EndOfTheWorld': {}},
                 'currentRoom': 'Third District',
                 'story' : 0,
+                'shipUnlocked' : True,
+                'unlockedWorlds' : ['DestinyIslands', 'TraverseTown'],
                 },
 
 
@@ -76,6 +78,7 @@ saves = {
                         'Neverland': {}, 'HollowBastion': {}, 'EndOfTheWorld': {}},
                 'currentRoom': '1st Floor Shop',
                 'story' : 1,
+                'shipUnlocked' : True,
                 },
 
                 

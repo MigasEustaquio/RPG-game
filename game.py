@@ -445,6 +445,37 @@ def unrestrict(currentRoom):          ###UNRESTRICT AREAS
   else:
     player.restrictionLifted[player.world][currentRoom]=[rooms[player.world][currentRoom]['unlock'][x][0]]
 
+def worldMap():
+  while True:
+    # showStatus()        #### MAKE A WORLD MAP SHOW STATUS
+    print('\nWorld Map\n')
+    move = ''
+    world = ''
+    worldFound = False
+    while move == '':  
+      move = input('>')
+    move = move.lower()
+    
+    for world in worldNames:
+      if move in worldNames[world]:
+        if world not in player.unlockedWorlds:
+          print('We can\'t travel to ' + worldDisplayName[world])
+        else:
+          worldFound = True
+          break
+
+    if worldFound:
+      answer = input('Do you want to land in ' + worldDisplayName[world] + '?\n')
+      if 'yes' in answer.lower() :
+        player.world=world
+        return rooms[world][0]  ###############################
+
+    # if 'save' in move:
+    #   print()
+
+  
+  
+
 
 
 #################
@@ -482,13 +513,13 @@ while True:                        ###MAIN
   while True:
     showStatus()
 
-    if retryBoss == False:
+    if retryBoss == False:                              ##### INPUT READER
       move = ''
       while move == '':  
         move = input('>')
       move = move.lower().split()
 
-    if 'map' in move:                                   ##### OPEN MAP
+    if 'map' in move and 'world' not in move:           ##### OPEN MAP
       if player.tutorial['open map'] == 0:
         print('The first time opening a map may glitch out and refuse to open, just close the map and open it again!')
         player.tutorial['open map'] = 1
@@ -571,6 +602,12 @@ while True:                        ###MAIN
         with open('utilities/saveFile.txt', 'r') as f:
           saves = ast.literal_eval(f.read())
         saveScreen(player, saves)
+      else:
+        print('There is no save point here!')
+
+    elif 'world' in move:                                ##### SAVE
+      if 'Shop' in currentRoom or 'Save' in rooms[player.world][currentRoom]:
+        previusRoom = currentRoom = worldMap()
       else:
         print('There is no save point here!')
 

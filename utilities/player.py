@@ -46,8 +46,10 @@ class player:
 
         #STORY RELATED
         self.world = 'TraverseTown'
-        self.map = worldMaps   ############### WHEN CHANGE WORLDS HAVE TO UPDATE THE worldMaps DICTIONARY
+        self.map = worldMaps
         self.story = 0
+        self.shipUnlocked = True
+        self.unlockedWorlds = ['TraverseTown']
 
         self.tutorial = tutorials
         self.treasures = treasureList

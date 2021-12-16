@@ -1,4 +1,4 @@
-world map
+world map (half done)
 
 enemy commands (started)
 
