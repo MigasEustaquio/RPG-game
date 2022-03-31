@@ -227,6 +227,7 @@ rooms = {
                   'elevator' : 'Cavern',
                   'person'  : ['Merlin', 'Fairy Godmother'],
                   'resetHeartless' : ['Third District', 'Alleyway'],
+                  'Save':'',
                   'map number' : '2',
                   'restricted' : {}
                 },

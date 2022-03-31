@@ -445,7 +445,7 @@ def unrestrict(currentRoom):          ###UNRESTRICT AREAS
   else:
     player.restrictionLifted[player.world][currentRoom]=[rooms[player.world][currentRoom]['unlock'][x][0]]
 
-def worldMap():
+def worldMap():                       ###WORLD MAP
   while True:
     # showStatus()        #### MAKE A WORLD MAP SHOW STATUS
     print('\nWorld Map\n')

@@ -56,6 +56,15 @@ people = {
               },
             },
 
+            '1st Floor Shop' :{
+              'Moogle' : {
+                      0: {'speech' : 'Moogle: Hi there, Kupo!\nTo buy an item just type \'buy [item]\'\n\nHere\'s what I have in stock:',
+                          'reward' : 'no',
+                          'present' : 'yes',
+                      },
+              },
+            },
+
             '2nd Floor' : {
               'Roxas' : {
                       0: {'speech' : 'Roxas: Story is now 1!',

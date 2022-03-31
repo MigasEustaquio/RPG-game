@@ -1,5 +1,7 @@
 world map (half done)
 
+allies?
+
 enemy commands (started)
 
 select abilities? (brain storming)
@@ -7,6 +9,8 @@ select abilities? (brain storming)
 add enemies (half done)
 
 add worlds
+
+unlock areas (for now only by magic)
 
 add abilities (almost done)
 
