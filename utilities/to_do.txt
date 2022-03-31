@@ -19,3 +19,5 @@ synthesize?
 enemy drops (half done)
 
 exp equipment
+
+save using csv? (save dict may be hard)
