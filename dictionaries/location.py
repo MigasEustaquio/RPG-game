@@ -255,6 +255,31 @@ rooms = {
   },
 
 
+  'OlympusColiseum': {
+
+    0 : 'Coliseum Gates',
+
+      'Coliseum Gates' : { 'up' : 'Lobby',
+                  'resetHeartless' : [],
+                  'map number' : '1',
+                  'restricted' : {}
+      }, 
+
+      'Lobby' : { 'down' : 'Coliseum Gates',
+                  # 'treasure' : {'treasure' : 'item', 'item' : 'potion'},
+                  'person'  : ['Phil', 'Hercules'],
+                  'resetHeartless' : [],
+                  'map number' : '1',
+                  'restricted' : {}
+      },
+
+      'Arena' : { 'down' : 'Lobby', #Remove this line later
+                  'resetHeartless' : [],
+                  'map number' : '1',
+                  'restricted' : {}
+      },
+
+
   'CastleOblivion': {
 
     0 : '1st Floor',

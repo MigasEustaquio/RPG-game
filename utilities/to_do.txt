@@ -4,7 +4,7 @@ allies?
 
 enemy commands (started)
 
-select abilities? (brain storming)
+select abilities? (how?)
 
 add enemies (half done)
 

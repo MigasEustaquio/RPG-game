@@ -1,4 +1,5 @@
 people = {
+            ###Destiny Islands
 
             'Seashore' : {
               'Kairi' : {
@@ -27,6 +28,7 @@ people = {
               },
             },
 
+            ###Travere Town
 
             'Green Room' : {
               'Leon' : {
@@ -55,6 +57,30 @@ people = {
                       },
               },
             },
+
+
+            ###Olympus Coliseum
+
+            'Lobby' : {
+              'Phil' : {
+                1: {'speech' : 'Phil: Get up on the hydra\'s back!',
+                      'reward' : 'no',
+                      'present' : 'yes',
+                },
+              },
+
+              'Hercules' : {
+                0: {'speech' : 'Hercules: That won\'t stop a true hero!',
+                      'reward' : 'no',
+                      'present' : 'yes',
+                },
+              },
+            },
+
+
+
+            ###Castle Oblivion
+
 
             '1st Floor Shop' :{
               'Moogle' : {
