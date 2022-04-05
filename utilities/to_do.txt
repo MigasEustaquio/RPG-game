@@ -18,6 +18,8 @@ synthesize?
 
 enemy drops (half done)
 
+make abilities, equipment and other displays pretty like items display is
+
 exp equipment
 
 save using csv? (save dict may be hard)

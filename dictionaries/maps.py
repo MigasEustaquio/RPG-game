@@ -13,6 +13,11 @@ maps = {
             'Wonderland' : {},
 
 
+            'OlympusColiseum' : {
+                    '1' : {'incomplete' : '10', 'complete' : '11'},
+            },
+
+
             'CastleOblivion' : {
                     '1' : {'incomplete' : '10', 'complete' : '11'},
             }

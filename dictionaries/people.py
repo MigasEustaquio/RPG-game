@@ -63,15 +63,16 @@ people = {
 
             'Lobby' : {
               'Phil' : {
-                1: {'speech' : 'Phil: Get up on the hydra\'s back!',
-                      'reward' : 'no',
-                      'present' : 'yes',
+                1: {'speech' : 'Phil: Let\'s try the arena!',
+                    'reward' : 'arena',
+                    'present' : 'yes',
                 },
               },
 
               'Hercules' : {
                 0: {'speech' : 'Hercules: That won\'t stop a true hero!',
-                      'reward' : 'no',
+                      'reward' : 'mapUpdate',
+                      'mapUpdate' : '1',
                       'present' : 'yes',
                 },
               },

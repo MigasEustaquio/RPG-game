@@ -474,7 +474,25 @@ def worldMap():                       ###WORLD MAP
     #   print()
 
   
-  
+def selectArena():
+  while True:
+    print('\nPhil: What arena do you wish to enter?\n(type the number or the name of the arena you wish to enter. 0 or \'nevermind\' to leave)')
+    #Print unlocked arenas
+    
+    answer = input('>')
+    answer = str(answer).lower()
+
+    if answer == '0' or answer == 'nevermind':
+      print('\nPhil: Okay kid, talk to me if you wish to become a hero!')
+      break
+    elif answer == '1':
+      print('\nEntering Arena 1')
+      #create arena fights function
+    elif answer == '2':
+      print('\nEntering Arena 2')
+    else:
+      print('\nArena not found!')
+
 
 
 
@@ -806,7 +824,14 @@ while True:                        ###MAIN
               else:
                 player.stock.append(people[currentRoom][person][storyToTalk[i]]['item'])
                 print('Your item pouch is full, item send to stock!!')
-            people[currentRoom][person][storyToTalk[i]]['reward'] = 'no'
+            elif reward == 'arena':
+              selectArena()
+            # elif reward == 'transport':
+            #   print(event['transport speech'])
+
+            if reward != 'arena':
+              people[currentRoom][person][storyToTalk[i]]['reward'] = 'no'
+
             if 'Moogle' in rooms[player.world][currentRoom]['person']:
                 shop(currentRoom)
 
