@@ -278,7 +278,7 @@ rooms = {
                   'map number' : '1',
                   'restricted' : {}
       },
-
+  },
 
   'CastleOblivion': {
 
