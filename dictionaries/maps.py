@@ -59,6 +59,7 @@ worldNames = {
         'Neverland' : ['never', 'neverland'],
         'HollowBastion' : ['hollow', 'bastion', 'hollow bastion', 'hollowbastion'],
         'EndOfTheWorld' : ['end', 'of', 'the', 'world', 'end of the world', 'endoftheworld'],
+        'CastleOblivion' : ['castle', 'oblivion', 'castleoblivion', 'castle oblivion']
 
 }
 
@@ -77,6 +78,7 @@ worldDisplayName = {
         'Neverland' : 'Neverland',
         'HollowBastion' : 'Hollow Bastion',
         'EndOfTheWorld' : 'End Of The World',
+        'CastleOblivion' : 'Castle Oblivion'
 
 
 }

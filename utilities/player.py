@@ -48,9 +48,11 @@ class player:
         #STORY RELATED
         self.world = 'TraverseTown'
         self.map = worldMaps
-        self.story = 0
         self.shipUnlocked = True
         self.unlockedWorlds = ['TraverseTown']
+        self.story = {'DestinyIslands' : 0, 'TraverseTown' : 0, 'Wonderland' : 0, 'DeepJungle' : 0,
+        'Atlantica' : 0, 'OlympusColiseum' : 0, 'Agrabah' : 0, 'Monstro' : 0, '100AcreWood' : 0,
+        'HalloweenTown' : 0, 'Neverland' : 0, 'HollowBastion' : 0, 'EndOfTheWorld' : 0}
 
         self.unlockedArenas = []
         self.arenaRecords = {}

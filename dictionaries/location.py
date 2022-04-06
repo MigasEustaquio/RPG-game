@@ -50,6 +50,10 @@ rooms = {
                   'restricted' : {}
       },
 
+      'Rooms List' : {
+                  'resetHeartless' : ['Seashore', 'Cove', 'Seaside Shack', 'Paopu Tree', 'Secret Place']
+      }
+
   },
 
   'TraverseTown' : {
@@ -247,10 +251,16 @@ rooms = {
 
             'First District Shop' : { 'leave' : 'First District',              
                   'person'  : ['Moogle'],
-                                    'resetHeartless' : ['Second District', 'Hotel', 'Alleyway'],
+                  'resetHeartless' : ['Second District', 'Hotel', 'Alleyway'],
                   'map number' : '1',
                   'restricted' : {}
                 },
+
+            'Rooms List' : {
+                  'resetHeartless' : ['First District', 'Second District', 'Third District', 'Small House',
+                   'Dalmatian House', 'Hotel', 'Green Room', 'Red Room', 'Alleyway', 'Gizmo Shop', 'Second District Upper Side',
+                   'Third District Upper Side', 'Mystical House', 'Magician\'s Study', '?', 'Cavern', 'First District Shop']
+            }
 
   },
 
@@ -269,6 +279,7 @@ rooms = {
                   # 'treasure' : {'treasure' : 'item', 'item' : 'potion'},
                   'person'  : ['Phil', 'Hercules'],
                   'resetHeartless' : [],
+                  'Save':'',
                   'map number' : '1',
                   'restricted' : {}
       },
@@ -278,6 +289,10 @@ rooms = {
                   'map number' : '1',
                   'restricted' : {}
       },
+
+      'Rooms List' : {
+                  'resetHeartless' : ['Coliseum Gates', 'Lobby', 'Arena']
+      }
   },
 
   'CastleOblivion': {
@@ -352,6 +367,11 @@ rooms = {
                   'map number' : '1',
                   'restricted' : {}
                 },
+
+      
+      'Rooms List' : {
+                  'resetHeartless' : ['1st Floor', '2nd Floor', '3rd Floor', '4th Floor', '5th Floor', '1st Floor Shop']
+      }
 
   }
 }

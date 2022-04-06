@@ -1,4 +1,5 @@
 import ast
+import sys
 from utilities.player import *
 
 def save(file, y, saves):
@@ -144,7 +145,7 @@ def loadScreen(player, saves):
 
 
 def editSaveFile(player):
-  if (input('To write the save file from the \'saves\' dict inside \"utilities\\save.py\" to the saveFile.txt write \'save\'.')) == 'save':
+  if 'edit' in sys.argv or (input('To write the save file from the \'saves\' dict inside \"utilities\\save.py\" to the saveFile.txt write \'save\'.')) == 'save':
     with open('utilities/saveFile.txt', 'w') as file:
       file.write(str(player.editedSaves))
     with open('utilities/saveFile.txt', 'r') as f:
@@ -165,6 +166,9 @@ New Game
 Load Game
   ''')
     print('---------------------------')
+
+    if 'edit' in sys.argv:
+      saves = editSaveFile(player)
 
     option = ''
     while option == '':  

@@ -27,35 +27,34 @@ Commands:
   menu
 ''')
 
-
-def verifyPersonStory(peolpeInRoom):  ###Check person's speech and reward based on story
+def verifyPersonStory(peolpeInRoom):            ###Check person's speech and reward based on story
   peopleToTalk = []
   storyToTalk = []
   for person in peolpeInRoom:
-      if player.story > list(people[currentRoom][person])[-1]:
+      if player.story[player.world] > list(people[currentRoom][person])[-1]:
         if people[currentRoom][person][list(people[currentRoom][person])[-1]]['present'] == 'yes':
           peopleToTalk.append(person)
           storyToTalk.append(list(people[currentRoom][person])[-1])
-      elif player.story < list(people[currentRoom][person])[0]:
+      elif player.story[player.world] < list(people[currentRoom][person])[0]:
         pass
       else:
         for story in people[currentRoom][person]:
-          if story == player.story:
+          if story == player.story[player.world]:
             if people[currentRoom][person][story]['present'] == 'yes':
               peopleToTalk.append(person)
               storyToTalk.append(story)
             break
           else:
-            if story > player.story:
-              if people[currentRoom][person][previusStory]['present'] == 'yes':
+            if story > player.story[player.world]:
+              if people[currentRoom][person][previousStory]['present'] == 'yes':
                 peopleToTalk.append(person)
-                storyToTalk.append(previusStory)
+                storyToTalk.append(previousStory)
               break
             else:
-              previusStory = story
+              previousStory = story
   return peopleToTalk, storyToTalk
 
-def bossScene(enemyName):             ###Print Scenes
+def bossScene(enemyName):                       ###Print Scenes
   skip = input('Skip scene?(yes/no)\n>')
   print()
   if skip.lower() == 'yes':
@@ -66,7 +65,7 @@ def bossScene(enemyName):             ###Print Scenes
      time.sleep(3)
     print()
 
-def showStatus():                     ###SHOW STATUS
+def showStatus():                               ###SHOW STATUS
   #print the player's current status
   print(Fore.RED + '\n---------------------------')
   print(Fore.WHITE + 'You are in the ' + currentRoom)
@@ -94,11 +93,30 @@ def showStatus():                     ###SHOW STATUS
       player.tutorial['treasure chest'] = 1
   print(Fore.RED + "---------------------------")
 
-def shop(currentRoom):                ###SHOP
+def shop(currentRoom):                          ###SHOP
     for item in shops[currentRoom]:
         print(item, '   \tcost:', shops[currentRoom][item], 'munny!')
 
-def levelUP():                        ###LEVEL UP
+def resetHeartless(currentRoom, previousStory=0):
+  for room in rooms[player.world][currentRoom]['resetHeartless']:
+    if 'heartless' in rooms[player.world][room]:
+      if player.story[player.world] in rooms[player.world][room]['heartless']:
+        if rooms[player.world][room]['heartless'][player.story[player.world]]['status'] == 0:
+          rooms[player.world][room]['heartless'][player.story[player.world]]['status'] = rooms[player.world][room]['heartless'][player.story[player.world]]['waves']
+      else:
+        if player.story[player.world] > list(rooms[player.world][room]['heartless'])[-1]:
+          rooms[player.world][room]['heartless'][list(rooms[player.world][room]['heartless'])[-1]]['status'] = rooms[player.world][room]['heartless'][list(rooms[player.world][room]['heartless'])[-1]]['waves']
+        elif player.story[player.world] < list(rooms[player.world][room]['heartless'])[0]:
+          pass
+        else:
+          for story in rooms[player.world][room]['heartless']:
+            if story > player.story[player.world]:
+              rooms[player.world][room]['heartless'][previousStory]['status'] = rooms[player.world][room]['heartless'][previousStory]['waves']
+              break
+            else:
+              previousStory = story
+
+def levelUP():                                  ###LEVEL UP
   if levelUp[player.level]['ability'] != 'none':
     player.abilities.append(levelUp[player.level]['ability'])
     print('\nObtained ' + levelUp[player.level]['ability'] + '!')
@@ -119,7 +137,7 @@ def levelUP():                        ###LEVEL UP
     player.DEF += levelUp[player.level]['DEF']
     print('Defense increased!')
 
-def useItem(item):                    ###USE ITEM
+def useItem(item):                              ###USE ITEM
   del player.item[player.item.index(item)]
   player.itemBKP.append(item)
   player.ArenaitemBKP.append(item)
@@ -141,7 +159,7 @@ def useItem(item):                    ###USE ITEM
   player.MP = player.MP + items[item]['MP']
   if player.MP > player.TotalMP: player.MP = player.TotalMP
 
-def scan(enemy):                      ###SCAN
+def scan(enemy):                                ###SCAN
   heartlessHealthDisplay = ''
   i=0
   while i< enemy.MaxHP:
@@ -156,7 +174,7 @@ def scan(enemy):                      ###SCAN
   print("HP : " + red + heartlessHealthDisplay)
   print(Fore.MAGENTA + "---------------------------")
 
-def finishAttack(enemy, damage):      ###FINISHERS
+def finishAttack(enemy, damage):                ###FINISHERS
   finish = player.finishers[random.randint(0, (len(player.finishers)-1))]
   if finish == 'Blitz':
     print("You used " + yellow + "Blitz" + white + " and dealt " + yellow + "critical" + white + " damage!")
@@ -190,7 +208,7 @@ def finishAttack(enemy, damage):      ###FINISHERS
   print('You caused ' + red + str(damageDealt) + ' ♥ ' + white + 'of damage!')
   enemy.HP = enemy.HP - damageDealt
 
-def battle(enemyName, arenaBattle = False):                ###BATTLE
+def battle(enemyName, arenaBattle=False):       ###BATTLE
   ###
     player.createBKP()
     if enemyName in bosses:
@@ -390,7 +408,7 @@ def battle(enemyName, arenaBattle = False):                ###BATTLE
           return 'victory'
         enemy.statusEffectEnd()
 
-def gameOver():                       ###GAME OVER
+def gameOver():                                 ###GAME OVER
   print('\n\nKINGDOM HEARTS🤍\n\nretry?\ncontinue?\nload game?\n\n')
   command = ''
   while True:
@@ -410,7 +428,7 @@ def gameOver():                       ###GAME OVER
       print('Command not found!\n')
       command = ''
 
-def arenaGameOver():                       ###GAME OVER
+def arenaGameOver():                            ###ARENA GAME OVER
   print('\n\nKINGDOM HEARTS🤍\n\nColiseum Arena\nretry?\nquit?\n\n')
   command = ''
   while True:
@@ -422,7 +440,7 @@ def arenaGameOver():                       ###GAME OVER
       print('Command not found!\n')
       command = ''
 
-def determineBattle(story, currentRoom, previusRoom):   ###DETERMINE ENEMY TO BATTLE
+def determineBattle(story, currentRoom, previousRoom):   ###DETERMINE ENEMY TO BATTLE
     status = rooms[player.world][currentRoom]['heartless'][story]['status']
     if status > 0:
       while True:
@@ -430,24 +448,24 @@ def determineBattle(story, currentRoom, previusRoom):   ###DETERMINE ENEMY TO BA
         if result == 'victory':
           rooms[player.world][currentRoom]['heartless'][story]['status'] = (status - 1)
           player.calculateHealth()
-          return 1, currentRoom, previusRoom
+          return 1, currentRoom, previousRoom
         if result == 'defeat':
           print("---------------------------")
           print('Your HP has dropped to zero!\nGAME OVER')
           result = gameOver()
         if result == 'run':
           temp = currentRoom
-          currentRoom = previusRoom
-          previusRoom = temp
+          currentRoom = previousRoom
+          previousRoom = temp
           player.calculateHealth()
-          return 0, currentRoom, previusRoom
+          return 0, currentRoom, previousRoom
         if result == 'load':
           player.HP = player.TotalHP
           player.MP = player.TotalMP
           return 0, rooms[player.world][0], rooms[player.world][0]
-    else: return 0, currentRoom, previusRoom
+    else: return 0, currentRoom, previousRoom
   
-def unrestrict(currentRoom):          ###UNRESTRICT AREAS
+def unrestrict(currentRoom):                    ###UNRESTRICT AREAS
 
   if len(rooms[player.world][currentRoom]['unlock'][x])>2:
     del rooms[player.world][rooms[player.world][currentRoom]['unlock'][x][2]]['restricted'][rooms[player.world][currentRoom]['unlock'][x][3]]
@@ -462,10 +480,12 @@ def unrestrict(currentRoom):          ###UNRESTRICT AREAS
   else:
     player.restrictionLifted[player.world][currentRoom]=[rooms[player.world][currentRoom]['unlock'][x][0]]
 
-def worldMap():                       ###WORLD MAP
+def worldMap():                                 ###WORLD MAP
   while True:
     # showStatus()        #### MAKE A WORLD MAP SHOW STATUS
-    print('\nWorld Map\n')
+    print(cyan + '\nWorld Map\n\n' + white + 'Available worlds:')
+    for world in player.unlockedWorlds:
+      print(worldDisplayName[world])
     move = ''
     world = ''
     worldFound = False
@@ -482,16 +502,20 @@ def worldMap():                       ###WORLD MAP
           break
 
     if worldFound:
-      answer = input('Do you want to land in ' + worldDisplayName[world] + '?\n')
-      if 'yes' in answer.lower() :
+      print('\nDo you want to land in ' + worldDisplayName[world] + '?')
+      answer = input('>')
+      if 'yes' in answer.lower():
+        resetHeartless('Rooms List')
         player.world=world
         return rooms[world][0]  ###############################
 
-    # if 'save' in move:
-    #   print()
+    if 'save' in move:
+      player.currentRoom = currentRoom
+      with open('utilities/saveFile.txt', 'r') as f:
+        saves = ast.literal_eval(f.read())
+      saveScreen(player, saves)
 
-
-def arena(arenaNumber):               ###ARENA FIGHT
+def arena(arenaNumber):                         ###ARENA FIGHT
 
   while True:
     retry = False
@@ -552,8 +576,7 @@ def arena(arenaNumber):               ###ARENA FIGHT
 
       break
 
-
-def selectArena():                    ###SELECT ARENA
+def selectArena():                              ###SELECT ARENA
   while True:
     print('\nPhil: What arena do you wish to enter?\n(type the number of the arena you wish to enter. 0 or \'nevermind\' to leave)')
     for number in player.unlockedArenas:
@@ -608,9 +631,9 @@ while True:                        ###MAIN
 #INITIALIZE VARIABLES
   alreadyBattled = 0
   retryBoss = False
-  previusStory = 0
+  previousStory = 0
   currentRoom = player.currentRoom
-  previusRoom = currentRoom
+  previousRoom = currentRoom
 #
   showInstructions()
   while True:
@@ -648,8 +671,8 @@ while True:                        ###MAIN
     
     elif 'upgrade' in move:                             ##### TEST 2
 
-      player.story += 1
-      print('Story: ' + str(player.story))
+      player.story[player.world] += 1
+      print('Story: ' + str(player.story[player.world]))
       # print(list(rooms[player.world]['2nd Floor']['heartless']))
       print('\ntested!\n')
     
@@ -713,7 +736,10 @@ while True:                        ###MAIN
 
     elif 'world' in move:                                ##### SAVE
       if 'Shop' in currentRoom or 'Save' in rooms[player.world][currentRoom]:
-        previusRoom = currentRoom = worldMap()
+        print('Do you want to jump into the gummi ship and get to the world map?')
+        answer = input('>')
+        if 'yes' in answer.lower(): previousRoom = currentRoom = worldMap()
+        else: print('Aborting...')
       else:
         print('There is no save point here!')
 
@@ -828,46 +854,19 @@ while True:                        ###MAIN
         if move[1] in rooms[player.world][currentRoom]:
           #set the current room to the new room
           alreadyBattled = 0
-          previusRoom = currentRoom
+          previousRoom = currentRoom
           currentRoom = rooms[player.world][currentRoom][move[1]]
-          for room in rooms[player.world][currentRoom]['resetHeartless']:
-              if player.story in rooms[player.world][room]['heartless']:
-                if rooms[player.world][room]['heartless'][player.story]['status'] == 0:
-                  rooms[player.world][room]['heartless'][player.story]['status'] = rooms[player.world][room]['heartless'][player.story]['waves']
-              else:
-                if player.story > list(rooms[player.world][room]['heartless'])[-1]:
-                  rooms[player.world][room]['heartless'][list(rooms[player.world][room]['heartless'])[-1]]['status'] = rooms[player.world][room]['heartless'][list(rooms[player.world][room]['heartless'])[-1]]['waves']
-                elif player.story < list(rooms[player.world][room]['heartless'])[0]:
-                  pass
-                else:
-                  for story in rooms[player.world][room]['heartless']:
-                    if story > player.story:
-                      rooms[player.world][room]['heartless'][previusStory]['status'] = rooms[player.world][room]['heartless'][previusStory]['waves']
-                      break
-                    else:
-                      previusStory = story
+
+          resetHeartless(currentRoom) ####
+
         #there is no door (link) to the new room
         elif move[1] == 'back':
             alreadyBattled = 0
             temp = currentRoom
-            currentRoom = previusRoom
-            previusRoom = temp
-            for room in rooms[player.world][currentRoom]['resetHeartless']:
-              if player.story in rooms[player.world][room]['heartless']:
-                if rooms[player.world][room]['heartless'][player.story]['status'] == 0:
-                  rooms[player.world][room]['heartless'][player.story]['status'] = rooms[player.world][room]['heartless'][player.story]['waves']
-              else:
-                if player.story > list(rooms[player.world][room]['heartless'])[-1]:
-                  rooms[player.world][room]['heartless'][list(rooms[player.world][room]['heartless'])[-1]]['status'] = rooms[player.world][room]['heartless'][list(rooms[player.world][room]['heartless'])[-1]]['waves']
-                elif player.story < list(rooms[player.world][room]['heartless'])[0]:
-                  pass
-                else:
-                  for story in rooms[player.world][room]['heartless']:
-                    if story > player.story:
-                      rooms[player.world][room]['heartless'][previusStory]['status'] = rooms[player.world][room]['heartless'][previusStory]['waves']
-                      break
-                    else:
-                      previusStory = story
+            currentRoom = previousRoom
+            previousRoom = temp
+
+            resetHeartless(currentRoom) ####
 
         else:
           if retryBoss == False:
@@ -886,8 +885,8 @@ while True:                        ###MAIN
             event = people[currentRoom][person][storyToTalk[i]]
             reward = event['reward']
             if reward == 'story':
-              if player.story == (people[currentRoom][person][storyToTalk[i]]['story']-1):
-                player.story += 1
+              if player.story[player.world] == (people[currentRoom][person][storyToTalk[i]]['story']-1):
+                player.story[player.world] += 1
                 print()
             elif reward == 'mapUpdate':
               if player.map[player.world][event['mapUpdate']] == 'no':
@@ -930,29 +929,29 @@ while True:                        ###MAIN
         print('Can\'t talk to ' + move[1] + '!')
 
 
-    if 'boss' in rooms[player.world][currentRoom] and player.story == (bosses[rooms[player.world][currentRoom]['boss']]['story']-1):           ###### BOSS BATTLE
+    if 'boss' in rooms[player.world][currentRoom] and player.story[player.world] == (bosses[rooms[player.world][currentRoom]['boss']]['story']-1):           ###### BOSS BATTLE
       retryBoss = False
       bossScene(rooms[player.world][currentRoom]['boss'])
       result = battle(rooms[player.world][currentRoom]['boss'])
       if result == 'victory':
-        player.story = bosses[rooms[player.world][currentRoom]['boss']]['story']
+        player.story[player.world] += 1
       ###RESET HEARTLESS STATUS SO PLAYER WON'T FIGHT RIGHT AWAY
         if 'heartless' in rooms[player.world][currentRoom]:
-          if player.story > list(rooms[player.world][currentRoom]['heartless'])[-1]:
+          if player.story[player.world] > list(rooms[player.world][currentRoom]['heartless'])[-1]:
             rooms[player.world][currentRoom]['heartless'][list(rooms[player.world][currentRoom]['heartless'])[-1]]['status'] = 0
-          elif player.story < list(rooms[player.world][currentRoom]['heartless'])[0]:
+          elif player.story[player.world] < list(rooms[player.world][currentRoom]['heartless'])[0]:
             pass
           else:
             for story in rooms[player.world][currentRoom]['heartless']:
-              if story == player.story:
+              if story == player.story[player.world]:
                 rooms[player.world][currentRoom]['heartless'][story]['status'] = 0
                 break
               else:
-                if story > player.story:
-                  rooms[player.world][currentRoom]['heartless'][previusStory]['status'] = 0
+                if story > player.story[player.world]:
+                  rooms[player.world][currentRoom]['heartless'][previousStory]['status'] = 0
                   break
                 else:
-                  previusStory = story
+                  previousStory = story
       ###DEFEAT
       elif result == 'defeat':
           print("---------------------------")
@@ -962,35 +961,35 @@ while True:                        ###MAIN
             retryBoss = True
           if result == 'run':
             temp = currentRoom
-            currentRoom = previusRoom
-            previusRoom = temp
+            currentRoom = previousRoom
+            previousRoom = temp
             player.calculateHealth()
           if result == 'load':
             player.HP = player.TotalHP
             player.MP = player.TotalMP
             currentRoom = rooms[player.world][0]
-            previusRoom = currentRoom
+            previousRoom = currentRoom
       player.calculateHealth()
 
     elif 'heartless' in rooms[player.world][currentRoom] and alreadyBattled == 0:           ###### BATTLE
-      if player.story > list(rooms[player.world][currentRoom]['heartless'])[-1]:
-        alreadyBattled, currentRoom, previusRoom = determineBattle(list(rooms[player.world][currentRoom]['heartless'])[-1], currentRoom, previusRoom)
-      elif player.story < list(rooms[player.world][currentRoom]['heartless'])[0]:
+      if player.story[player.world] > list(rooms[player.world][currentRoom]['heartless'])[-1]:
+        alreadyBattled, currentRoom, previousRoom = determineBattle(list(rooms[player.world][currentRoom]['heartless'])[-1], currentRoom, previousRoom)
+      elif player.story[player.world] < list(rooms[player.world][currentRoom]['heartless'])[0]:
         pass
       else:
         for story in rooms[player.world][currentRoom]['heartless']:
-          if story == player.story:
-            alreadyBattled, currentRoom, previusRoom = determineBattle(story, currentRoom, previusRoom)
+          if story == player.story[player.world]:
+            alreadyBattled, currentRoom, previousRoom = determineBattle(story, currentRoom, previousRoom)
             break
           else:
-            if story > player.story:
-              alreadyBattled, currentRoom, previusRoom = determineBattle(previusStory, currentRoom, previusRoom)
+            if story > player.story[player.world]:
+              alreadyBattled, currentRoom, previousRoom = determineBattle(previousStory, currentRoom, previousRoom)
               break
             else:
-              previusStory = story
+              previousStory = story
 
 
     # player wins if they get to the Third District
-    if currentRoom == 'Third District' and  player.story == 1:
+    if currentRoom == 'Third District' and  player.story[player.world] == 1:
       print('You found Donald & Goofy... YOU WIN!')
       break
