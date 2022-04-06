@@ -347,6 +347,7 @@ def battle(enemyName, arenaBattle = False):                ###BATTLE
             return 'defeat'
   ###VICTORY
         if enemy.HP <= 0:       ###VICTORY
+          if not arenaBattle:
     ###MUNNY
             munny = 3 * random.randint(enemy.munny[0], enemy.munny[1])
             print('\nYou defeated the Heartless!\nCONGRATULATIONS!')
@@ -375,18 +376,18 @@ def battle(enemyName, arenaBattle = False):                ###BATTLE
                   print('\nObtained the ' + cyan + enemy.drop[drop] + white + ' Keyblade!')
                 break
     ###MP RECOVER
-            recoverMPNumber = random.randint(1, 100)
-            if 'MP Haste' in player.abilities: recoverMPNumberNeeded = 55
-            else: recoverMPNumberNeeded = 75
-            if 'MP Rage' in player.abilities: recoverMP = math.ceil(player.TotalMP/4) + math.ceil((player.TotalMP-player.MP)/4)
-            else: recoverMP = math.ceil(player.TotalMP/4)
+          recoverMPNumber = random.randint(1, 100)
+          if 'MP Haste' in player.abilities: recoverMPNumberNeeded = 55
+          else: recoverMPNumberNeeded = 75
+          if 'MP Rage' in player.abilities: recoverMP = math.ceil(player.TotalMP/4) + math.ceil((player.TotalMP-player.MP)/4)
+          else: recoverMP = math.ceil(player.TotalMP/4)
 
-            if recoverMPNumber > recoverMPNumberNeeded:
-              print('\nYou recovered ' + blue + str(recoverMP) + ' ● ' + white + '!')
-              player.MP += recoverMP
-              if player.MP > player.TotalMP: player.MP = player.TotalMP
+          if recoverMPNumber > recoverMPNumberNeeded:
+            print('\nYou recovered ' + blue + str(recoverMP) + ' ● ' + white + '!')
+            player.MP += recoverMP
+            if player.MP > player.TotalMP: player.MP = player.TotalMP
 
-            return 'victory'
+          return 'victory'
         enemy.statusEffectEnd()
 
 def gameOver():                       ###GAME OVER
@@ -410,7 +411,7 @@ def gameOver():                       ###GAME OVER
       command = ''
 
 def arenaGameOver():                       ###GAME OVER
-  print('\n\nKINGDOM HEARTS🤍\n\nretry?\nquit?\n\n')
+  print('\n\nKINGDOM HEARTS🤍\n\nColiseum Arena\nretry?\nquit?\n\n')
   command = ''
   while True:
     player.restoreArenaBKP()
@@ -490,7 +491,7 @@ def worldMap():                       ###WORLD MAP
     #   print()
 
 
-def arena(arenaNumber):
+def arena(arenaNumber):               ###ARENA FIGHT
 
   while True:
     retry = False
@@ -499,8 +500,13 @@ def arena(arenaNumber):
     for wave in arenaFights[arenaNumber]:
       print('\nWave ' + str(wave) + '\n')
       result = battle(arenaFights[arenaNumber][wave], arenaBattle=True)
-      if result == 'victory': pass
+      if result == 'victory': print(green +'\nEnemies defeated!\n' + white)
       elif result == 'defeat':
+          if arenaNumber in player.arenaRecords:
+            if player.arenaRecords[arenaNumber] != 'Complete' and int(player.arenaRecords[arenaNumber]) < wave:
+              player.arenaRecords[arenaNumber] = str(int(wave)-1)
+          else: player.arenaRecords[arenaNumber] = str(int(wave)-1)
+          
           print("---------------------------")
           print('Your HP has dropped to zero!\nArena Failed')
           result = arenaGameOver()
@@ -511,9 +517,9 @@ def arena(arenaNumber):
             return
 
     if retry == False:
-
       print('\n-----------------------\n\nCongratulations!!')
-      trophy = arenaNames[arenaNumber]+' Trophy'
+      trophy = arenaNames[arenaNumber] +' Trophy'
+      player.arenaRecords[arenaNumber] = 'Complete'
 
       ##Already completed the arena before
       if (trophy) in player.keyItems:
@@ -547,15 +553,17 @@ def arena(arenaNumber):
       break
 
 
-
-  #receive rewards and congratulations or the game over screen here (ex: line 878 in boss fight)
-
-  
-def selectArena():
+def selectArena():                    ###SELECT ARENA
   while True:
     print('\nPhil: What arena do you wish to enter?\n(type the number of the arena you wish to enter. 0 or \'nevermind\' to leave)')
     for number in player.unlockedArenas:
-      print(number + '  ' + arenaNames[number])
+      if number in player.arenaRecords:
+        if player.arenaRecords[number] ==  'Complete':
+          print(number + '  ' + arenaNames[number] + green + '\t  Complete!' + white)
+        else:
+          print(number + '  ' + arenaNames[number] + yellow + '\t  Record: ' + player.arenaRecords[number] + white)
+      else:
+          print(number + '  ' + arenaNames[number])
     
     answer = input('>')
     answer = str(answer).lower()
@@ -630,9 +638,12 @@ while True:                        ###MAIN
 
     elif 'test' in move:                                ##### TEST
 
-      print(player.restrictionLifted)
-      print()
-      print(rooms['TraverseTown']['First District'])
+      if bool(player.arenaRecords):
+        for record in player.arenaRecords:
+          print(arenaNames[record] + ' record: ' + player.arenaRecords[record])
+      else:
+        print('There are no arena records!')
+
       print('\ntested!\n')
     
     elif 'upgrade' in move:                             ##### TEST 2

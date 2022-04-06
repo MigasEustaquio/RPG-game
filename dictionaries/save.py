@@ -47,6 +47,7 @@ saves = {
                 'shipUnlocked' : True,
                 'unlockedWorlds' : ['DestinyIslands', 'TraverseTown'],
                 'unlockedArenas' : [],
+                'arenaRecords' : {},
                 },
 
 
@@ -82,6 +83,7 @@ saves = {
                 'shipUnlocked' : True,
                 'unlockedWorlds' : ['CastleOblivion'],
                 'unlockedArenas' : [],
+                'arenaRecords' : {},
                 },
 
 
@@ -117,6 +119,7 @@ saves = {
                 'shipUnlocked' : True,
                 'unlockedWorlds' : ['OlympusColiseum'],
                 'unlockedArenas' : ['1', '2'],
+                'arenaRecords' : {},
                 },
                 
 

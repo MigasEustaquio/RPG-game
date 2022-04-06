@@ -53,6 +53,7 @@ class player:
         self.unlockedWorlds = ['TraverseTown']
 
         self.unlockedArenas = []
+        self.arenaRecords = {}
 
         self.tutorial = tutorials
         self.treasures = treasureList
@@ -86,9 +87,9 @@ class player:
         self.ArenaHPBKP = self.HP
         self.ArenaMPBKP = self.MP
         self.ArenaitemBKP = []
-    def restoreArenaBKP(self): #Not working
-        self.HP = self.ArenaHPBKP
-        self.MP = self.ArenaMPBKP
+    def restoreArenaBKP(self):
+        self.HP = self.TotalHP
+        self.MP = self.TotalMP
         self.item = self.item + self.ArenaitemBKP
     def calculateHealth(self):
         self.TotalHP = self.MaxHP
