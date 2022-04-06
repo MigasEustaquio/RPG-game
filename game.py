@@ -122,6 +122,7 @@ def levelUP():                        ###LEVEL UP
 def useItem(item):                    ###USE ITEM
   del player.item[player.item.index(item)]
   player.itemBKP.append(item)
+  player.ArenaitemBKP.append(item)
 
   if str(item) == 'ether' or str(item) == 'elixir':
     print('\nUsed an ' + green + str(item))
@@ -189,7 +190,7 @@ def finishAttack(enemy, damage):      ###FINISHERS
   print('You caused ' + red + str(damageDealt) + ' ♥ ' + white + 'of damage!')
   enemy.HP = enemy.HP - damageDealt
 
-def battle(enemyName):                ###BATTLE
+def battle(enemyName, arenaBattle = False):                ###BATTLE
   ###
     player.createBKP()
     if enemyName in bosses:
@@ -327,13 +328,16 @@ def battle(enemyName):                ###BATTLE
           command = ''
   ###RUN
         elif "run" in command:       ###RUN
-          if bossBattle == False:
+          if bossBattle == True:
+            print('You can\'t run from a boss battle!')
+            command = ''
+          elif arenaBattle == True:
+            print('You can\'t run from the arena!')
+            command = ''
+          else:
             command = ''
             print('You got away successfully!')
             return 'run'
-          else:
-            print('You can\'t run from a boss battle!')
-            command = ''
   ###ERROR
         else:       ###ERROR
           command = ''
@@ -401,6 +405,18 @@ def gameOver():                       ###GAME OVER
         saves = ast.literal_eval(f.read())
       loadScreen(player, saves)
       return 'load'
+    else:
+      print('Command not found!\n')
+      command = ''
+
+def arenaGameOver():                       ###GAME OVER
+  print('\n\nKINGDOM HEARTS🤍\n\nretry?\nquit?\n\n')
+  command = ''
+  while True:
+    player.restoreArenaBKP()
+    command = input('>').lower()
+    if 'retry' in command: return 'retry'
+    elif 'quit' in command: return 'quit'
     else:
       print('Command not found!\n')
       command = ''
@@ -473,11 +489,73 @@ def worldMap():                       ###WORLD MAP
     # if 'save' in move:
     #   print()
 
+
+def arena(arenaNumber):
+
+  while True:
+    retry = False
+    print(Fore.YELLOW + '\n\nWelcome to the ' + arenaNames[arenaNumber] + Fore.WHITE)
+    player.createArenaBKP()
+    for wave in arenaFights[arenaNumber]:
+      print('\nWave ' + str(wave) + '\n')
+      result = battle(arenaFights[arenaNumber][wave], arenaBattle=True)
+      if result == 'victory': pass
+      elif result == 'defeat':
+          print("---------------------------")
+          print('Your HP has dropped to zero!\nArena Failed')
+          result = arenaGameOver()
+          if result == 'retry':
+            retry = True
+            break
+          if result == 'quit':
+            return
+
+    if retry == False:
+
+      print('\n-----------------------\n\nCongratulations!!')
+      trophy = arenaNames[arenaNumber]+' Trophy'
+
+      ##Already completed the arena before
+      if (trophy) in player.keyItems:
+        print('You got a ' + green + arenaRewards[arenaNumber][2] + white + '!')
+        if len(player.item) < player.itemPouch:
+          player.item.append(arenaRewards[arenaNumber][2])
+        else:
+          player.stock.append(arenaRewards[arenaNumber][2])
+          print('Your item pouch is full, item send to stock!!')
+
+      ##First time completing the arena
+      else:
+        rewards = arenaRewards[arenaNumber][1]
+        player.keyItems.append(trophy)
+        print('You obtained the ' + trophy + '!\n')
+
+        if 'keyblade' in rewards:
+          player.keyblades.append(arenaRewards[arenaNumber]['keyblade'])
+          print('You got the ' + cyan + arenaRewards[arenaNumber]['keyblade'] + white + ' Keyblade!')
+        if 'magic' in rewards:
+          magicName = arenaRewards[arenaNumber]['magic']
+          player.magic.append(arenaRewards[arenaNumber]['magic'])
+          print('You learned the ' + player.colors[magics[magicName]['speech'][4]] + magicName + white + ' spell!')
+        if 'ability' in rewards:
+          abilityName = arenaRewards[arenaNumber]['ability']
+          player.abilities.append(abilityName)
+          print('\nObtained ' + abilityName + '!')
+          if abilityName in finishersList:
+            player.finishers.append(abilityName)
+
+      break
+
+
+
+  #receive rewards and congratulations or the game over screen here (ex: line 878 in boss fight)
+
   
 def selectArena():
   while True:
-    print('\nPhil: What arena do you wish to enter?\n(type the number or the name of the arena you wish to enter. 0 or \'nevermind\' to leave)')
-    #Print unlocked arenas
+    print('\nPhil: What arena do you wish to enter?\n(type the number of the arena you wish to enter. 0 or \'nevermind\' to leave)')
+    for number in player.unlockedArenas:
+      print(number + '  ' + arenaNames[number])
     
     answer = input('>')
     answer = str(answer).lower()
@@ -485,11 +563,10 @@ def selectArena():
     if answer == '0' or answer == 'nevermind':
       print('\nPhil: Okay kid, talk to me if you wish to become a hero!')
       break
-    elif answer == '1':
-      print('\nEntering Arena 1')
-      #create arena fights function
-    elif answer == '2':
-      print('\nEntering Arena 2')
+    elif answer in player.unlockedArenas:
+      print('\nPhil: Very well kid, good luck!')
+      arena(answer)
+      break
     else:
       print('\nArena not found!')
 

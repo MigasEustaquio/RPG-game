@@ -10,6 +10,8 @@ add enemies (half done)
 
 add worlds
 
+add arenas and arena rewards (half done)
+
 unlock areas (for now only by magic)
 
 add abilities (almost done)

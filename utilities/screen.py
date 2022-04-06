@@ -35,6 +35,7 @@ def save(file, y, saves):
   x['story'] = y.story
   x['shipUnlocked'] = y.shipUnlocked
   x['unlockedWorlds'] = y.unlockedWorlds
+  x['unlockedArenas'] = y.unlockedArenas
   y.saveFile = file
 
   saves[file]=x
@@ -77,6 +78,7 @@ def load(file, y, saves):
   y.story = x['story']
   y.shipUnlocked = x['shipUnlocked']
   y.unlockedWorlds = x['unlockedWorlds']
+  y.unlockedArenas = x['unlockedArenas']
   y.saveFile = file
   y.HP = y.MaxHP
   y.MP = y.MaxMP

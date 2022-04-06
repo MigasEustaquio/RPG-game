@@ -10,6 +10,7 @@ from dictionaries.save import *
 from dictionaries.tutorials import *
 from dictionaries.treasuresNrestrictions import *
 from dictionaries.abilities import *
+from dictionaries.arenas import *
 
 class player:
     def __init__(self):
@@ -51,6 +52,8 @@ class player:
         self.shipUnlocked = True
         self.unlockedWorlds = ['TraverseTown']
 
+        self.unlockedArenas = []
+
         self.tutorial = tutorials
         self.treasures = treasureList
         self.restrictionLifted = restrictionLiftedList
@@ -62,6 +65,10 @@ class player:
         self.HPBKP = 0
         self.MPBKP = 0
         self.itemBKP = []
+
+        self.ArenaHPBKP = 0
+        self.ArenaMPBKP = 0
+        self.ArenaitemBKP = []
 
 
         colorama_init(autoreset=True)
@@ -75,6 +82,14 @@ class player:
         self.HP = self.HPBKP
         self.MP = self.MPBKP
         self.item = self.item + self.itemBKP
+    def createArenaBKP(self):
+        self.ArenaHPBKP = self.HP
+        self.ArenaMPBKP = self.MP
+        self.ArenaitemBKP = []
+    def restoreArenaBKP(self): #Not working
+        self.HP = self.ArenaHPBKP
+        self.MP = self.ArenaMPBKP
+        self.item = self.item + self.ArenaitemBKP
     def calculateHealth(self):
         self.TotalHP = self.MaxHP
         self.TotalMP = self.MaxMP
