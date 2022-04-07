@@ -21,6 +21,7 @@ synthesize?
 enemy drops (half done)
 
 make abilities, equipment and other displays pretty like items display is
+make treasure items display
 
 exp equipment
 

@@ -21,7 +21,7 @@ rooms = {
 
       'Cove' : { 'left' : 'Seashore',
                   'up' : 'Seaside Shack',
-                  # 'treasure' : {'treasure' : 'item', 'item' : 'potion'},
+                  # 'treasure' : '',
                   'person'  : ['Riku', 'Kairi'],
                   'resetHeartless' : [],
                   'map number' : '1',
@@ -72,7 +72,7 @@ rooms = {
                   'right' : 'Third District',
                   'left' : 'Hotel',
                   'up' : 'Gizmo Shop',
-                  'treasure' : {'treasure' : 'item', 'item' : 'potion'},
+                  'treasure' : '',
                   'heartless'  : { 
                     0:{
                     'waves' : 2, 'status' : 2, 'wave' : {
@@ -152,7 +152,7 @@ rooms = {
 
               'Alleyway' : { 'down' : 'Green Room',
                   'right' : 'Red Room',
-                  'treasure' : {'treasure' : 'mapUpdate', 'mapUpdate' : '1'},
+                  'treasure' : '',
                   'heartless'  : { 
                     0:{
                       'waves' : 3, 'status' : 3, 'wave' : {
@@ -276,7 +276,7 @@ rooms = {
       }, 
 
       'Lobby' : { 'down' : 'Coliseum Gates',
-                  # 'treasure' : {'treasure' : 'item', 'item' : 'potion'},
+                  # 'treasure' : '',
                   'person'  : ['Phil', 'Hercules'],
                   'resetHeartless' : [],
                   'Save':'',
@@ -311,7 +311,7 @@ rooms = {
                   'left' : '1st Floor',
                   'up' : '1st Floor',
                   'down' : '5th Floor',
-                  'treasure' : {'treasure' : 'keyblade', 'keyblade' : 'Kingdom Key D'},
+                  'treasure' : '',
                   'person'  : ['Roxas', 'Axel'],
                   # 'heartless'  : { 
                   #   1 : {

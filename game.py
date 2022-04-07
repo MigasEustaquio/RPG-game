@@ -86,12 +86,52 @@ def showStatus():                               ###SHOW STATUS
         player.tutorial['quit'] = 1
       if "Shop" in currentRoom:
         print('To get out of the shop type: \'leave\'')
-  if 'treasure' in rooms[player.world][currentRoom] and player.treasures[player.world][currentRoom]['status']=='closed':
-    print('You see a treasure chest!')
+  if 'treasure' in rooms[player.world][currentRoom]:
+    count=0
+    for number in player.treasures[player.world][currentRoom]:
+      if number > player.story[player.world]: break
+      if player.treasures[player.world][currentRoom][number]['status']=='closed': count+=1
+    if count == 0: return
+    elif count == 1:
+      print('You see a treasure chest!')
+    elif count > 1:
+      print('You see ' + str(count) + ' treasure chests!')
     if player.tutorial['treasure chest'] == 0:
       print(Fore.YELLOW + "tutorial: " + Fore.WHITE + tutorialSpeech['treasure chest'])
       player.tutorial['treasure chest'] = 1
   print(Fore.RED + "---------------------------")
+
+def openTreasure(number, currentRoom):
+
+  if treasureList[player.world][currentRoom][number]['treasure'] == 'item':
+    print('Obtained a "' + treasureList[player.world][currentRoom][number]['item'] + '"!')
+    if len(player.item) < player.itemPouch:
+      player.item.append(treasureList[player.world][currentRoom][number]['item'])
+    else:
+      player.stock.append(treasureList[player.world][currentRoom][number]['item'])
+      print('Your item pouch is full, item send to stock!!')
+
+  elif treasureList[player.world][currentRoom][number]['treasure'] == 'key item':
+    print('Obtained the "' + treasureList[player.world][currentRoom][number]['key item'] + '" key item!')
+    player.keyItems.append(treasureList[player.world][currentRoom][number]['key item'])
+
+  elif treasureList[player.world][currentRoom][number]['treasure'] == 'mapUpdate':
+    if player.map[player.world][treasureList[player.world][currentRoom][number]['mapUpdate']] == 'no':
+      player.map[player.world][treasureList[player.world][currentRoom][number]['mapUpdate']] = 'incomplete'
+      print('Obtained ' + player.world + ' ' + treasureList[player.world][currentRoom][number]['mapUpdate'] + ' map!')
+    elif player.map[player.world][treasureList[player.world][currentRoom][number]['mapUpdate']] == 'incomplete':
+      player.map[player.world][treasureList[player.world][currentRoom][number]] = 'complete'
+      print(player.world + ' ' + treasureList[player.world][currentRoom][number]['mapUpdate'] + ' map updated!')
+    if player.tutorial['open map'] == 0:
+      print(Fore.YELLOW + "tutorial: " + Fore.WHITE + tutorialSpeech['open map'])
+      player.tutorial['open map'] = 1
+
+  elif treasureList[player.world][currentRoom][number]['treasure'] == 'keyblade':
+    print('Obtained the ' + cyan + treasureList[player.world][currentRoom][number]['keyblade'] + white + ' Keyblade!')
+    player.keyblades.append(treasureList[player.world][currentRoom][number]['keyblade'])
+
+  player.treasures[player.world][currentRoom][number]['status']='opened'
+
 
 def shop(currentRoom):                          ###SHOP
     for item in shops[currentRoom]:
@@ -669,7 +709,7 @@ while True:                        ###MAIN
 
       print('\ntested!\n')
     
-    elif 'upgrade' in move:                             ##### TEST 2
+    elif 'upgrade' in move:                             ##### TEST 2 (story)
 
       player.story[player.world] += 1
       print('Story: ' + str(player.story[player.world]))
@@ -677,36 +717,14 @@ while True:                        ###MAIN
       print('\ntested!\n')
     
     elif 'treasure' in move:                            ##### TREASURE
-      if 'treasure' in rooms[player.world][currentRoom] and player.treasures[player.world][currentRoom]['status']=='closed':
-        if rooms[player.world][currentRoom]['treasure']['treasure'] == 'item':
-          print('Obtained a "' + rooms[player.world][currentRoom]['treasure']['item'] + '"!')
-          if len(player.item) < player.itemPouch:
-            player.item.append(rooms[player.world][currentRoom]['treasure']['item'])
-          else:
-            player.stock.append(rooms[player.world][currentRoom]['treasure']['item'])
-            print('Your item pouch is full, item send to stock!!')
-
-        elif rooms[player.world][currentRoom]['treasure']['treasure'] == 'key item':
-          print('Obtained the "' + rooms[player.world][currentRoom]['treasure']['key item'] + '" key item!')
-          player.keyItems.append(rooms[player.world][currentRoom]['treasure']['key item'])
-
-        elif rooms[player.world][currentRoom]['treasure']['treasure'] == 'mapUpdate':
-          if player.map[player.world][rooms[player.world][currentRoom]['treasure']['mapUpdate']] == 'no':
-            player.map[player.world][rooms[player.world][currentRoom]['treasure']['mapUpdate']] = 'incomplete'
-            print('Obtained ' + player.world + ' ' + rooms[player.world][currentRoom]['treasure']['mapUpdate'] + ' map!')
-          elif player.map[player.world][rooms[player.world][currentRoom]['treasure']['mapUpdate']] == 'incomplete':
-            player.map[player.world][rooms[player.world][currentRoom]['treasure']['mapUpdate']] = 'complete'
-            print(player.world + ' ' + rooms[player.world][currentRoom]['treasure']['mapUpdate'] + ' map updated!')
-          if player.tutorial['open map'] == 0:
-            print(Fore.YELLOW + "tutorial: " + Fore.WHITE + tutorialSpeech['open map'])
-            player.tutorial['open map'] = 1
-
-        elif rooms[player.world][currentRoom]['treasure']['treasure'] == 'keyblade':
-          print('Obtained the ' + cyan + rooms[player.world][currentRoom]['treasure']['keyblade'] + white + ' Keyblade!')
-          player.keyblades.append(rooms[player.world][currentRoom]['treasure']['keyblade'])
-
-        del rooms[player.world][currentRoom]['treasure']
-        player.treasures[player.world][currentRoom]['status']='opened'
+      if 'treasure' in rooms[player.world][currentRoom]:
+        count=0
+        for number in player.treasures[player.world][currentRoom]:
+          if number > player.story[player.world]: break
+          if player.treasures[player.world][currentRoom][number]['status']=='closed':
+            count+=1
+            openTreasure(number, currentRoom)
+        if count==0: print('There\'s no treasure chest in this room!')
       else:
         print('There\'s no treasure chest in this room!')
 

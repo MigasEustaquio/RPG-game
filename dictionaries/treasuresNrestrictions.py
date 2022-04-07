@@ -2,10 +2,14 @@ treasureList = {
 
     'TraverseTown' : {
 
-        'Second District' : {'treasure' : 'item', 'item' : 'potion', 'status' : 'closed'},
+        'Second District' : {1 : {'treasure' : 'item', 'item' : 'potion', 'status' : 'closed'},
+                             2 : {'treasure' : 'item', 'item' : 'hi-potion', 'status' : 'closed'}
+                            },
                     
 
-        'Alleyway' : {'treasure' : 'mapUpdate', 'mapUpdate' : '1', 'status' : 'closed'},
+        'Alleyway' :        {1 : {'treasure' : 'mapUpdate', 'mapUpdate' : '1', 'status' : 'closed'},
+        
+                            },
 
 
     },
@@ -13,7 +17,9 @@ treasureList = {
 
     'CastleOblivion': {
 
-        '2nd Floor' : {'treasure' : 'keyblade', 'keyblade' : 'Kingdom Key D', 'status' : 'closed'},
+        '2nd Floor' : {1 : {'treasure' : 'keyblade', 'keyblade' : 'Kingdom Key D', 'status' : 'closed'},
+        
+                    },
 
 
     }
