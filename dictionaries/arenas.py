@@ -4,6 +4,8 @@ arenaNames = {
     '2' : 'Pegasus Cup',
     '3' : 'Hercules Cup',
     '4' : 'Hades Cup',
+    '5' : 'Gold Match',
+    '6' : 'Platinum Match'
 
 
 }
@@ -36,7 +38,7 @@ arenaRewards = {   ###THE SECOND REWARD IS ALWAYS AN ITEM
     '2' : {
         1 : ['magic', 'ability'],
         'magic' : 'firaga',
-        'ability' : ['Jackpot', False],
+        'ability' : 'Jackpot',
         2 : 'megalixir'
 
     },

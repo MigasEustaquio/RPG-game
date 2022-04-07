@@ -3,7 +3,7 @@
 import random
 import math
 import time
-from allyClasses import Ally
+from utilities.allyClasses import *
 from utilities.enemyClasses import *
 from utilities.screen import *
 from dictionaries.people import *
@@ -75,8 +75,9 @@ def showStatus():                               ###SHOW STATUS
     peopleToTalk, storyToTalk = verifyPersonStory(rooms[player.world][currentRoom]['person'])
     for person in peopleToTalk:
       print('You see ' + person)
-  if "shop" in rooms[player.world][currentRoom] and (currentRoom+' Shop location') in player.keyItems:
-    print('You see the ' + rooms[player.world][currentRoom]['shop'] + ', try: \'enter shop\'')
+  if "shop" in rooms[player.world][currentRoom]:
+    if (currentRoom+' Shop location') in player.keyItems or rooms[player.world][rooms[player.world][currentRoom]['shop']]['key'] in player.keyItems:
+      print('You see the ' + rooms[player.world][currentRoom]['shop'] + ', try: \'enter shop\'')
   if "Shop" in currentRoom or "Save" in rooms[player.world][currentRoom]:
       player.HP = player.TotalHP
       player.MP = player.TotalMP
@@ -141,26 +142,26 @@ def shop(currentRoom):                          ###SHOP
 def resetHeartless(currentRoom, previousStory=0):
   for room in rooms[player.world][currentRoom]['resetHeartless']:
     if 'heartless' in rooms[player.world][room]:
-      if player.story[player.world] in enemyLocations[player.world][currentRoom]:
-        if enemyLocations[player.world][currentRoom][player.story[player.world]]['status'] == 0:
-          enemyLocations[player.world][currentRoom][player.story[player.world]]['status'] = enemyLocations[player.world][currentRoom][player.story[player.world]]['waves']
+      if player.story[player.world] in enemyLocations[player.world][room]:
+        if enemyLocations[player.world][room][player.story[player.world]]['status'] == 0:
+          enemyLocations[player.world][room][player.story[player.world]]['status'] = enemyLocations[player.world][room][player.story[player.world]]['waves']
       else:
-        if player.story[player.world] > list(enemyLocations[player.world][currentRoom])[-1]:
-          enemyLocations[player.world][currentRoom][-1]['status'] = enemyLocations[player.world][currentRoom][-1]['waves']
-        elif player.story[player.world] < list(enemyLocations[player.world][currentRoom])[0]:
+        if player.story[player.world] > list(enemyLocations[player.world][room])[-1]:
+          enemyLocations[player.world][room][-1]['status'] = enemyLocations[player.world][room][-1]['waves']
+        elif player.story[player.world] < list(enemyLocations[player.world][room])[0]:
           pass
         else:
-          for story in enemyLocations[player.world][currentRoom]:
+          for story in enemyLocations[player.world][room]:
             if story > player.story[player.world]:
-              enemyLocations[player.world][currentRoom][previousStory]['status'] = enemyLocations[player.world][currentRoom][previousStory]['waves']
+              enemyLocations[player.world][room][previousStory]['status'] = enemyLocations[player.world][room][previousStory]['waves']
               break
             else:
               previousStory = story
 
 def levelUP():                                  ###LEVEL UP
   if levelUp[player.level]['ability'] != 'none':
-    player.abilities.append(levelUp[player.level]['ability'])
-    print('\nObtained ' + levelUp[player.level]['ability'][0] + '!')
+    player.abilities.append([levelUp[player.level]['ability'], False])
+    print('\nObtained ' + yellow + levelUp[player.level]['ability'] + '!')
     # if levelUp[player.level]['ability'][0] in finishersList:
     #   player.finishers.append(levelUp[player.level]['ability'])
   if levelUp[player.level]['HP'] != 0:
@@ -476,9 +477,9 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
                 break
     ###MP RECOVER
           recoverMPNumber = random.randint(1, 100)
-          if ['MP Haste', True] in player.abilities: recoverMPNumberNeeded = 55
+          if ['Mp Haste', True] in player.abilities: recoverMPNumberNeeded = 55
           else: recoverMPNumberNeeded = 75
-          if ['MP Rage', True] in player.abilities: recoverMP = math.ceil(player.TotalMP/4) + math.ceil((player.TotalMP-player.MP)/4)
+          if ['Mp Rage', True] in player.abilities: recoverMP = math.ceil(player.TotalMP/4) + math.ceil((player.TotalMP-player.MP)/4)
           else: recoverMP = math.ceil(player.TotalMP/4)
 
           if recoverMPNumber > recoverMPNumberNeeded:
@@ -650,8 +651,8 @@ def arena(arenaNumber):                         ###ARENA FIGHT
           print('You learned the ' + player.colors[magics[magicName]['speech'][4]] + magicName + white + ' spell!')
         if 'ability' in rewards:
           abilityName = arenaRewards[arenaNumber]['ability']
-          player.abilities.append(abilityName)
-          print('\nObtained ' + abilityName[0] + '!')
+          player.abilities.append([abilityName, False])
+          print('\nObtained ' + yellow + abilityName + '!')
           # if abilityName[0] in finishersList:
           #   player.finishers.append(abilityName)
 

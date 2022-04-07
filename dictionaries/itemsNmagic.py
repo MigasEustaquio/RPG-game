@@ -90,55 +90,105 @@ magics = {
 
 }
 
-shops = {
-
-            'First District Shop' : {'potion' : 10,
-                      'hi-potion' : 20,
-                      'ether': 15,
-                      'obsidian ring' : 1000
-            },
-
-
-
-
-
-            '1st Floor Shop' : {'potion' : 10,
-                      'hi-potion' : 20,
-                      'ether': 15,
-                      'obsidian ring' : 1000
-            },
-
-}
-
 
 keybladeStatus = { 
 
             'Kingdom Key' : {
                     'damage' : 1, 
-                    'MP': 1 
+                    'MP': 0 
             },
 
             'Jungle King' : {
+                    'damage' : 3, 
+                    'MP': 0 
+            },
+
+            'Lady Luck' : {
+                    'damage' : 5, 
+                    'MP': 2 
+            },
+
+            'Olympia' : {
+                    'damage' : 8, 
+                    'MP': 0 
+            },
+
+            'Three Wishes' : {
+                    'damage' : 4, 
+                    'MP': 0 
+            },
+
+            'Wishing Star' : {
+                    'damage' : 3, 
+                    'MP': 0 
+            },
+
+            'Spellbinder' : {
                     'damage' : 2, 
                     'MP': 2 
             },
 
-            'Oathkeeper' : {
+            'Crabclaw' : {
+                    'damage' : 4, 
+                    'MP': 1 
+            },
+
+            'Pumpkinhead' : {
                     'damage' : 5, 
-                    'MP': 5 
+                    'MP': 0 
+            },
+
+            'Fairy Harp' : {
+                    'damage' : 8, 
+                    'MP': 1 
+            },
+
+            'Metal Chocobo' : {
+                    'damage' : 7, 
+                    'MP': -1 
+            },
+
+            'Divine Rose' : {
+                    'damage' : 11, 
+                    'MP': 0 
+            },
+
+            'Lionheart' : {
+                    'damage' : 8, 
+                    'MP': 1 
+            },
+
+            'Diamond Dust' : {
+                    'damage' : 1, 
+                    'MP': 3 
+            },
+
+            'One-Winged Angel' : {
+                    'damage' : 6, 
+                    'MP': -2 
+            },
+
+            'Oathkeeper' : {
+                    'damage' : 7, 
+                    'MP': 1 
             },
 
             'Oblivion' : {
-                    'damage' : 6, 
-                    'MP': 2 
+                    'damage' : 9, 
+                    'MP': -1 
             },
 
             'Ultima Weapon' : {
-                    'damage' : 6, 
-                    'MP': 4 
+                    'damage' : 12, 
+                    'MP': 2 
             },
 
             'Kingdom Key D' : {
+                    'damage' : 8, 
+                    'MP': 4 
+            },
+
+            'Keyblade of heart' : {
                     'damage' : 8, 
                     'MP': 4 
             },

@@ -4,6 +4,7 @@ from colorama import init as colorama_init
 import copy
 
 from dictionaries.itemsNmagic import *
+from dictionaries.shopDetails import *
 from dictionaries.exp import *
 from dictionaries.maps import *
 from dictionaries.save import *
@@ -475,7 +476,7 @@ MP: ''' + str(keybladeStatus[self.keyblades[i]]['MP']) + '''
                 tab='\t'
                 name=ability[0]
                 if ability[0] in self.finishers: name=name+' (F)'
-                if len(name)<=8: tab=tab+tab+tab+tab
+                if len(name)<=6: tab=tab+tab+tab+tab
                 elif len(name)<=12: tab=tab+tab+tab
                 elif len(name)<=16: tab=tab+tab
                 if ability[1]: print(Fore.YELLOW + '● ' + Fore.WHITE + name + tab + 'cost: ' + str(abilityList[ability[0]][1]))

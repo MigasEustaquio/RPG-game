@@ -1,26 +1,58 @@
-world map (almost done)
+implement:{
 
-allies (started)
+    allies (started)
 
-enemy commands (started)
+    add worlds (story and mechanics)
 
-add enemies (half done)
+    unlock areas (for now only by magic) (require more worlds and rooms)
 
-add worlds
+    add abilities (almost done)
 
-add arenas and arena rewards (half done)
+    exp equipment
 
-unlock areas (for now only by magic)
+}
 
-add abilities (almost done)
+improve:{
 
-synthesize?
+    add enemies (half done)
 
-enemy drops (half done)
+    add magic spells
 
-make abilities, equipment and other displays pretty like items display is
-make treasure items display
+    world map (almost done)
 
-exp equipment
+    enemy commands (started)
 
-save using csv? (save dict may be hard)
+}
+
+complete with data:{
+
+    add worlds (rooms)
+
+    add enemies (hp, damage, commands...)
+
+    add arenas and arena rewards (half done)
+
+    enemy drops (half done)
+
+}
+
+style:{
+
+    make abilities, equipment and other displays pretty like items display is
+    make treasure items display
+
+    change keyblade and equipment trading display to look like abilities?
+
+    sort items, magics...
+
+}
+
+uncertain to do:{
+
+    synthesize?
+
+    save using csv? (save dict may be hard)
+
+}
+
+

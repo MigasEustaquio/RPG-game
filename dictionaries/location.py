@@ -216,6 +216,7 @@ rooms = {
     0 : 'Coliseum Gates',
 
       'Coliseum Gates' : { 'up' : 'Lobby',
+                  'person'  : ['Phil', 'Hercules'],
                   'resetHeartless' : [],
                   'map number' : '1',
                   'restricted' : {}
@@ -224,20 +225,23 @@ rooms = {
       'Lobby' : { 'down' : 'Coliseum Gates',
                   # 'treasure' : '',
                   'person'  : ['Phil', 'Hercules'],
+                  'shop' : 'Coliseum Shop',
                   'resetHeartless' : [],
                   'Save':'',
                   'map number' : '1',
                   'restricted' : {}
       },
 
-      'Arena' : { 'down' : 'Lobby', #Remove this line later
+      'Coliseum Shop' : { 'leave' : 'Lobby',              
+                  'person'  : ['Moogle'],
                   'resetHeartless' : [],
                   'map number' : '1',
-                  'restricted' : {}
-      },
+                  'restricted' : {},
+                  'key' : 'Coliseum Shop location'
+                },
 
       'Rooms List' : {
-                  'resetHeartless' : ['Coliseum Gates', 'Lobby', 'Arena']
+                  'resetHeartless' : ['Coliseum Gates', 'Lobby']
       }
   },
 

@@ -5,16 +5,16 @@ levelUp = {
                         'ability' : 'none', 'HP' : 0, 'MP' : 0},
 
                 2 : { 'exp': 20, 'next' : 70,
-                        'ability' : ['Scan', False], 'HP' : 1, 'MP' : 0  },
+                        'ability' : 'Scan', 'HP' : 1, 'MP' : 0  },
 
                 3 : { 'exp': 70, 'next' : 140,
-                        'ability' : ['MP Haste', False], 'HP' : 0, 'MP' : 1  },
+                        'ability' : 'Mp Haste', 'HP' : 0, 'MP' : 1  },
 
                 4 : { 'exp': 140, 'next' : 240,
                         'ability' : 'none', 'HP' : 0, 'MP' : 0},
 
                 5 : { 'exp': 240, 'next' : 390,
-                        'ability' : 'scan', 'HP' : 1, 'MP' : 0  },
+                        'ability' : 'none', 'HP' : 1, 'MP' : 0  },
 
                 6 : { 'exp': 390, 'next' : 580,
                         'ability' : 'none', 'HP' : 0, 'MP' : 1  },
@@ -23,7 +23,7 @@ levelUp = {
                         'ability' : 'none', 'HP' : 0, 'MP' : 0},
 
                 8 : { 'exp': 800, 'next' : 1090,
-                        'ability' : 'scan', 'HP' : 1, 'MP' : 0  },
+                        'ability' : 'none', 'HP' : 1, 'MP' : 0  },
 
                 9 : { 'exp': 1090, 'next' : 1350,
                         'ability' : 'none', 'HP' : 0, 'MP' : 1  },

@@ -61,6 +61,26 @@ people = {
 
             ###Olympus Coliseum
 
+            'Coliseum Gates' : {
+              'Phil' : {
+                0: {'speech' : 'Phil: Let\'s try the arena!',
+                    'reward' : 'key item',
+                    'key item' : 'Coliseum Shop location',
+                    'present' : 'yes',
+                },
+                1:{'present' : 'no'}
+              },
+
+              'Hercules' : {
+                0: {'speech' : 'Hercules: That won\'t stop a true hero!',
+                      'reward' : 'mapUpdate',
+                      'mapUpdate' : '1',
+                      'present' : 'yes',
+                },
+                1:{'present' : 'no'}
+              },
+            },
+
             'Lobby' : {
               'Phil' : {
                 1: {'speech' : 'Phil: Let\'s try the arena!',
@@ -70,11 +90,21 @@ people = {
               },
 
               'Hercules' : {
-                0: {'speech' : 'Hercules: That won\'t stop a true hero!',
+                1: {'speech' : 'Hercules: That won\'t stop a true hero!',
                       'reward' : 'mapUpdate',
                       'mapUpdate' : '1',
                       'present' : 'yes',
                 },
+              },
+            },
+
+
+            'Coliseum Shop' :{
+              'Moogle' : {
+                      0: {'speech' : 'Moogle: Hi there, Kupo!\nTo buy an item just type \'buy [item]\'\n\nHere\'s what I have in stock:',
+                          'reward' : 'no',
+                          'present' : 'yes',
+                      },
               },
             },
 
