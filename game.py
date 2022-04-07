@@ -9,6 +9,7 @@ from dictionaries.people import *
 from dictionaries.location import *
 from dictionaries.enemies import *
 from dictionaries.scenes import *
+from dictionaries.enemyLocations import *
 
 def showInstructions():
     #print a main menu and the commands
@@ -131,7 +132,6 @@ def openTreasure(number, currentRoom):
     player.keyblades.append(treasureList[player.world][currentRoom][number]['keyblade'])
 
   player.treasures[player.world][currentRoom][number]['status']='opened'
-
 
 def shop(currentRoom):                          ###SHOP
     for item in shops[currentRoom]:
@@ -481,12 +481,12 @@ def arenaGameOver():                            ###ARENA GAME OVER
       command = ''
 
 def determineBattle(story, currentRoom, previousRoom):   ###DETERMINE ENEMY TO BATTLE
-    status = rooms[player.world][currentRoom]['heartless'][story]['status']
+    status = enemyLocations[player.world][currentRoom][story]['status']
     if status > 0:
       while True:
-        result = battle(rooms[player.world][currentRoom]['heartless'][story]['wave'][status])
+        result = battle(enemyLocations[player.world][currentRoom][story]['wave'][status])
         if result == 'victory':
-          rooms[player.world][currentRoom]['heartless'][story]['status'] = (status - 1)
+          enemyLocations[player.world][currentRoom][story]['status'] = (status - 1)
           player.calculateHealth()
           return 1, currentRoom, previousRoom
         if result == 'defeat':
@@ -752,7 +752,7 @@ while True:                        ###MAIN
       else:
         print('There is no save point here!')
 
-    elif 'world' in move:                                ##### SAVE
+    elif 'world' in move:                               ##### SAVE
       if 'Shop' in currentRoom or 'Save' in rooms[player.world][currentRoom]:
         print('Do you want to jump into the gummi ship and get to the world map?')
         answer = input('>')
@@ -955,18 +955,18 @@ while True:                        ###MAIN
         player.story[player.world] += 1
       ###RESET HEARTLESS STATUS SO PLAYER WON'T FIGHT RIGHT AWAY
         if 'heartless' in rooms[player.world][currentRoom]:
-          if player.story[player.world] > list(rooms[player.world][currentRoom]['heartless'])[-1]:
-            rooms[player.world][currentRoom]['heartless'][list(rooms[player.world][currentRoom]['heartless'])[-1]]['status'] = 0
-          elif player.story[player.world] < list(rooms[player.world][currentRoom]['heartless'])[0]:
+          if player.story[player.world] > list(enemyLocations[player.world][currentRoom])[-1]:
+            enemyLocations[player.world][currentRoom][-1]['status'] = 0
+          elif player.story[player.world] < list(enemyLocations[player.world][currentRoom])[0]:
             pass
           else:
-            for story in rooms[player.world][currentRoom]['heartless']:
+            for story in enemyLocations[player.world][currentRoom]:
               if story == player.story[player.world]:
-                rooms[player.world][currentRoom]['heartless'][story]['status'] = 0
+                enemyLocations[player.world][currentRoom][story]['status'] = 0
                 break
               else:
                 if story > player.story[player.world]:
-                  rooms[player.world][currentRoom]['heartless'][previousStory]['status'] = 0
+                  enemyLocations[player.world][currentRoom][previousStory]['status'] = 0
                   break
                 else:
                   previousStory = story
@@ -990,12 +990,12 @@ while True:                        ###MAIN
       player.calculateHealth()
 
     elif 'heartless' in rooms[player.world][currentRoom] and alreadyBattled == 0:           ###### BATTLE
-      if player.story[player.world] > list(rooms[player.world][currentRoom]['heartless'])[-1]:
-        alreadyBattled, currentRoom, previousRoom = determineBattle(list(rooms[player.world][currentRoom]['heartless'])[-1], currentRoom, previousRoom)
-      elif player.story[player.world] < list(rooms[player.world][currentRoom]['heartless'])[0]:
+      if player.story[player.world] > list(enemyLocations[player.world][currentRoom])[-1]:
+        alreadyBattled, currentRoom, previousRoom = determineBattle(list(enemyLocations[player.world][currentRoom])[-1], currentRoom, previousRoom)
+      elif player.story[player.world] < list(enemyLocations[player.world][currentRoom])[0]:
         pass
       else:
-        for story in rooms[player.world][currentRoom]['heartless']:
+        for story in enemyLocations[player.world][currentRoom]:
           if story == player.story[player.world]:
             alreadyBattled, currentRoom, previousRoom = determineBattle(story, currentRoom, previousRoom)
             break

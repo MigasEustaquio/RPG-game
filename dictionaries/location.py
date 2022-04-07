@@ -73,16 +73,7 @@ rooms = {
                   'left' : 'Hotel',
                   'up' : 'Gizmo Shop',
                   'treasure' : '',
-                  'heartless'  : { 
-                    0:{
-                    'waves' : 2, 'status' : 2, 'wave' : {
-                       2 : 'soldier', 1 : 'shadow'}
-                    },
-                    1:{
-                    'waves' : 2, 'status' : 2, 'wave' : {
-                       2 : 'soldier', 1 : 'shadow'}
-                    },
-                  },
+                  'heartless'  : '',
                   'resetHeartless' : ['Alleyway', 'Third District Upper Side'],
                   'map number' : '1',
                   'restricted' : {}
@@ -119,16 +110,7 @@ rooms = {
             'Hotel' : { 'right' : 'Second District',
                     'left' : 'Green Room',
                     'up' : 'Red Room',
-                    'heartless'  : { 
-                      0:{
-                      'waves' : 1, 'status' : 1, 'wave' : {
-                          1 : 'shadow'}
-                      },
-                      1:{
-                      'waves' : 1, 'status' : 1, 'wave' : {
-                          1 : 'shadow'}
-                      },
-                    },
+                    'heartless'  : '',
                     'resetHeartless' : ['Alleyway'],
                   'map number' : '1',
                   'restricted' : {}
@@ -153,16 +135,7 @@ rooms = {
               'Alleyway' : { 'down' : 'Green Room',
                   'right' : 'Red Room',
                   'treasure' : '',
-                  'heartless'  : { 
-                    0:{
-                      'waves' : 3, 'status' : 3, 'wave' : {
-                        3 : 'soldier', 2 : 'shadow', 1 : 'shadow'}
-                    },
-                    1:{
-                      'waves' : 3, 'status' : 3, 'wave' : {
-                        3 : 'soldier', 2 : 'shadow', 1 : 'shadow'}
-                    },
-                  },
+                  'heartless'  : '',
                   'resetHeartless' : ['Second District', 'Hotel'],
                   'map number' : '1',
                   'restricted' : {}
@@ -170,16 +143,7 @@ rooms = {
 
               'Gizmo Shop' : { 'down' : 'Second District',
                     'up' : 'Second District Upper Side',
-                    'heartless'  : { 
-                      0:{
-                      'waves' : 1, 'status' : 1, 'wave' : {
-                          1 : 'shadow'}
-                      },
-                      1:{
-                      'waves' : 1, 'status' : 1, 'wave' : {
-                          1 : 'shadow'}
-                      },
-                    },
+                    'heartless'  : '',
                     'resetHeartless' : ['Third District Upper Side', 'Hotel', 'Third District'],
                   'map number' : '1',
                   'restricted' : {}
@@ -188,16 +152,7 @@ rooms = {
              'Second District Upper Side' : { 'down' : 'Gizmo Shop',
                     'right' : 'Third District Upper Side',
                     'jump' : 'Second District',
-                    'heartless'  : { 
-                      0:{
-                      'waves' : 1, 'status' : 1, 'wave' : {
-                          1 : 'shadow'}
-                      },
-                      1:{
-                      'waves' : 1, 'status' : 1, 'wave' : {
-                          1 : 'shadow'}
-                      },
-                    },
+                    'heartless'  : '',
                     'resetHeartless' : ['Second District'],
                   'map number' : '1',
                   'restricted' : {}
@@ -205,16 +160,7 @@ rooms = {
 
              'Third District Upper Side' : { 'left' : 'Second District Upper Side',
                     'jump' : 'Third District',
-                    'heartless'  : { 
-                      0:{
-                      'waves' : 1, 'status' : 1, 'wave' : {
-                          1 : 'shadow'}
-                      },
-                      1:{
-                      'waves' : 1, 'status' : 1, 'wave' : {
-                          1 : 'shadow'}
-                      },
-                    },
+                    'heartless'  : '',
                     'resetHeartless' : ['Gizmo Shop'],
                   'map number' : '1',
                   'restricted' : {}
@@ -313,15 +259,7 @@ rooms = {
                   'down' : '5th Floor',
                   'treasure' : '',
                   'person'  : ['Roxas', 'Axel'],
-                  # 'heartless'  : { 
-                  #   1 : {
-                  #   'waves' : 2, 'status' : 2, 'wave' : {
-                  #      2 : 'soldier', 1 : 'shadow'}
-                  #   },
-                  #   3 : {
-                  #   'waves' : 1, 'status' : 1, 'wave' : { 1 : 'angel star'}
-                  #   },
-                  # },
+                  # 'heartless'  : '',
                   'resetHeartless' : [],
                   'map number' : '1',
                   'restricted' : {}
@@ -348,14 +286,7 @@ rooms = {
       '5th Floor' : {'left' : '4th Floor',
                   'up' : '1st Floor',
                   'boss' : 'Xemnas',
-                  'heartless'  : { 
-                    2: {
-                      'waves' : 1, 'status' : 1, 'wave' : { 1 : 'invisible'}
-                    },
-                    3: {
-                      'waves' : 1, 'status' : 1, 'wave' : { 1 : 'invisible'}
-                    },
-                  },
+                  'heartless'  : '',
                   'resetHeartless' : [],
                   'map number' : '1',
                   'restricted' : {}

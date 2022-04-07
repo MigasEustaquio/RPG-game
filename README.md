@@ -1,1 +1,2 @@
 # RPG-game
+This game is a tribute to my favorite game in a very simple manner. It is been developed  by a student without any intentions of profit. Thanks very much for been here and I hope you like it!
