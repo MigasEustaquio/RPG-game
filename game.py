@@ -160,9 +160,9 @@ def resetHeartless(currentRoom, previousStory=0):
 def levelUP():                                  ###LEVEL UP
   if levelUp[player.level]['ability'] != 'none':
     player.abilities.append(levelUp[player.level]['ability'])
-    print('\nObtained ' + levelUp[player.level]['ability'] + '!')
-    if levelUp[player.level]['ability'] in finishersList:
-      player.finishers.append(levelUp[player.level]['ability'])
+    print('\nObtained ' + levelUp[player.level]['ability'][0] + '!')
+    # if levelUp[player.level]['ability'][0] in finishersList:
+    #   player.finishers.append(levelUp[player.level]['ability'])
   if levelUp[player.level]['HP'] != 0:
     player.MaxHP += levelUp[player.level]['HP']
     player.HP += levelUp[player.level]['HP']
@@ -281,7 +281,7 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
         player.showBattleStatus()
         enemy.damage = enemy.totalDamage
 
-        if 'Scan' in player.abilities:
+        if ['Scan', True] in player.abilities:
           scan(enemy)
 
         while command == '':
@@ -313,10 +313,10 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
         if command == 'attack':       ###ATTACK
             command = ''
     ### Finishers
-            if any(item in player.abilities for item in finishersList) and finishCount == 3:
+            if any(item in player.finishers for item in finishersList) and finishCount == 3:
               finishAttack(enemy, damage)
               finishCount = 0
-            elif any(item in player.abilities for item in finishersList) and 'Negative Combo' in player.abilities and finishCount == 2:
+            elif any(item in player.finishers for item in finishersList) and 'Negative Combo' in player.abilities and finishCount == 2:
               finishAttack(enemy, damage)
               finishCount = 0
             else:
@@ -344,7 +344,7 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
     ###
         elif "magic" in command:       ###MAGIC
           command = command.lower().split()
-          if 'Combo Master' not in player.abilities or finishCount == 3:
+          if ['Combo Master', True] not in player.abilities or finishCount == 3:
             finishCount = 0
           if not player.magic:
             print('Magic is still a mystery to you!')
@@ -366,7 +366,7 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
                   enemy.statusEffectDamage()
     ###Calculate damage
                 if player.HP > player.TotalHP: player.HP = player.TotalHP
-                if 'Leaf Bracer' in player.abilities and 'cur' in command[1]:
+                if ['Leaf Bracer', True] in player.abilities and 'cur' in command[1]:
                   print(green + 'Leaf Bracer' + white +' protects you from damage while casting a Healing spell!')
                   enemy.damage = 0
                 else:
@@ -476,9 +476,9 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
                 break
     ###MP RECOVER
           recoverMPNumber = random.randint(1, 100)
-          if 'MP Haste' in player.abilities: recoverMPNumberNeeded = 55
+          if ['MP Haste', True] in player.abilities: recoverMPNumberNeeded = 55
           else: recoverMPNumberNeeded = 75
-          if 'MP Rage' in player.abilities: recoverMP = math.ceil(player.TotalMP/4) + math.ceil((player.TotalMP-player.MP)/4)
+          if ['MP Rage', True] in player.abilities: recoverMP = math.ceil(player.TotalMP/4) + math.ceil((player.TotalMP-player.MP)/4)
           else: recoverMP = math.ceil(player.TotalMP/4)
 
           if recoverMPNumber > recoverMPNumberNeeded:
@@ -651,9 +651,9 @@ def arena(arenaNumber):                         ###ARENA FIGHT
         if 'ability' in rewards:
           abilityName = arenaRewards[arenaNumber]['ability']
           player.abilities.append(abilityName)
-          print('\nObtained ' + abilityName + '!')
-          if abilityName in finishersList:
-            player.finishers.append(abilityName)
+          print('\nObtained ' + abilityName[0] + '!')
+          # if abilityName[0] in finishersList:
+          #   player.finishers.append(abilityName)
 
       break
 
@@ -742,7 +742,9 @@ while True:                        ###MAIN
 
     elif 'test' in move:                                ##### TEST
 
-      player.allies.append(Ally('Donald&Goofy', player))
+      # player.allies.append(Ally('Donald&Goofy', player))
+
+      print(player.finishers)
 
       # if bool(player.arenaRecords):
       #   for record in player.arenaRecords:
@@ -775,6 +777,9 @@ while True:                        ###MAIN
 
     elif 'menu' in move:                                ##### SHOW MENU
         player.menu()
+
+    elif 'ability' in move or 'abilities' in move:      ##### EQUIP abilities
+        player.equipAbilities()
 
     elif 'equipment' in move:                           ##### TRADE EQUIPMENT
         player.tradeEquipment()

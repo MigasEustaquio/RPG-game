@@ -42,8 +42,12 @@ class player:
 
         self.keyblades = ['Kingdom Key']
 
-        self.abilities = []
-        self.finishers = []
+        self.MaxAP = 1
+        self.TotalAP = self.MaxAP
+        self.AP = self.TotalAP
+
+        self.abilities = [] #All unlocked abilities
+        self.finishers = [] #Only equipped finishers
 
         #STORY RELATED
         self.world = 'TraverseTown'
@@ -97,12 +101,14 @@ class player:
     def calculateHealth(self):
         self.TotalHP = self.MaxHP
         self.TotalMP = self.MaxMP
+        self.TotalAP = self.MaxAP
 
         self.TotalMP += keybladeStatus[self.keyblade]['MP']
 
         for accessory in self.equipment:
             self.TotalHP += equipments[accessory]['HP']
             self.TotalMP += equipments[accessory]['MP']
+            self.TotalAP += equipments[accessory]['AP']
 
         if self.HP > self.TotalHP: self.HP = self.TotalHP
         if self.MP > self.TotalMP: self.MP = self.TotalMP
@@ -380,7 +386,7 @@ DEF: ''' + str(equipments[self.equipmentList[j]]['DEF']) + '''
         option = ''
         i=0
         while option == '':
-            print('To equip a different keyblade use equip [keyblade] or navigate with \'next\' or \'previous\'. (0 to cancel)\n')
+            print('To equip a different keyblade use \'equip [keyblade]\' or navigate with \'next\' or \'previous\'. (0 to cancel)\n')
             print(Fore.YELLOW + 'Equipped:\n')
 
             print(Fore.BLUE +
@@ -448,6 +454,64 @@ MP: ''' + str(keybladeStatus[self.keyblades[i]]['MP']) + '''
                     break
                 else:
                     print(Fore.RED + 'Equipment not found')
+                option=''
+            
+            else:
+                print(Fore.RED + 'Command not found')
+                option=''
+
+        self.calculateHealth()
+
+#####EQUIP ABILITIES
+    def equipAbilities(self):
+        option = ''
+        while option == '':
+            self.abilities=sorted(self.abilities, key=lambda x: x[0])
+
+            print('\nTo equip an ability use \'equip [ability]\', to unequip use \'unequip [ability]\'. If you want to see an ability description use \'see [ability]\'. (0 to cancel)\n')
+
+            print('\nAP: ' + str(self.AP) + '\\' + str(self.TotalAP) + '\n')
+            for ability in self.abilities: #● ○
+                tab='\t'
+                name=ability[0]
+                if ability[0] in self.finishers: name=name+' (F)'
+                if len(name)<=8: tab=tab+tab+tab+tab
+                elif len(name)<=12: tab=tab+tab+tab
+                elif len(name)<=16: tab=tab+tab
+                if ability[1]: print(Fore.YELLOW + '● ' + Fore.WHITE + name + tab + 'cost: ' + str(abilityList[ability[0]][1]))
+                else: print('○ ' + name + tab + 'cost: ' + str(abilityList[ability[0]][1]))
+
+            option = input('>')
+            option = option.lower().split()
+            if len(option)>2: option[1] = option[1].capitalize() + ' ' + option[2].capitalize()
+            elif len(option)>1: option[1] = option[1].capitalize()
+
+
+            if option == '0' or option[0] == '0':
+                break
+
+            elif option[0] == 'equip':
+                if [option[1], True] in self.abilities: print(Fore.RED + 'This ability is already equipped!')
+                elif [option[1], False] in self.abilities:
+                    if self.AP >= abilityList[option[1]][1]:
+                        self.abilities[self.abilities.index([option[1], False])][1]=True
+                        self.AP=self.AP-abilityList[option[1]][1]
+                        print(Fore.GREEN + option[1] + ' equipped!\n')
+                        if option[1] in finishersList: self.finishers.append(option[1])
+                    else: print(Fore.RED + 'Not enought AP!')
+                else:
+                    print(Fore.RED + 'Ability not found!')
+                option=''
+
+            elif option[0] == 'unequip':
+                if [option[1], False] in self.abilities: print(Fore.RED + 'This ability is already unequipped!')
+                elif [option[1], True] in self.abilities:
+                    self.abilities[self.abilities.index([option[1], True])][1]=False
+                    self.AP+=abilityList[option[1]][1]
+                    print(Fore.CYAN + option[1] + ' unequipped!\n')
+                    if option[1] in finishersList: del(self.finishers[self.finishers.index(option[1])])
+                else:
+                    print(Fore.RED + 'Ability not found')
                 option=''
             
             else:

@@ -1,10 +1,8 @@
-world map (half done)
+world map (almost done)
 
 allies (started)
 
 enemy commands (started)
-
-select abilities? (how?)
 
 add enemies (half done)
 

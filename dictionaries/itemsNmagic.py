@@ -147,52 +147,52 @@ keybladeStatus = {
 equipments = {
 
         'angel bangle' : {'description' : 'Raises max HP and Defense.',
-                        'HP' : 6, 'MP' : 0, 'STR' : 0, 'DEF' : 2},
+                        'HP' : 6, 'MP' : 0, 'STR' : 0, 'DEF' : 2, 'AP' : 0},
 
         'atlas armlet' : {'description' : 'Raises max MP and Defense. Also significantly enhances magic and summon power..',
-                        'HP' : 0, 'MP' : 2, 'STR' : 0, 'DEF' : 2},
+                        'HP' : 0, 'MP' : 2, 'STR' : 0, 'DEF' : 2, 'AP' : 0},
 
         'brave warrior' : {'description' : 'Slightly raises max HP and Strength.',
-                        'HP' : 3, 'MP' : 0, 'STR' : 1, 'DEF' : 0},
+                        'HP' : 3, 'MP' : 0, 'STR' : 1, 'DEF' : 0, 'AP' : 0},
 
         'cosmic arts' : {'description' : 'Raises max HP and MP.',
-                        'HP' : 9, 'MP' : 2, 'STR' : 0, 'DEF' : 2},
+                        'HP' : 9, 'MP' : 2, 'STR' : 0, 'DEF' : 2, 'AP' : 0},
 
         'exp bracelet' : {'description' : 'Increases the experience you get by 20%.',
-                        'HP' : 0, 'MP' : 0, 'STR' : -2, 'DEF' : -2},
+                        'HP' : 0, 'MP' : 0, 'STR' : -2, 'DEF' : -2, 'AP' : 0},
 
         'exp earring' : {'description' : 'Increases the experience you get by 20%.',
-                        'HP' : 0, 'MP' : 0, 'STR' : 0, 'DEF' : 0},
+                        'HP' : 0, 'MP' : 0, 'STR' : 0, 'DEF' : 0, 'AP' : 0},
 
         'gaia bangle' : {'description' : 'Significantly raises max HP and Defense.',
-                        'HP' : 9, 'MP' : 0, 'STR' : 0, 'DEF' : 3},
+                        'HP' : 9, 'MP' : 0, 'STR' : 0, 'DEF' : 3, 'AP' : 0},
 
         'golem chain' : {'description' : 'Raises Strength and Defense.',
-                        'HP' : 0, 'MP' : 0, 'STR' : 3, 'DEF' : 1},
+                        'HP' : 0, 'MP' : 0, 'STR' : 3, 'DEF' : 1, 'AP' : 0},
 
         'obsidian ring' : {'description' : 'Raises max HP and Defense.',
-                        'HP' : 0, 'MP' : 0, 'STR' : 1, 'DEF' : 0},
+                        'HP' : 0, 'MP' : 0, 'STR' : 1, 'DEF' : 0, 'AP' : 0},
 
         'Omega Arts' : {'description' : 'Raises max HP, Strength, and Defense.',
-                        'HP' : 3, 'MP' : 0, 'STR' : 3, 'DEF' : 3},
+                        'HP' : 3, 'MP' : 0, 'STR' : 3, 'DEF' : 3, 'AP' : 0},
 
         'Power Chain' : {'description' : 'Slightly raises Strength.',
-                        'HP' : 0, 'MP' : 0, 'STR' : 1, 'DEF' : 0},
+                        'HP' : 0, 'MP' : 0, 'STR' : 1, 'DEF' : 0, 'AP' : 0},
 
         'Prime Cap' : {'description' : 'Raises Defense.',
-                        'HP' : 0, 'MP' : 0, 'STR' : -5, 'DEF' : 5},
+                        'HP' : 0, 'MP' : 0, 'STR' : -5, 'DEF' : 5, 'AP' : 0},
 
         'Protect Chain' : {'description' : 'Slightly raises Defense.',
-                        'HP' : 0, 'MP' : 0, 'STR' : 0, 'DEF' : 1},
+                        'HP' : 0, 'MP' : 0, 'STR' : 0, 'DEF' : 1, 'AP' : 0},
 
         'Protega Chain' : {'description' : 'Significantly raises Defense.',
-                        'HP' : 0, 'MP' : 0, 'STR' : 0, 'DEF' : 3},
+                        'HP' : 0, 'MP' : 0, 'STR' : 0, 'DEF' : 3, 'AP' : 0},
 
         'Protera Chain' : {'description' : 'Raises Defense.',
-                        'HP' : 0, 'MP' : 0, 'STR' : 0, 'DEF' : 2},
+                        'HP' : 0, 'MP' : 0, 'STR' : 0, 'DEF' : 2, 'AP' : 0},
 
         'Titan Chain' : {'description' : 'Significantly raises Strength and Defense.',
-                        'HP' : 0, 'MP' : 0, 'STR' : 4, 'DEF' : 2},
+                        'HP' : 0, 'MP' : 0, 'STR' : 4, 'DEF' : 2, 'AP' : 0},
 
         
 }

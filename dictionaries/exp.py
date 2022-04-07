@@ -5,10 +5,10 @@ levelUp = {
                         'ability' : 'none', 'HP' : 0, 'MP' : 0},
 
                 2 : { 'exp': 20, 'next' : 70,
-                        'ability' : 'Scan', 'HP' : 1, 'MP' : 0  },
+                        'ability' : ['Scan', False], 'HP' : 1, 'MP' : 0  },
 
                 3 : { 'exp': 70, 'next' : 140,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 1  },
+                        'ability' : ['MP Haste', False], 'HP' : 0, 'MP' : 1  },
 
                 4 : { 'exp': 140, 'next' : 240,
                         'ability' : 'none', 'HP' : 0, 'MP' : 0},

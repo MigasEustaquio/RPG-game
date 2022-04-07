@@ -36,7 +36,7 @@ arenaRewards = {   ###THE SECOND REWARD IS ALWAYS AN ITEM
     '2' : {
         1 : ['magic', 'ability'],
         'magic' : 'firaga',
-        'ability' : 'Jackpot',
+        'ability' : ['Jackpot', False],
         2 : 'megalixir'
 
     },
