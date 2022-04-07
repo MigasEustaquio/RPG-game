@@ -121,7 +121,7 @@ heartless = {
             },
 
             'invisible' : {'commands' : ['attack', 'invisible strike'], 
-                    'HP': 10 , 'damage': 20, #4
+                    'HP': 20 , 'damage': 1, #4
                     'munny' : [2,6],
                     'exp' : 20,
                     'drop' : {}

@@ -1,6 +1,6 @@
 world map (half done)
 
-allies?
+allies (started)
 
 enemy commands (started)
 

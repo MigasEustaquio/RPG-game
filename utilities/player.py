@@ -47,6 +47,7 @@ class player:
 
         #STORY RELATED
         self.world = 'TraverseTown'
+        self.allies = []
         self.map = worldMaps
         self.shipUnlocked = True
         self.unlockedWorlds = ['TraverseTown']

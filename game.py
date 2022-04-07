@@ -3,6 +3,7 @@
 import random
 import math
 import time
+from allyClasses import Ally
 from utilities.enemyClasses import *
 from utilities.screen import *
 from dictionaries.people import *
@@ -140,18 +141,18 @@ def shop(currentRoom):                          ###SHOP
 def resetHeartless(currentRoom, previousStory=0):
   for room in rooms[player.world][currentRoom]['resetHeartless']:
     if 'heartless' in rooms[player.world][room]:
-      if player.story[player.world] in rooms[player.world][room]['heartless']:
-        if rooms[player.world][room]['heartless'][player.story[player.world]]['status'] == 0:
-          rooms[player.world][room]['heartless'][player.story[player.world]]['status'] = rooms[player.world][room]['heartless'][player.story[player.world]]['waves']
+      if player.story[player.world] in enemyLocations[player.world][currentRoom]:
+        if enemyLocations[player.world][currentRoom][player.story[player.world]]['status'] == 0:
+          enemyLocations[player.world][currentRoom][player.story[player.world]]['status'] = enemyLocations[player.world][currentRoom][player.story[player.world]]['waves']
       else:
-        if player.story[player.world] > list(rooms[player.world][room]['heartless'])[-1]:
-          rooms[player.world][room]['heartless'][list(rooms[player.world][room]['heartless'])[-1]]['status'] = rooms[player.world][room]['heartless'][list(rooms[player.world][room]['heartless'])[-1]]['waves']
-        elif player.story[player.world] < list(rooms[player.world][room]['heartless'])[0]:
+        if player.story[player.world] > list(enemyLocations[player.world][currentRoom])[-1]:
+          enemyLocations[player.world][currentRoom][-1]['status'] = enemyLocations[player.world][currentRoom][-1]['waves']
+        elif player.story[player.world] < list(enemyLocations[player.world][currentRoom])[0]:
           pass
         else:
-          for story in rooms[player.world][room]['heartless']:
+          for story in enemyLocations[player.world][currentRoom]:
             if story > player.story[player.world]:
-              rooms[player.world][room]['heartless'][previousStory]['status'] = rooms[player.world][room]['heartless'][previousStory]['waves']
+              enemyLocations[player.world][currentRoom][previousStory]['status'] = enemyLocations[player.world][currentRoom][previousStory]['waves']
               break
             else:
               previousStory = story
@@ -266,9 +267,10 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
     print("---------------------------")
     if bossBattle == False:
       print('You see a ' + red + 'Heartless' + white +'! It\'s a '+ red + enemyName + white + '!')
+      print('commands: \n\nattack \nmagic [magic name] \nitem [item name] \nrun')
     else:
       print('Boss Battle! ' + enemyName  + '!')
-    print('commands: \n\nattack \nmagic [magic name] \nitem [item name] \nrun')
+      print('commands: \n\nattack \nmagic [magic name] \nitem [item name]')
     
     enemy = Heartless(enemyName, bossBattle)
 
@@ -285,6 +287,7 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
         while command == '':
             command = input('>')
         command = command.lower()
+
   ###Status effect duration      #INCLUDE BLIZZARD AND THUNDER
         enemy.statusEffectDuration()
   ###PassTurn
@@ -296,6 +299,15 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
     ### Calculate damage
           if bossBattle == False: enemy.selectCommand(player, defense)
           else: enemy.selectCommandBoss(player, defense)
+    ### Allies Help
+          if player.allies:
+            for ally in player.allies:
+              helpType, helpValue, helpStatus = ally.selectCommand(player)
+              if helpType == 'heal': player.HP = player.HP + helpValue
+              else: enemy.HP = enemy.HP - helpValue
+              if helpStatus != '':
+                enemy.statusEffect = helpStatus
+                enemy.statusDuration = magics[helpStatus]['status']['duration']
   ###ATTACK
     ###
         if command == 'attack':       ###ATTACK
@@ -319,6 +331,15 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
     ### Calculate damage
             if bossBattle == False: enemy.selectCommand(player, defense)
             else: enemy.selectCommandBoss(player, defense)
+    ### Allies Help
+            if player.allies:
+              for ally in player.allies:
+                helpType, helpValue, helpStatus = ally.selectCommand(player)
+                if helpType == 'heal': player.HP = player.HP + helpValue
+                else: enemy.HP = enemy.HP - helpValue
+                if helpStatus != '':
+                  enemy.statusEffect = helpStatus
+                  enemy.statusDuration = magics[helpStatus]['status']['duration']
   ###MAGIC
     ###
         elif "magic" in command:       ###MAGIC
@@ -346,13 +367,22 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
     ###Calculate damage
                 if player.HP > player.TotalHP: player.HP = player.TotalHP
                 if 'Leaf Bracer' in player.abilities and 'cur' in command[1]:
-                  print(green + 'Leaf Bracer' + white +' protects you from damage while casting a Cure spell!')
+                  print(green + 'Leaf Bracer' + white +' protects you from damage while casting a Healing spell!')
                   enemy.damage = 0
                 else:
                   enemy.HP = enemy.HP - magics[command[1]]['damage']
                 player.HP = player.HP + magics[command[1]]['heal']
                 if bossBattle == False: enemy.selectCommand(player, defense)
                 else: enemy.selectCommandBoss(player, defense)
+    ### Allies Help
+                if player.allies:
+                  for ally in player.allies:
+                    helpType, helpValue, helpStatus = ally.selectCommand(player)
+                    if helpType == 'heal': player.HP = player.HP + helpValue
+                    else: enemy.HP = enemy.HP - helpValue
+                    if helpStatus != '':
+                      enemy.statusEffect = helpStatus
+                      enemy.statusDuration = magics[helpStatus]['status']['duration']
     ### Start status effect
                 if 'cur' not in command[1]:
                   enemy.statusEffect = command[1]
@@ -360,6 +390,8 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
     ###
               else:
                 print('Not enough MP!')
+            else:
+              print('Magic not found!')
 
           command = ''
   ###ITEM
@@ -383,6 +415,15 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
                 print("You don\'t have any ", command[1])
             except IndexError:
                 print('try: item [item name]')
+    ### Allies Help
+            if player.allies:
+              for ally in player.allies:
+                helpType, helpValue, helpStatus = ally.selectCommand(player)
+                if helpType == 'heal': player.HP = player.HP + helpValue
+                else: enemy.HP = enemy.HP - helpValue
+                if helpStatus != '':
+                  enemy.statusEffect = helpStatus
+                  enemy.statusDuration = magics[helpStatus]['status']['duration']
           command = ''
   ###RUN
         elif "run" in command:       ###RUN
@@ -701,19 +742,23 @@ while True:                        ###MAIN
 
     elif 'test' in move:                                ##### TEST
 
-      if bool(player.arenaRecords):
-        for record in player.arenaRecords:
-          print(arenaNames[record] + ' record: ' + player.arenaRecords[record])
-      else:
-        print('There are no arena records!')
+      player.allies.append(Ally('Donald&Goofy', player))
+
+      # if bool(player.arenaRecords):
+      #   for record in player.arenaRecords:
+      #     print(arenaNames[record] + ' record: ' + player.arenaRecords[record])
+      # else:
+      #   print('There are no arena records!')
 
       print('\ntested!\n')
     
     elif 'upgrade' in move:                             ##### TEST 2 (story)
 
+      # print(player.allies)
+
       player.story[player.world] += 1
       print('Story: ' + str(player.story[player.world]))
-      # print(list(rooms[player.world]['2nd Floor']['heartless']))
+
       print('\ntested!\n')
     
     elif 'treasure' in move:                            ##### TREASURE
