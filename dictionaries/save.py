@@ -80,7 +80,7 @@ saves = {
                 'munny' : 1000000,
                 'stock' : [],
                 'keyblades' : ['Kingdom Key', 'Oathkeeper', 'Oblivion', 'Ultima Weapon'],
-                'abilities' : [['Scan', True], ['Mp Haste', True], ['Leaf Bracer', True], ['Combo Master', True], ['Negative Combo', True], ['Zantetsuken', True]],
+                'abilities' : [['Scan', True], ['Mp Haste', True], ['Leaf Bracer', True], ['Combo Master', True], ['Lucky Strike', True], ['Negative Combo', True], ['Zantetsuken', True]],
                 'finishers' : ['Zantetsuken'],
                 'world' : 'CastleOblivion',
                 'map' : {'CastleOblivion' : {'1': 'complete'}},

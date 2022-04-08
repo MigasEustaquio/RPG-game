@@ -450,10 +450,12 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
           if not arenaBattle:
     ###MUNNY
             munny = 3 * random.randint(enemy.munny[0], enemy.munny[1])
+            if ['Jackpot', True] in player.abilities: munny=int(munny*6/5)
             print('\nYou defeated the Heartless!\nCONGRATULATIONS!')
             print('\nYou obtained ' + yellow + str(munny) + '🔸 munny!')
             player.munny += munny
     ###EXP
+            if 'exp bracelet' in player.equipment or 'exp earring' in player.equipment: enemy.exp = int(enemy.exp*6/5)
             print('You gained ' + str(enemy.exp) + ' exp!')
             player.exp += enemy.exp
             while player.exp >= levelUp[player.level]['next']:
@@ -461,6 +463,8 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
               print('\nLevel Up!\nLevel: ' + str(player.level))
               levelUP()
     ###DROP
+            if ['Lucky Strike', True] in player.abilities: enemy.drop = [x + 20 for x in enemy.drop]
+            print(enemy.drop)
             dropNumber = random.randint(1, 100)
             for drop in enemy.drop:
               if dropNumber <= drop:

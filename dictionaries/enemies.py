@@ -124,7 +124,7 @@ heartless = {
                     'HP': 20 , 'damage': 1, #4
                     'munny' : [2,6],
                     'exp' : 20,
-                    'drop' : {}
+                    'drop' : {5 : 'potion', 10 : 'ether'}
             },
 
             'large body' : {'commands' : 'attack', 

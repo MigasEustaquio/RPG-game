@@ -8,8 +8,6 @@ implement:{
 
     add abilities (almost done)
 
-    exp equipment
-
 }
 
 improve:{
