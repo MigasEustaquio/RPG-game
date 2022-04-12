@@ -84,8 +84,12 @@ magics = {
                         'MP' : 3, 'damage' : 0, 'heal' : 10,
                          },
 
+                #damage based on enemy health and player total mp?
+                'gravity' : {'speech' : ['', '', '', '', 'BLUE'] , 'status' : {'name': 'gravity', 'speech': ['The ','gravity',' effect makes the enemy too heavy too attack! It inflicts ','0 ♥',' of damage!'], 'damage' : 0, 'duration' : 1, 'reduction' : 1}
+                        },
 
-                'gravity' : {'speech' : ['', '', '', '', 'BLUE'] , 'status' : {'name': 'gravity', 'speech': ['The ','gravity',' effect makes the enemy too heavy too attack! It inflicts ','0 ♥',' of damage!'], 'damage' : 0, 'duration' : 1, 'reduction' : 99}
+                #defense
+                'aero' : {'speech' : ['', '', '', '', 'BLUE'] , 'status' : {'name': 'gravity', 'speech': ['The ','aero',' ','0 ♥',' of damage!'], 'damage' : 0, 'duration' : 1, 'reduction' : 1}
                         },
 
 }

@@ -105,7 +105,7 @@ class Heartless:
       if 'Second Chance' in player.abilities:                ###SECOND CHANCE
         if player.HP < 1 and oldHP > 1:
           player.HP = 1
-          print('Second Chance')
+          print(Fore.GREEN +'Second Chance' + Fore.WHITE)
 
     def useCommand(self, player, defense):        ###CALCULATE COMMAND DETAILS
       self.calculateDamage(player, defense)

@@ -216,53 +216,112 @@ def scan(enemy):                                ###SCAN
   print("HP : " + red + heartlessHealthDisplay)
   print(Fore.MAGENTA + "---------------------------")
 
-def finishAttack(enemy, damage, mPower):                ###FINISHERS
+def finishAttack(enemy, damage, defense, mPower):                ###FINISHERS
   if len(player.finishers) == 1: finish = player.finishers[0]
   else: finish = player.finishers[random.randint(0, (len(player.finishers)-1))]
   print('You attacked and unleashed a combo finisher!')
   if finish == 'Blitz':
     print("You used " + yellow + "Blitz" + white + " and dealt " + yellow + "critical" + white + " damage!")
     damageDealt = math.ceil(1.5*damage)-enemy.defense
-  elif finish == 'Gravity Break':
-    print("You used " + blue + "Gravity Break" + white + " and the gravity pull stunned the enemy!")
-    enemy.damage = 0
+  elif finish == 'Gravity Break':   ##NOT IMPLEMENTED
+    print("You used " + blue + "Gravity Break" + white + " and casts the gravity spell!")
     damageDealt = damage-enemy.defense
   elif finish == 'Hurricane Blast':   ##NOT IMPLEMENTED
     # print("You used Zantetsuken and dealt " + yellow + "triple" + white + " damage!" + ' You caused ' + red + str(3*damage) + ' ♥ ' + white + 'of damage!')
     print('Hurricane Blast (not implemented)')
-  elif finish == 'Ripple Drive':   ##HALF IMPLEMENTED
+  elif finish == 'Ripple Drive':
     if 'Kingdom' in player.keyblade:
-      print("You used " + blue + "Ripple Drive" + white + " and activated the " + blue + "Defender" + white + " ability!")
-      enemy.damage = enemy.damage-1
+      print("You used " + yellow + "Ripple Drive" + white + "! It enhances your " + yellow + "defense" + white + " power!")
+      defense += 1
       damageDealt = damage-enemy.defense
-    # elif 'Jungle King' in player.keyblade:
-    #   print("You used " + green + "Ripple Drive" + white + " and restore " + red + str(math.ceil(player.TotalMP/4)) + ' ♥'+ white + " !")
-    #   damageDealt = damage-enemy.defense
+    elif 'Jungle King' in player.keyblade:
+      print("You used " + green + "Ripple Drive" + white + "! You restore " + red + '2 ♥'+ white + " !")
+      player.HP+=2
+      damageDealt = damage-enemy.defense
     elif 'Lady Luck' in player.keyblade:
-      print("You used " + blue + "Ripple Drive" + white + " and it enhances your magical power!")
-      mPower+=1
+      print("You used " + blue + "Ripple Drive" + white + "! It significantly enhances your " + blue + "magical power" + white + "!")
+      mPower+=2
       damageDealt = damage-enemy.defense
     elif 'Olympia' in player.keyblade:
-      print("You used " + red + "Ripple Drive" + white + " and now ignore enemy blocks!")
+      print("You used " + red + "Ripple Drive" + white + "! You can now ignore enemy blocks!")
+      damageDealt=damage-enemy.totalDefense
+      player.ignoreBlock=True
+    elif 'Three Wishes' in player.keyblade:
+      print("You used " + red + "Ripple Drive" + white + "! You can now ignore enemy blocks!")
+      damageDealt=damage-enemy.totalDefense
+      player.ignoreBlock=True
+    elif 'Wishing Star' in player.keyblade:
+      print("You used " + red + "Ripple Drive" + white + "! It enhances your " + red + "attack power" + white + "!")
+      damage+=1
+      damageDealt = damage-enemy.defense
+    elif 'Spellbinder' in player.keyblade:
+      print("You used " + blue + "Ripple Drive" + white + "! It significantly enhances your " + blue + "magical power" + white + "!")
+      mPower+=2
+      damageDealt = damage-enemy.defense
+    elif 'Crabclaw' in player.keyblade:
+      print("You used " + blue + "Ripple Drive" + white + "! It enhances your " + blue + "magical power" + white + "!")
+      mPower+=1
+      damageDealt = damage-enemy.defense
+    elif 'Pumpkinhead' in player.keyblade:
+      print("You used " + red + "Ripple Drive" + white + "! It enhances your " + red + "attack power" + white + "!")
+      damage+=1
+      damageDealt = damage-enemy.defense
+    elif 'Metal Chocobo' in player.keyblade:
+      print("You used " + red + "Ripple Drive" + white + "! It significantly enhances your " + red + "attack power" + white + "!")
+      damage+=2
+      damageDealt = damage-enemy.defense
+    elif 'Fairy Harp' in player.keyblade:
+      print("You used " + blue + "Ripple Drive" + white + "! It enhances your " + blue + "magical power" + white + "!")
+      mPower+=1
+      damageDealt = damage-enemy.defense
+    elif 'Divine Rose' in player.keyblade:
+      print("You used " + red + "Ripple Drive" + white + "! It enhances your " + red + "attack power" + white + " and you can now ignore enemy blocks!")
+      damage+=1
       damageDealt=damage-enemy.totalDefense
       player.ignoreBlock=True
     elif 'Oathkeeper' in player.keyblade:
-      print("You used " + green + "Ripple Drive" + white + " and restore " + red + str(math.ceil(player.TotalMP/4)) + ' ♥'+ white + " !")
-      player.HP += math.ceil(player.TotalMP/4)
+      print("You used " + green + "Ripple Drive" + white + "! It enhances your " + blue + "magical power" + white + " and also restore " + red + str(math.ceil(player.TotalMP/4)) + ' ♥'+ white + " !")
+      player.HP += math.ceil(player.TotalMP/4) #Restore HP based on total MP
+      mPower+=1
+      damageDealt = damage-enemy.defense
+    elif 'Oblivion' in player.keyblade:
+      print("You used " + red + "Ripple Drive" + white + "! It significantly enhances your " + red + "attack power" + white + " and enhances your " + blue + "magical power" + white + "!")
+      damage+=2
+      mPower+=1
+      damageDealt = damage-enemy.defense
+    elif 'Lionheart' in player.keyblade:
+      print("You used " + yellow + "Ripple Drive" + white + "! It enhances both your " + red + "attack power" + white + " and your " + blue + "magical power" + white + "!")
+      damage+=1
+      mPower+=1
+      damageDealt = damage-enemy.defense
+    elif 'Diamond Dust' in player.keyblade:
+      print("You used " + blue + "Ripple Drive" + white + "! It Greatly enhances your " + blue + "magical power" + white + " and also restore " + blue + str(math.ceil(player.TotalMP/4)) + ' ●'+ white + " !")
+      player.MP += math.ceil(player.TotalMP/4)
+      mPower+=3
+      damageDealt = damage-enemy.defense
+    elif 'One-Winged Angel' in player.keyblade:
+      print("You used " + blue + "Ripple Drive" + white + "! It dealt " + yellow + "triple" + white + " critical damage!")
+      damageDealt = 3*damage-enemy.defense
+    elif 'Ultima Weapon' in player.keyblade:
+      print("You used " + green + "Ripple Drive" + white + "! It restores " + red + '2 ♥'+ white + " and " + blue + "2 ●" + white +"!")
+      player.HP += 2
+      player.MP += 2
       damageDealt = damage-enemy.defense
     else:
-      print('Not implemented')
+      print('You shouldn\'t have thi keyblade... Anyway it has no bonus effect')
       damageDealt = damage-enemy.defense
-  elif finish == 'Stun Impact':   ##NOT IMPLEMENTED
-    # print("You used Zantetsuken and dealt " + yellow + "triple" + white + " damage!" + ' You caused ' + red + str(3*damage) + ' ♥ ' + white + 'of damage!')
-    print('Stun Impact (not implemented)')
+  elif finish == 'Stun Impact':
+    print('You used ' + red +'Stun Impact' + white + ' and it caused the enemy to be stunned!')
+    enemy.damage = 0
+    damageDealt = damage-enemy.defense
   elif finish == 'Zantetsuken':
     print("You used " + yellow + "Zantetsuken" + white + " and dealt " + yellow + "double" + white + " damage!")
     damageDealt = 2*damage-enemy.defense
+ 
   if damageDealt<0: damageDealt=0
   print('You caused ' + red + str(damageDealt) + ' ♥ ' + white + 'of damage!')
   enemy.HP = enemy.HP - damageDealt
-  return mPower
+  return damage, defense, mPower
 
 def battle(enemyName, arenaBattle=False):       ###BATTLE
   ###
@@ -336,10 +395,10 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
             else: enemy.selectCommandBoss(player, defense)
     ### Finishers
             if any(item in player.finishers for item in finishersList) and finishCount == 3:
-              mPower = finishAttack(enemy, damage, mPower)
+              damage, defense, mPower = finishAttack(enemy, damage, mPower)
               finishCount = 0
             elif any(item in player.finishers for item in finishersList) and 'Negative Combo' in player.abilities and finishCount == 2:
-              mPower = finishAttack(enemy, damage, mPower)
+              damage, defense, mPower = finishAttack(enemy, damage, defense, mPower)
               finishCount = 0
             else:
               finishCount += 1
@@ -478,12 +537,12 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
           if not arenaBattle:
     ###MUNNY
             munny = 3 * random.randint(enemy.munny[0], enemy.munny[1])
-            if ['Jackpot', True] in player.abilities: munny=int(munny*6/5)
+            if ['Jackpot', True] in player.abilities: munny=math.ceil(munny*6/5)
             print('\nYou defeated the Heartless!\nCONGRATULATIONS!')
             print('\nYou obtained ' + yellow + str(munny) + '🔸 munny!')
             player.munny += munny
     ###EXP
-            if 'exp bracelet' in player.equipment or 'exp earring' in player.equipment: enemy.exp = int(enemy.exp*6/5)
+            if 'exp bracelet' in player.equipment or 'exp earring' in player.equipment: enemy.exp = math.ceil(enemy.exp*6/5)
             print('You gained ' + str(enemy.exp) + ' exp!')
             player.exp += enemy.exp
             while player.exp >= levelUp[player.level]['next']:
