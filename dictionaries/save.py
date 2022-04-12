@@ -68,7 +68,7 @@ saves = {
                 'AP' : 50,
                 'MaxAP' : 100,
                 'STR' : 0,
-                'DEF' : 8,
+                'DEF' : 0,
                 'magicPower' : 1,
                 'magic' : ['fire', 'fira', 'firaga', 'blizzard', 'blizzara', 'blizzaga', 'cure', 'cura', 'curaga'],
                 'item' : ['potion', 'potion', 'mega-potion', 'ether', 'hi-ether', 'mega-ether', 'elixir', 'megalixir'],

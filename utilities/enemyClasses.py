@@ -31,8 +31,16 @@ class Heartless:
               self.totalDefense = 0
         else: self.totalDefense = bosses[name]['defense']
 
+        if not bossBattle:
+          try:
+              self.totalMagicResistance = heartless[name]['magic resistance']
+          except:
+              self.totalMagicResistance = 0
+        else: self.totalMagicResistance = bosses[name]['magic resistance']
+
         self.damage = self.totalDamage
         self.defense = self.totalDefense
+        self.magicResistance = self.totalMagicResistance
 
         self.commandTurn = 0
         self.commandName = ''
@@ -65,53 +73,60 @@ class Heartless:
 
     def statusEffectDuration(self):               ###STATUS EFFECT DURATION
       if 'blizza' in self.statusEffect or 'thund' in self.statusEffect:
-        self.damage = self.damage - magics[self.statusEffect]['status']['reduction']
         self.statusDuration = self.statusDuration - 1
       print("---------------------------")
 
+    def statusEffectDamageReduction(self, speech, damageDealt, mPower):
+      reduction = magics[self.statusEffect]['status']['reduction']+mPower-self.magicResistance
+      if reduction<0: reduction=0
+      newDamage = damageDealt - reduction
+      if newDamage<0: newDamage=0
+      speech=speech.replace(str(damageDealt) + ' ♥',Fore.RED + str(newDamage) + ' ♥' + Fore.WHITE)
+      return speech, newDamage
+
     def statusEffectDamage(self):                 ###STATUS EFFECT DAMAGE
-      print(magics[self.statusEffect]['status']['speech'][0] + self.colors[magics[self.statusEffect]['speech'][4]] + magics[self.statusEffect]['status']['speech'][1] + Fore.WHITE + magics[self.statusEffect]['status']['speech'][2] + Fore.RED + magics[self.statusEffect]['status']['speech'][3] + Fore.WHITE + magics[self.statusEffect]['status']['speech'][4])
+      reduction = magics[self.statusEffect]['status']['damage']-self.magicResistance
+      if reduction<0: reduction=0
+      print(magics[self.statusEffect]['status']['speech'][0] + self.colors[magics[self.statusEffect]['speech'][4]] + magics[self.statusEffect]['status']['speech'][1] + Fore.WHITE + magics[self.statusEffect]['status']['speech'][2] + Fore.RED + str(reduction) + ' ♥' + Fore.WHITE + magics[self.statusEffect]['status']['speech'][4])
       if 'fir' in self.statusEffect:
-        self.HP = self.HP - magics[self.statusEffect]['status']['damage']
+        self.HP = self.HP - reduction
         self.statusDuration = self.statusDuration - 1
       
     def unpenetrableBlock(self):
       self.totalDefense=99
+      self.magicResistance=99
 
     def block(self, player):
       if player.ignoreBlock:
-        print('The enemy tries to block all incoming phisical attacks!')
         self.defense=99
+        return 'The enemy tries to block all incoming phisical attacks!', 0
       else:
-        print('The enemy blocks all incoming phisical attacks!')
         self.defense=99
         player.blocked=True
+        return 'The enemy blocks all incoming phisical attacks!', 0
 
-    def calculateDamage(self, player, defense):   ###CALCULATE DAMAGE DEALT
+    def calculateDamage(self, defense):   ###CALCULATE DAMAGE DEALT
       damageDealt = self.damage-defense
       if damageDealt < 0: damageDealt = 0
       if self.commandTurn == 0:
-        if self.bossBattle == False: print("The Heartless attacks you!\nYou lost " + Fore.RED + str(damageDealt) + ' ♥ ' + Fore.WHITE + '!')
-        else: print(self.name + " attacks you!\nYou lost " + Fore.RED + str(damageDealt) + ' ♥ ' + Fore.WHITE + '!')
+        if self.bossBattle == False: speech = "The Heartless attacks you!\nYou lost " + Fore.RED + str(damageDealt) + ' ♥' + Fore.WHITE + '!'
+        else: speech = self.name + " attacks you!\nYou lost " + Fore.RED + str(damageDealt) + ' ♥' + Fore.WHITE + '!'
       else:
         if 'unpenetrableBlock'in commands[self.commandName][self.commandTurn]:
           self.unpenetrableBlock()
-          print(commands[self.commandName][self.commandTurn]['speech'])
+          speech = commands[self.commandName][self.commandTurn]['speech']
         else:  
-          if self.bossBattle == False: print("The Heartless used " + self.commandName.capitalize() + "!\nYou lost " + Fore.RED + str(damageDealt) + ' ♥ ' + Fore.WHITE + '!')
-          else: print(self.name + " used " + self.commandName.capitalize() + "!\nYou lost " + Fore.RED + str(damageDealt) + ' ♥ ' + Fore.WHITE + '!')
-      oldHP = player.HP
-      player.HP = player.HP - damageDealt
-      if 'Second Chance' in player.abilities:                ###SECOND CHANCE
-        if player.HP < 1 and oldHP > 1:
-          player.HP = 1
-          print(Fore.GREEN +'Second Chance' + Fore.WHITE)
+          if self.bossBattle == False: speech = "The Heartless used " + self.commandName.capitalize() + "!\nYou lost " + Fore.RED + str(damageDealt) + ' ♥' + Fore.WHITE + '!'
+          else: speech = self.name + " used " + self.commandName.capitalize() + "!\nYou lost " + Fore.RED + str(damageDealt) + ' ♥' + Fore.WHITE + '!'
 
-    def useCommand(self, player, defense):        ###CALCULATE COMMAND DETAILS
-      self.calculateDamage(player, defense)
+      return speech, damageDealt
+
+    def useCommand(self, defense):        ###CALCULATE COMMAND DETAILS
       self.defense = commands[self.commandName][self.commandTurn]['defense']
-      self.totalDamage = commands[self.commandName][self.commandTurn]['damage']
+      self.damage = commands[self.commandName][self.commandTurn]['damage']
+      speech, damageDealt = self.calculateDamage(defense)
       self.commandTurn = self.commandTurn-1
+      return speech, damageDealt
 
     def selectCommand(self, player, defense):     ###SELECT COMMAND
       if not self.bossBattle:
@@ -123,34 +138,36 @@ class Heartless:
       
       self.damage = self.totalDamage
       self.defense = self.totalDefense
+      self.magicResistance = self.totalMagicResistance
       if self.commandTurn == 0:
         number=randint(1, 100)
         if heartless[self.name]['commands'] != 'attack':
           if number <= 30:
             self.commandName = heartless[self.name]['commands'][1]
             self.commandTurn = commands[self.commandName]['turns']
-            self.useCommand(player, defense)
-          elif number <= 50: self.block(player)
-          else: self.calculateDamage(player, defense)
+            speech, damageDealt = self.useCommand(defense)
+          elif number <= 50: speech, damageDealt = self.block(player)
+          else: speech, damageDealt = self.calculateDamage(defense)
         else:
-          if number<=40: self.calculateDamage(player, defense)
-          else: self.block(player)
-      else: self.useCommand(player, defense)
+          if number<=40: speech, damageDealt = self.calculateDamage(defense)
+          else: speech, damageDealt = self.block(player)
+      else: speech, damageDealt = self.useCommand(defense)
 
+      return speech, damageDealt
 
-    def selectCommandBoss(self, player, defense):     ###SELECT COMMAND BOSS
+    def selectCommandBoss(self, defense):     ###SELECT COMMAND BOSS
       self.damage = self.totalDamage
       self.defense = self.totalDefense
       if self.commandTurn == 0:
         commandNumber=randint(0, len(bosses[self.name]['commands']))
         if commandNumber == 0 or commandNumber == len(bosses[self.name]['commands']):
-          self.calculateDamage(player, defense)
+          speech, damageDealt = self.calculateDamage(defense)
         else:
           self.commandName = bosses[self.name]['commands'][commandNumber]
           self.commandTurn = commands[self.commandName]['turns']
-          self.useCommand(player, defense)
-      else: self.useCommand(player, defense)
+          speech, damageDealt = self.useCommand(defense)
+      else: speech, damageDealt = self.useCommand(defense)
 
-
+      return speech, damageDealt
 
 ###USE COMMAND AND SELECT COMMAND DIFFERENT FOR BOSSES (if else in the game to call different method)

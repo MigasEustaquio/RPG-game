@@ -23,17 +23,17 @@ magics = {
 
                 'fire' :{ 'speech': ['You cast Fire and deal ', ' ♥', ' of damage!\nThe enemy is now ', 'Burning', 'RED'],
                         'MP' : 1, 'damage' : 1, 'heal' : 0,
-                        'status' : {'name': 'Burning', 'speech': ['The enemy is ', 'burning', ' and takes ', '1 ♥', ' of damage!'], 'damage' : 1, 'duration' : 2}
+                        'status' : {'name': 'Burning', 'speech': ['The enemy is ', 'burning', ' and takes ', '1 ♥', ' of damage!'], 'damage' : 1, 'duration' : 2, 'reduction' : 0}
                         },
 
                 'fira' :{ 'speech': ['You cast Fira and deal ', ' ♥', ' of damage!\nThe enemy is now ', 'Burning', 'RED'],
                         'MP' : 2, 'damage' : 2, 'heal' : 0,
-                        'status' : {'name': 'Burning', 'speech': ['The enemy is ', 'burning', ' and takes ', '2 ♥', ' of damage!'], 'damage' : 2, 'duration' : 3}
+                        'status' : {'name': 'Burning', 'speech': ['The enemy is ', 'burning', ' and takes ', '2 ♥', ' of damage!'], 'damage' : 2, 'duration' : 3, 'reduction' : 0}
                         },
                 
                 'firaga' :{ 'speech': ['You cast Firaga and deal ', ' ♥', ' of damage!\nThe enemy is now ', 'Burning', 'RED'],
                         'MP' : 3, 'damage' : 3, 'heal' : 0,
-                        'status' : {'name': 'Burning', 'speech': ['The enemy is ', 'burning', ' and takes ', '3 ♥', ' of damage!'], 'damage' : 3, 'duration' : 4}
+                        'status' : {'name': 'Burning', 'speech': ['The enemy is ', 'burning', ' and takes ', '3 ♥', ' of damage!'], 'damage' : 3, 'duration' : 4, 'reduction' : 0}
                         },
 
 

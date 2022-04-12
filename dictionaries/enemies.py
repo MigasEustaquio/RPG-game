@@ -121,8 +121,9 @@ heartless = {
             },
 
             'invisible' : {'commands' : ['attack', 'invisible strike'],
-                    'HP': 4 , 'damage': 1, #4
+                    'HP': 40 , 'damage': 5, #4
                     'defense': 2,
+                    'magic resistance' : 0,
                     'munny' : [2,6],
                     'exp' : 20,
                     'drop' : {5 : 'potion', 10 : 'ether'}
@@ -231,7 +232,7 @@ commands = {
 
         'invisible strike' : {'turns': 2,
          2 : {'defense' : 99, 'damage' : 0, 'speech' : 'The enemy vanishes before you!', 'unpenetrableBlock':''},
-         1 : {'defense' : 2, 'damage' : 6},
+         1 : {'defense' : 2, 'damage' : 7},
          },
 
         'barrier' : {'turns': 1,

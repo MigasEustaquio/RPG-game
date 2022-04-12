@@ -181,6 +181,8 @@ class player:
         #print the player's current battle status
 
         self.calculateHealth()
+        # print(self.TotalHP)
+        # print(self.HP)
         currentHP, currentMP = self.buildHPMPDisplay()
         itemsDisplay = self.buildItemDisplay()        
 
