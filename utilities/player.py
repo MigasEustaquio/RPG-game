@@ -27,6 +27,7 @@ class player:
 
         self.STR = 0
         self.DEF = 0
+        self.magicPower = 0
 
         self.equipment = []
         self.equipmentNumber = 1
@@ -79,6 +80,8 @@ class player:
         self.ArenaMPBKP = 0
         self.ArenaitemBKP = []
 
+        self.ignoreBlock = False
+        self.blocked = False
 
         colorama_init(autoreset=True)
         self.colors = dict(Fore.__dict__.items())

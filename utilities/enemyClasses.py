@@ -23,15 +23,16 @@ class Heartless:
 
         if bossBattle == False: self.totalDamage = heartless[name]['damage']
         else: self.totalDamage = bosses[name]['damage']
+        
+        if not bossBattle:
+          try:
+              self.totalDefense = heartless[name]['defense']
+          except:
+              self.totalDefense = 0
+        else: self.totalDefense = bosses[name]['defense']
 
         self.damage = self.totalDamage
-        
-        if bossBattle == False:
-          try:
-              self.defense = heartless[name]['defense']
-          except:
-              self.defense = 0
-        else: self.defense = bosses[name]['defense']
+        self.defense = self.totalDefense
 
         self.commandTurn = 0
         self.commandName = ''
@@ -43,10 +44,12 @@ class Heartless:
           self.exp = heartless[name]['exp']
           self.munny = heartless[name]['munny']
           self.drop = heartless[name]['drop']
+          self.luckyDrop = {(x+20):heartless[name]['drop'][x] for x in heartless[name]['drop']}
         else:
           self.exp = bosses[name]['exp']
           self.munny = bosses[name]['munny']
           self.drop = bosses[name]['drop']
+          self.luckyDrop = {(x+20):bosses[name]['drop'][x] for x in bosses[name]['drop']}
 
 
         colorama_init(autoreset=True)
@@ -72,6 +75,18 @@ class Heartless:
         self.HP = self.HP - magics[self.statusEffect]['status']['damage']
         self.statusDuration = self.statusDuration - 1
       
+    def unpenetrableBlock(self):
+      self.totalDefense=99
+
+    def block(self, player):
+      if player.ignoreBlock:
+        print('The enemy tries to block all incoming phisical attacks!')
+        self.defense=99
+      else:
+        print('The enemy blocks all incoming phisical attacks!')
+        self.defense=99
+        player.blocked=True
+
     def calculateDamage(self, player, defense):   ###CALCULATE DAMAGE DEALT
       damageDealt = self.damage-defense
       if damageDealt < 0: damageDealt = 0
@@ -79,8 +94,12 @@ class Heartless:
         if self.bossBattle == False: print("The Heartless attacks you!\nYou lost " + Fore.RED + str(damageDealt) + ' ♥ ' + Fore.WHITE + '!')
         else: print(self.name + " attacks you!\nYou lost " + Fore.RED + str(damageDealt) + ' ♥ ' + Fore.WHITE + '!')
       else:
-        if self.bossBattle == False: print("The Heartless used " + self.commandName.capitalize() + "!\nYou lost " + Fore.RED + str(damageDealt) + ' ♥ ' + Fore.WHITE + '!')
-        else: print(self.name + " used " + self.commandName.capitalize() + "!\nYou lost " + Fore.RED + str(damageDealt) + ' ♥ ' + Fore.WHITE + '!')
+        if 'unpenetrableBlock'in commands[self.commandName][self.commandTurn]:
+          self.unpenetrableBlock()
+          print(commands[self.commandName][self.commandTurn]['speech'])
+        else:  
+          if self.bossBattle == False: print("The Heartless used " + self.commandName.capitalize() + "!\nYou lost " + Fore.RED + str(damageDealt) + ' ♥ ' + Fore.WHITE + '!')
+          else: print(self.name + " used " + self.commandName.capitalize() + "!\nYou lost " + Fore.RED + str(damageDealt) + ' ♥ ' + Fore.WHITE + '!')
       oldHP = player.HP
       player.HP = player.HP - damageDealt
       if 'Second Chance' in player.abilities:                ###SECOND CHANCE
@@ -89,31 +108,46 @@ class Heartless:
           print('Second Chance')
 
     def useCommand(self, player, defense):        ###CALCULATE COMMAND DETAILS
-      if self.bossBattle == False:  self.commandName = heartless[self.name]['commands'][1]
       self.calculateDamage(player, defense)
-      if self.commandTurn == 0:
-        self.commandTurn = commands[self.commandName]['turns']
       self.defense = commands[self.commandName][self.commandTurn]['defense']
       self.totalDamage = commands[self.commandName][self.commandTurn]['damage']
       self.commandTurn = self.commandTurn-1
 
     def selectCommand(self, player, defense):     ###SELECT COMMAND
+      if not self.bossBattle:
+        try:
+            self.totalDefense = heartless[self.name]['defense']
+        except:
+            self.totalDefense = 0
+      else: self.totalDefense = bosses[self.name]['defense']
+      
+      self.damage = self.totalDamage
+      self.defense = self.totalDefense
       if self.commandTurn == 0:
+        number=randint(1, 100)
         if heartless[self.name]['commands'] != 'attack':
-          if randint(1, 100) <= 30:
+          if number <= 30:
+            self.commandName = heartless[self.name]['commands'][1]
+            self.commandTurn = commands[self.commandName]['turns']
             self.useCommand(player, defense)
+          elif number <= 50: self.block(player)
           else: self.calculateDamage(player, defense)
-        else: self.calculateDamage(player, defense)
+        else:
+          if number<=40: self.calculateDamage(player, defense)
+          else: self.block(player)
       else: self.useCommand(player, defense)
 
 
     def selectCommandBoss(self, player, defense):     ###SELECT COMMAND BOSS
+      self.damage = self.totalDamage
+      self.defense = self.totalDefense
       if self.commandTurn == 0:
         commandNumber=randint(0, len(bosses[self.name]['commands']))
         if commandNumber == 0 or commandNumber == len(bosses[self.name]['commands']):
           self.calculateDamage(player, defense)
         else:
           self.commandName = bosses[self.name]['commands'][commandNumber]
+          self.commandTurn = commands[self.commandName]['turns']
           self.useCommand(player, defense)
       else: self.useCommand(player, defense)
 

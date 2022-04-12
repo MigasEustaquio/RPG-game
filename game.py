@@ -216,8 +216,10 @@ def scan(enemy):                                ###SCAN
   print("HP : " + red + heartlessHealthDisplay)
   print(Fore.MAGENTA + "---------------------------")
 
-def finishAttack(enemy, damage):                ###FINISHERS
-  finish = player.finishers[random.randint(0, (len(player.finishers)-1))]
+def finishAttack(enemy, damage, mPower):                ###FINISHERS
+  if len(player.finishers) == 1: finish = player.finishers[0]
+  else: finish = player.finishers[random.randint(0, (len(player.finishers)-1))]
+  print('You attacked and unleashed a combo finisher!')
   if finish == 'Blitz':
     print("You used " + yellow + "Blitz" + white + " and dealt " + yellow + "critical" + white + " damage!")
     damageDealt = math.ceil(1.5*damage)-enemy.defense
@@ -233,6 +235,17 @@ def finishAttack(enemy, damage):                ###FINISHERS
       print("You used " + blue + "Ripple Drive" + white + " and activated the " + blue + "Defender" + white + " ability!")
       enemy.damage = enemy.damage-1
       damageDealt = damage-enemy.defense
+    # elif 'Jungle King' in player.keyblade:
+    #   print("You used " + green + "Ripple Drive" + white + " and restore " + red + str(math.ceil(player.TotalMP/4)) + ' ♥'+ white + " !")
+    #   damageDealt = damage-enemy.defense
+    elif 'Lady Luck' in player.keyblade:
+      print("You used " + blue + "Ripple Drive" + white + " and it enhances your magical power!")
+      mPower+=1
+      damageDealt = damage-enemy.defense
+    elif 'Olympia' in player.keyblade:
+      print("You used " + red + "Ripple Drive" + white + " and now ignore enemy blocks!")
+      damageDealt=damage-enemy.totalDefense
+      player.ignoreBlock=True
     elif 'Oathkeeper' in player.keyblade:
       print("You used " + green + "Ripple Drive" + white + " and restore " + red + str(math.ceil(player.TotalMP/4)) + ' ♥'+ white + " !")
       player.HP += math.ceil(player.TotalMP/4)
@@ -249,6 +262,7 @@ def finishAttack(enemy, damage):                ###FINISHERS
   if damageDealt<0: damageDealt=0
   print('You caused ' + red + str(damageDealt) + ' ♥ ' + white + 'of damage!')
   enemy.HP = enemy.HP - damageDealt
+  return mPower
 
 def battle(enemyName, arenaBattle=False):       ###BATTLE
   ###
@@ -260,6 +274,7 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
 
     damage = keybladeStatus[player.keyblade]['damage'] + player.STR
     defense = player.DEF
+    mPower = player.magicPower
 
     for accessory in player.equipment:
       damage += equipments[accessory]['STR']
@@ -305,7 +320,10 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
             for ally in player.allies:
               helpType, helpValue, helpStatus = ally.selectCommand(player)
               if helpType == 'heal': player.HP = player.HP + helpValue
-              else: enemy.HP = enemy.HP - helpValue
+              else:
+                helpValue=helpValue-enemy.defense
+                if helpValue<0: helpValue=0
+                enemy.HP = enemy.HP - helpValue
               if helpStatus != '':
                 enemy.statusEffect = helpStatus
                 enemy.statusDuration = magics[helpStatus]['status']['duration']
@@ -313,31 +331,35 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
     ###
         if command == 'attack':       ###ATTACK
             command = ''
+    ### Calculate enemy damage
+            if bossBattle == False: enemy.selectCommand(player, defense)
+            else: enemy.selectCommandBoss(player, defense)
     ### Finishers
             if any(item in player.finishers for item in finishersList) and finishCount == 3:
-              finishAttack(enemy, damage)
+              mPower = finishAttack(enemy, damage, mPower)
               finishCount = 0
             elif any(item in player.finishers for item in finishersList) and 'Negative Combo' in player.abilities and finishCount == 2:
-              finishAttack(enemy, damage)
+              mPower = finishAttack(enemy, damage, mPower)
               finishCount = 0
             else:
               finishCount += 1
-              damageDealt = (damage-enemy.defense)
+              if player.ignoreBlock: damageDealt=damage-enemy.totalDefense
+              else: damageDealt = (damage-enemy.defense)
               if damageDealt < 0: damageDealt=0
               print('You attacked and caused ' + red + str(damageDealt) + ' ♥ ' + white + 'of damage!')
               enemy.HP = enemy.HP - damageDealt
     ### Status effect
             if enemy.statusEffect != 'none':
               enemy.statusEffectDamage()
-    ### Calculate damage
-            if bossBattle == False: enemy.selectCommand(player, defense)
-            else: enemy.selectCommandBoss(player, defense)
     ### Allies Help
             if player.allies:
               for ally in player.allies:
                 helpType, helpValue, helpStatus = ally.selectCommand(player)
                 if helpType == 'heal': player.HP = player.HP + helpValue
-                else: enemy.HP = enemy.HP - helpValue
+                else:
+                  helpValue=helpValue-enemy.defense
+                  if helpValue<0: helpValue=0
+                  enemy.HP = enemy.HP - helpValue
                 if helpStatus != '':
                   enemy.statusEffect = helpStatus
                   enemy.statusDuration = magics[helpStatus]['status']['duration']
@@ -358,9 +380,9 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
     ###COLOR SPEECH
                 print('You used ' + blue + str(magics[command[1]]['MP']) +' ● ' + white + '!')
                 if 'cur' not in command[1]:
-                  print("You cast " + player.colors[magicText[4]] + command[1].capitalize() + white + " and deal " + red + magicText[1] + white + magicText[2] + player.colors[magicText[4]] + magicText[3])
+                  print("You cast " + player.colors[magicText[4]] + command[1].capitalize() + white + " and deal " + red + str(mPower+magics[command[1]]['damage']) + magicText[1] + white + magicText[2] + player.colors[magicText[4]] + magicText[3])
                 else:
-                  print("You cast " + green + command[1].capitalize() + white + " and restore " + red + magicText[1] + white + magicText[2])
+                  print("You cast " + green + command[1].capitalize() + white + " and restore " + red + str(mPower+magics[command[1]]['heal']) + magicText[1] + white + magicText[2])
                 player.MP = player.MP - magics[command[1]]['MP']
     ### Status effect
                 if 'fir' in enemy.statusEffect:
@@ -371,8 +393,8 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
                   print(green + 'Leaf Bracer' + white +' protects you from damage while casting a Healing spell!')
                   enemy.damage = 0
                 else:
-                  enemy.HP = enemy.HP - magics[command[1]]['damage']
-                player.HP = player.HP + magics[command[1]]['heal']
+                  enemy.HP = enemy.HP - (magics[command[1]]['damage']+mPower)
+                player.HP = player.HP + (magics[command[1]]['heal']+mPower)
                 if bossBattle == False: enemy.selectCommand(player, defense)
                 else: enemy.selectCommandBoss(player, defense)
     ### Allies Help
@@ -380,7 +402,10 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
                   for ally in player.allies:
                     helpType, helpValue, helpStatus = ally.selectCommand(player)
                     if helpType == 'heal': player.HP = player.HP + helpValue
-                    else: enemy.HP = enemy.HP - helpValue
+                    else:
+                      helpValue=helpValue-enemy.defense
+                      if helpValue<0: helpValue=0
+                      enemy.HP = enemy.HP - helpValue
                     if helpStatus != '':
                       enemy.statusEffect = helpStatus
                       enemy.statusDuration = magics[helpStatus]['status']['duration']
@@ -421,7 +446,10 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
               for ally in player.allies:
                 helpType, helpValue, helpStatus = ally.selectCommand(player)
                 if helpType == 'heal': player.HP = player.HP + helpValue
-                else: enemy.HP = enemy.HP - helpValue
+                else:
+                  helpValue=helpValue-enemy.defense
+                  if helpValue<0: helpValue=0
+                  enemy.HP = enemy.HP - helpValue
                 if helpStatus != '':
                   enemy.statusEffect = helpStatus
                   enemy.statusDuration = magics[helpStatus]['status']['duration']
@@ -463,8 +491,7 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
               print('\nLevel Up!\nLevel: ' + str(player.level))
               levelUP()
     ###DROP
-            if ['Lucky Strike', True] in player.abilities: enemy.drop = [x + 20 for x in enemy.drop]
-            print(enemy.drop)
+            if ['Lucky Strike', True] in player.abilities: enemy.drop = enemy.luckyDrop
             dropNumber = random.randint(1, 100)
             for drop in enemy.drop:
               if dropNumber <= drop:
@@ -657,8 +684,6 @@ def arena(arenaNumber):                         ###ARENA FIGHT
           abilityName = arenaRewards[arenaNumber]['ability']
           player.abilities.append([abilityName, False])
           print('\nObtained ' + yellow + abilityName + '!')
-          # if abilityName[0] in finishersList:
-          #   player.finishers.append(abilityName)
 
       break
 

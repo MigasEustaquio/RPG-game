@@ -120,8 +120,9 @@ heartless = {
                     'drop' : {}
             },
 
-            'invisible' : {'commands' : ['attack', 'invisible strike'], 
-                    'HP': 20 , 'damage': 1, #4
+            'invisible' : {'commands' : ['attack', 'invisible strike'],
+                    'HP': 4 , 'damage': 1, #4
+                    'defense': 2,
                     'munny' : [2,6],
                     'exp' : 20,
                     'drop' : {5 : 'potion', 10 : 'ether'}
@@ -228,20 +229,17 @@ bosses = {
 
 commands = {
 
-        'invisible strike' : {'turns': 3,
-         3 : {'defense' : 99, 'damage' : 0},
-         2 : {'defense' : 0, 'damage' : 6},
-         1 : {'defense' : 0, 'damage' : 4},
+        'invisible strike' : {'turns': 2,
+         2 : {'defense' : 99, 'damage' : 0, 'speech' : 'The enemy vanishes before you!', 'unpenetrableBlock':''},
+         1 : {'defense' : 2, 'damage' : 6},
          },
 
-        'barrier' : {'turns': 2,
-         2 : {'defense' : 8, 'damage' : 3},
-         1 : {'defense' : 5, 'damage' : 5}
+        'barrier' : {'turns': 1,
+         1 : {'defense' : 8, 'damage' : 3},
          },
 
-        'energy sphere' : {'turns': 2,
-         2 : {'defense' : 5, 'damage' : 10},
-         1 : {'defense' : 5, 'damage' : 5}
+        'energy sphere' : {'turns': 1,
+         1 : {'defense' : 5, 'damage' : 10},
          },
 
 }

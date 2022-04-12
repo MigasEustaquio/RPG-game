@@ -14,7 +14,7 @@ improve:{
 
     add enemies (half done)
 
-    add magic spells
+    add magic spells and effects
 
     world map (almost done)
 

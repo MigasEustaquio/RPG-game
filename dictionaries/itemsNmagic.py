@@ -21,66 +21,66 @@ items = {
 
 magics = {
 
-                'fire' :{ 'speech': ['You cast Fire and deal ', '1 ♥', ' of damage!\nThe enemy is now ', 'Burning', 'RED'],
+                'fire' :{ 'speech': ['You cast Fire and deal ', ' ♥', ' of damage!\nThe enemy is now ', 'Burning', 'RED'],
                         'MP' : 1, 'damage' : 1, 'heal' : 0,
                         'status' : {'name': 'Burning', 'speech': ['The enemy is ', 'burning', ' and takes ', '1 ♥', ' of damage!'], 'damage' : 1, 'duration' : 2}
                         },
 
-                'fira' :{ 'speech': ['You cast Fira and deal ', '2 ♥', ' of damage!\nThe enemy is now ', 'Burning', 'RED'],
+                'fira' :{ 'speech': ['You cast Fira and deal ', ' ♥', ' of damage!\nThe enemy is now ', 'Burning', 'RED'],
                         'MP' : 2, 'damage' : 2, 'heal' : 0,
                         'status' : {'name': 'Burning', 'speech': ['The enemy is ', 'burning', ' and takes ', '2 ♥', ' of damage!'], 'damage' : 2, 'duration' : 3}
                         },
                 
-                'firaga' :{ 'speech': ['You cast Firaga and deal ', '3 ♥', ' of damage!\nThe enemy is now ', 'Burning', 'RED'],
+                'firaga' :{ 'speech': ['You cast Firaga and deal ', ' ♥', ' of damage!\nThe enemy is now ', 'Burning', 'RED'],
                         'MP' : 3, 'damage' : 3, 'heal' : 0,
                         'status' : {'name': 'Burning', 'speech': ['The enemy is ', 'burning', ' and takes ', '3 ♥', ' of damage!'], 'damage' : 3, 'duration' : 4}
                         },
 
 
 
-                'blizzard' : { 'speech' : ['You cast Blizzard and deal ', '1 ♥',  ' of damage!\nThe enemy is now ', 'Freezing', 'BLUE'],
+                'blizzard' : { 'speech' : ['You cast Blizzard and deal ', ' ♥',  ' of damage!\nThe enemy is now ', 'Freezing', 'BLUE'],
                         'MP' : 1, 'damage' : 1, 'heal' : 0,
                         'status' : {'name': 'Freezing', 'speech': ['The enemy is ','freezing',' and inflicts ','1 ♥',' less of damage!'], 'damage' : 0, 'duration' : 2, 'reduction' : 1}
                         },
 
-                'blizzara' : { 'speech' : ['You cast Blizzara and deal ', '1 ♥',  ' of damage!\nThe enemy is now ', 'Freezing', 'BLUE'],
+                'blizzara' : { 'speech' : ['You cast Blizzara and deal ', ' ♥',  ' of damage!\nThe enemy is now ', 'Freezing', 'BLUE'],
                         'MP' : 2, 'damage' : 1, 'heal' : 0,
                         'status' : {'name': 'Freezing', 'speech': ['The enemy is ','freezing',' and inflicts ','2 ♥',' less of damage!'], 'damage' : 0, 'duration' : 3, 'reduction' : 2}
                         },
 
-                'blizzaga' : { 'speech' : ['You cast Blizzaga and deal ', '2 ♥',  ' of damage!\nThe enemy is now ', 'Freezing', 'BLUE'],
+                'blizzaga' : { 'speech' : ['You cast Blizzaga and deal ', ' ♥',  ' of damage!\nThe enemy is now ', 'Freezing', 'BLUE'],
                         'MP' : 3, 'damage' : 2, 'heal' : 0,
                         'status' : {'name': 'Freezing', 'speech': ['The enemy is ','freezing',' and inflicts ','2 ♥',' less of damage!'], 'damage' : 0, 'duration' : 4, 'reduction' : 2}
                         },
 
 
 
-                'thunder' : { 'speech' : ['You cast Thunder and deal ', '2 ♥',  ' of damage!\nThe enemy is now ', 'Paralized', 'YELLOW'],
+                'thunder' : { 'speech' : ['You cast Thunder and deal ', ' ♥',  ' of damage!\nThe enemy is now ', 'Paralized', 'YELLOW'],
                         'MP' : 1, 'damage' : 2, 'heal' : 0,
                         'status' : {'name': 'Paralized', 'speech': ['The enemy is ','paralized',' and inflicts ','1 ♥',' less of damage!'], 'damage' : 0, 'duration' : 2, 'reduction' : 1}
                         },
 
-                'thundara' : { 'speech' : ['You cast Thundara and deal ', '4 ♥',  ' of damage!\nThe enemy is now ', 'Paralized', 'YELLOW'],
+                'thundara' : { 'speech' : ['You cast Thundara and deal ', ' ♥',  ' of damage!\nThe enemy is now ', 'Paralized', 'YELLOW'],
                         'MP' : 2, 'damage' : 4, 'heal' : 0,
                         'status' : {'name': 'Paralized', 'speech': ['The enemy is ','paralized',' and inflicts ','1 ♥',' less of damage!'], 'damage' : 0, 'duration' : 2, 'reduction' : 1}
                         },
 
-                'thundaga' : { 'speech' : ['You cast Thundaga and deal ', '6 ♥',  ' of damage!\nThe enemy is now ', 'Paralized', 'YELLOW'],
+                'thundaga' : { 'speech' : ['You cast Thundaga and deal ', ' ♥',  ' of damage!\nThe enemy is now ', 'Paralized', 'YELLOW'],
                         'MP' : 3, 'damage' : 6, 'heal' : 0,
                         'status' : {'name': 'Paralized', 'speech': ['The enemy is ','paralized',' and inflicts ','2 ♥',' less of damage!'], 'damage' : 0, 'duration' : 3, 'reduction' : 2}
                         },
 
 
 
-                'cure' : { 'speech' : ['You cast Cure and restore ', '3 ♥', ' !'],
+                'cure' : { 'speech' : ['You cast Cure and restore ', ' ♥', ' !'],
                         'MP' : 1, 'damage' : 0, 'heal' : 3,
                          },
 
-                'cura' : { 'speech' : ['You cast Cura and restore ', '5 ♥', ' !'],
+                'cura' : { 'speech' : ['You cast Cura and restore ', ' ♥', ' !'],
                         'MP' : 2, 'damage' : 0, 'heal' : 5,
                          },
 
-                'curaga' : { 'speech' : ['You cast Curaga and restore ', '10 ♥', ' !'],
+                'curaga' : { 'speech' : ['You cast Curaga and restore ', ' ♥', ' !'],
                         'MP' : 3, 'damage' : 0, 'heal' : 10,
                          },
 

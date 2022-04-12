@@ -15,6 +15,7 @@ def save(file, y, saves):
   x['MP'] = y.MaxMP
   x['MaxAP'] = y.MaxAP
   x['AP'] = y.AP
+  x['magicPower'] = y.magicPower
   x['magic'] = y.magic
   x['item'] = y.item
   x['itemPouch'] = y.itemPouch
@@ -61,6 +62,7 @@ def load(file, y, saves):
   y.AP = x['AP']
   y.STR = x['STR']
   y.DEF = x['DEF']
+  y.magicPower = x['magicPower']
   y.magic = x['magic']
   y.item = x['item']
   y.itemPouch = x['itemPouch']
