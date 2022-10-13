@@ -245,6 +245,35 @@ rooms = {
       }
   },
 
+
+  'Wonderland':{
+
+    0 : 'Rabbit Hole',
+
+    'Rabbit Hole': {},
+
+    'Bizarre Room': {},
+
+    'Bizarre Room A': {},
+
+    'Bizarre Room B': {},
+
+    'Bizarre Room C': {},
+
+    'Queen\'s Castle': {},
+
+    'Lotus Forest': {},
+
+    'Tea Party Garden': {},
+
+    'Rooms List' : {
+                  'resetHeartless' : ['Bizarre Room', 'Bizarre Room A',
+                  'Bizarre Room B', 'Bizarre Room C', 'Lotus Forest', 'Tea Party Garden']
+
+  },
+
+
+
   'CastleOblivion': {
 
     0 : '1st Floor',

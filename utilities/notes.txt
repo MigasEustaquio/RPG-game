@@ -1,0 +1,27 @@
+destiny islands:{
+
+    reward: potion
+
+    treasure: protect chain
+}
+
+Traverse town:{
+
+    alleyway: potion
+    green room: elixir
+    boss: brave warrior
+    on exit: elixir + 500 munny
+    donald&goofy: fire + dodge roll(?)
+}
+
+Wonderland:{
+
+}
+
+Deep Jungle:{
+    
+}
+
+Olympus Coliseum:{
+
+}

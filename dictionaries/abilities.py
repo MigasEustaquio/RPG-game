@@ -10,7 +10,7 @@ abilityList = {
                 'Blitz' : ['Quickly attacks the enemy causing critical damage', 0],                         ####
                 'Combo Master' : ['Can use magic in combos without losing the finish', 0],                  ####
                 'Counterattack' : ['Attacks right after being blocked does more damage', 0],
-                'Finishing Plus' : ['Allows to use a bonus cobo finisher', 0],
+                'Finishing Plus' : ['Allows to use a bonus combo finisher', 0],
                 'Gravity Break' : ['(finisher)', 0],                                                        ######## incomplete
                 'Hurricane Blast' : ['(finisher)', 0],
                 'Jackpot' : ['Receive more munny in battle', 2],                                            ####
