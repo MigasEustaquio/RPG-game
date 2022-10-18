@@ -1,3 +1,4 @@
+#Usage: maps [world] [map number(given by the room)] [completion(if the player has details or not)]
 maps = {
 
             'DestinyIslands' : {
@@ -25,7 +26,7 @@ maps = {
             
 }
 
-
+#This dict represents the starting maps owned by the player, by default the first map is "incomplete" and the others are "no"
 worldMaps = {
 
             'DestinyIslands' : {'1': 'incomplete'},
@@ -44,6 +45,7 @@ worldMaps = {
             'EndOfTheWorld' : {'1': 'no'},
             }
 
+#Names to refer to each world on world map screen
 worldNames = {
 
         'DestinyIslands' : ['destiny', 'destiny islands', 'destinyislands'],
@@ -63,6 +65,7 @@ worldNames = {
 
 }
 
+#Simple display name for each world
 worldDisplayName = {
 
         'DestinyIslands' : 'Destiny Islands',

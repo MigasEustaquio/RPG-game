@@ -1,6 +1,10 @@
 #a dictionary linking a room to other room positions
 
+# The first '0' of each world represents the starting room
+
+# 'map number' : refers to the map image that the room is in
 # 'heartless' : (story)
+# 'resetHeartless' : what room have their heartless reset upon entering
 # 'unlock' : {'magic to unlock(?)':['direction', 'message after unlocking', 'unlock other area', 'direction of the other area']}
 
 rooms = {
@@ -211,6 +215,58 @@ rooms = {
   },
 
 
+  'Wonderland':{
+
+    0 : 'Rabbit Hole',
+
+    'Rabbit Hole': {},
+
+    'Bizarre Room': {},
+
+    'Bizarre Room A': {},
+
+    'Bizarre Room B': {},
+
+    'Bizarre Room C': {},
+
+    'Queen\'s Castle': {},
+
+    'Lotus Forest': {},
+
+    'Tea Party Garden': {},
+
+    'Rooms List' : {
+                  'resetHeartless' : ['Bizarre Room', 'Bizarre Room A',
+                  'Bizarre Room B', 'Bizarre Room C', 'Lotus Forest', 'Tea Party Garden']
+    }
+  },
+
+
+
+  'DeepJungle': {
+
+      0:'',
+
+
+      'Rooms List' : {
+                  'resetHeartless' : []
+    }
+
+  },
+
+
+    'Atlantica': {
+
+      0:'',
+
+
+      'Rooms List' : {
+                  'resetHeartless' : []
+    }
+
+  },
+  
+
   'OlympusColiseum': {
 
     0 : 'Coliseum Gates',
@@ -246,29 +302,86 @@ rooms = {
   },
 
 
-  'Wonderland':{
+    'Agrabah': {
 
-    0 : 'Rabbit Hole',
+      0:'',
 
-    'Rabbit Hole': {},
 
-    'Bizarre Room': {},
+      'Rooms List' : {
+                  'resetHeartless' : []
+    }
 
-    'Bizarre Room A': {},
+  },
 
-    'Bizarre Room B': {},
 
-    'Bizarre Room C': {},
+    'Monstro': {
 
-    'Queen\'s Castle': {},
+      0:'',
 
-    'Lotus Forest': {},
 
-    'Tea Party Garden': {},
+      'Rooms List' : {
+                  'resetHeartless' : []
+    }
 
-    'Rooms List' : {
-                  'resetHeartless' : ['Bizarre Room', 'Bizarre Room A',
-                  'Bizarre Room B', 'Bizarre Room C', 'Lotus Forest', 'Tea Party Garden']
+  },
+
+
+    '100AcreWood': {
+
+      0:'',
+
+
+      'Rooms List' : {
+                  'resetHeartless' : []
+    }
+
+  },
+
+
+    'HalloweenTown': {
+
+      0:'',
+
+
+      'Rooms List' : {
+                  'resetHeartless' : []
+    }
+
+  },
+
+
+    'Neverland': {
+
+      0:'',
+
+
+      'Rooms List' : {
+                  'resetHeartless' : []
+    }
+
+  },
+
+
+    'HollowBastion': {
+
+      0:'',
+
+
+      'Rooms List' : {
+                  'resetHeartless' : []
+    }
+
+  },
+
+
+    'EndOfTheWorld': {
+
+      0:'',
+
+
+      'Rooms List' : {
+                  'resetHeartless' : []
+    }
 
   },
 

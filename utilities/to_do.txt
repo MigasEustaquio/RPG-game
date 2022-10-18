@@ -2,6 +2,151 @@ urgent:{
 
 }
 
+locations: {
+
+    DestinyIslands{
+        locations : started
+        enemyLocations: none
+        story: none
+        images: ok
+        maps: ok
+        shops: ok
+        treasures: none
+        restrictions: none
+    }
+
+    TraverseTown: {
+        locations : started
+        enemyLocations: started
+        story: started
+        images: ok
+        maps: started
+        shops: started
+        treasures: started
+        restrictions: started
+    }
+
+    Wonderland: {
+        locations : named
+        enemyLocations: none
+        story: none
+        images: none
+        maps: none
+        shops: none
+        treasures: none
+        restrictions: none
+    }
+
+    DeepJungle: {
+        locations : started
+        enemyLocations: none
+        story: none
+        images: none
+        maps: none
+        shops: none
+        treasures: none
+        restrictions: none
+    }
+
+    Atlantica: {
+        locations : started
+        enemyLocations: none
+        story: none
+        images: none
+        maps: none
+        shops: none
+        treasures: none
+        restrictions: none
+    }
+
+    OlympusColiseum: {
+        locations : named
+        enemyLocations: none
+        story: none
+        images: none
+        maps: none
+        shops: none
+        treasures: none
+        restrictions: none
+    }
+
+    Agrabah: {
+        locations : started
+        enemyLocations: none
+        story: none
+        images: none
+        maps: none
+        shops: none
+        treasures: none
+        restrictions: none
+    }
+
+    Monstro: {
+        locations : started
+        enemyLocations: none
+        story: none
+        images: none
+        maps: none
+        shops: none
+        treasures: none
+        restrictions: none
+    }
+
+    100AcreWood: {
+        locations : started
+        enemyLocations: none
+        story: none
+        images: none
+        maps: none
+        shops: none
+        treasures: none
+        restrictions: none
+    }
+
+    HalloweenTown: {
+        locations : started
+        enemyLocations: none
+        story: none
+        images: none
+        maps: none
+        shops: none
+        treasures: none
+        restrictions: none
+    }
+
+    Neverland: {
+        locations : started
+        enemyLocations: none
+        story: none
+        images: none
+        maps: none
+        shops: none
+        treasures: none
+        restrictions: none
+    }
+
+    HollowBastion: {
+        locations : started
+        enemyLocations: none
+        story: none
+        images: none
+        maps: none
+        shops: none
+        treasures: none
+        restrictions: none
+    }
+
+    EndOfTheWorld: {
+        locations : started
+        enemyLocations: none
+        story: none
+        images: none
+        maps: none
+        shops: none
+        treasures: none
+        restrictions: none
+    }
+
 implement:{
 
     allies (started)
@@ -11,6 +156,8 @@ implement:{
     unlock areas (for now only by magic) (require more worlds and rooms)
 
     add abilities (almost done)
+
+}
 
 }
 
@@ -27,8 +174,6 @@ improve:{
 }
 
 complete with data:{
-
-    add worlds (rooms)
 
     add enemies (hp, damage, commands...)
 
