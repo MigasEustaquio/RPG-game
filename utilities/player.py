@@ -1,5 +1,6 @@
 from colorama import Fore, Style
 from colorama import init as colorama_init
+import math
 
 import copy
 
@@ -86,6 +87,8 @@ class player:
         colorama_init(autoreset=True)
         self.colors = dict(Fore.__dict__.items())
 
+        self.HPBarColour = 'GREEN'
+
     def createBKP(self):
         self.HPBKP = self.HP
         self.MPBKP = self.MP
@@ -116,6 +119,13 @@ class player:
 
         if self.HP > self.TotalHP: self.HP = self.TotalHP
         if self.MP > self.TotalMP: self.MP = self.TotalMP
+
+        if self.HP<= math.ceil(0.25*self.TotalHP):
+            self.HPBarColour = 'RED'
+        elif self.HP<= math.ceil(0.5*self.TotalHP):
+            self.HPBarColour = 'YELLOW'
+        else: self.HPBarColour = 'GREEN'
+
     def buildHPMPDisplay(self):
         currentHP = ''
         currentMP = ''
@@ -181,14 +191,15 @@ class player:
         #print the player's current battle status
 
         self.calculateHealth()
-        # print(self.TotalHP)
-        # print(self.HP)
+
         currentHP, currentMP = self.buildHPMPDisplay()
         itemsDisplay = self.buildItemDisplay()        
 
         print(Fore.YELLOW + '\n---------------------------')
-        print("HP : " + Fore.RED + str(currentHP))
-        print(Fore.WHITE + "MP : " + Fore.BLUE + str(currentMP))
+        print("HP : " + self.colors[self.HPBarColour] + str(currentHP))
+        if self.MP==0:
+            print(Fore.WHITE + "MP : " + Fore.RED + str(currentMP))
+        else: print(Fore.WHITE + "MP : " + Fore.BLUE + str(currentMP))
         print(Fore.WHITE + "Items :", itemsDisplay)
         print(Fore.YELLOW + "---------------------------")
 

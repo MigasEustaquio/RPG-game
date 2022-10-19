@@ -1,7 +1,7 @@
 #!/bin/python3
 # from os import X_OK
 import random
-import math
+
 import time
 from utilities.allyClasses import *
 from utilities.enemyClasses import *
@@ -211,9 +211,15 @@ def scan(enemy):                                ###SCAN
       heartlessHealthDisplay += '♡'
     i+=1
 
+    if enemy.HP<= math.ceil(0.25*enemy.MaxHP):
+      colour=red
+    elif enemy.HP<= math.ceil(0.5*enemy.MaxHP):
+      colour=yellow
+    else: colour=green
+
   print(Fore.MAGENTA + '\n---------------------------')
   print("Scan : " + enemy.name)
-  print("HP : " + red + heartlessHealthDisplay)
+  print("HP : " + colour + heartlessHealthDisplay)
   print(Fore.MAGENTA + "---------------------------")
 
 def finishAttack(enemy, damage, defense, mPower, enemyDamageDealt):                ###FINISHERS
@@ -332,12 +338,12 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
     elif enemyName in heartless:
       bossBattle = False
 
-    damage = keybladeStatus[player.keyblade]['damage'] + player.STR
+    damageBase = keybladeStatus[player.keyblade]['damage'] + player.STR
     defense = player.DEF
     mPower = player.magicPower
 
     for accessory in player.equipment:
-      damage += equipments[accessory]['STR']
+      damageBase += equipments[accessory]['STR']
       defense += equipments[accessory]['DEF']
 
     print("---------------------------")
@@ -350,12 +356,17 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
     
     enemy = Heartless(enemyName, bossBattle)
 
+    finishingPlusCheck=False
     finishCount = 0
     command = ''
 
     while True:
         player.showBattleStatus()
         enemy.damage = enemy.totalDamage
+
+        if ['Berserk', True] in player.abilities and player.HPBarColour == 'RED':
+          damage=damageBase+2
+        else: damage=damageBase
 
         if ['Scan', True] in player.abilities:
           scan(enemy)
@@ -389,7 +400,7 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
                 enemy.statusDuration = magics[helpStatus]['status']['duration']
   ###ATTACK
     ###
-        if command == 'attack':       ###ATTACK
+        elif command == 'attack':       ###ATTACK
             command = ''
     ### Calculate enemy damage
             if bossBattle == False: enemySpeech, enemyDamageDealt = enemy.selectCommand(player, defense)
@@ -398,9 +409,17 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
             if any(item in player.finishers for item in finishersList) and finishCount == 3:
               damage, defense, mPower, enemyDamageDealt = finishAttack(enemy, damage, defense, mPower, enemyDamageDealt)
               finishCount = 0
-            elif any(item in player.finishers for item in finishersList) and 'Negative Combo' in player.abilities and finishCount == 2:
+              if finishingPlusCheck: finishingPlusCheck=False
+              else: finishingPlusCheck=True
+            elif any(item in player.finishers for item in finishersList) and ['Negative Combo', True] in player.abilities and finishCount == 2:
               damage, defense, mPower, enemyDamageDealt = finishAttack(enemy, damage, defense, mPower, enemyDamageDealt)
               finishCount = 0
+              if finishingPlusCheck: finishingPlusCheck=False
+              else: finishingPlusCheck=True
+            elif any(item in player.finishers for item in finishersList) and ['Finishing Plus', True] in player.abilities and finishingPlusCheck:
+              damage, defense, mPower, enemyDamageDealt = finishAttack(enemy, damage, defense, mPower, enemyDamageDealt)
+              finishCount = 0
+              finishingPlusCheck=False
             else:
               finishCount += 1
               if player.ignoreBlock: damageDealt=damage-enemy.totalDefense
@@ -412,7 +431,7 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
             if enemy.statusEffect != 'none': enemySpeech, enemyDamageDealt = enemy.statusEffectDamageReduction(enemySpeech, enemyDamageDealt, mPower)
             print(enemySpeech)
             player.HP -= enemyDamageDealt
-            if 'Second Chance' in player.abilities and player.HP<1 and player.HP+enemyDamageDealt>1:
+            if  ['Second Chance', True] in player.abilities and player.HP<1 and player.HP+enemyDamageDealt>1:
               player.HP=1
               print(green +'Second Chance' + white)
     ### Status effect damage
@@ -473,7 +492,7 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
                 if enemy.statusEffect != 'none': enemySpeech, enemyDamageDealt = enemy.statusEffectDamageReduction(enemySpeech, enemyDamageDealt, mPower)
                 print(enemySpeech)
                 player.HP -= enemyDamageDealt
-                if 'Second Chance' in player.abilities and player.HP<1 and player.HP+enemyDamageDealt>1:
+                if ['Second Chance', True] in player.abilities and player.HP<1 and player.HP+enemyDamageDealt>1:
                   player.HP=1
                   print(green +'Second Chance' + white)
     ### Status effect damage
@@ -519,7 +538,7 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
                 if enemy.statusEffect != 'none': enemySpeech, enemyDamageDealt = enemy.statusEffectDamageReduction(enemySpeech, enemyDamageDealt, mPower)
                 print(enemySpeech)
                 player.HP -= enemyDamageDealt
-                if 'Second Chance' in player.abilities and player.HP<1 and player.HP+enemyDamageDealt>1:
+                if ['Second Chance', True] in player.abilities and player.HP<1 and player.HP+enemyDamageDealt>1:
                   player.HP=1
                   print(green +'Second Chance' + white)
     ### Allies Help

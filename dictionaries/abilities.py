@@ -6,11 +6,11 @@ abilityList = {
 
                 'Aerial Sweep' : ['?', 0],
                 'Ars Arcanum' : ['?', 0],
-                'Berserk' : ['Boosts attack power when HP is critically low', 0],
+                'Berserk' : ['Boosts attack power when HP is critically low', 0],                           ####
                 'Blitz' : ['Quickly attacks the enemy causing critical damage', 0],                         ####
                 'Combo Master' : ['Can use magic in combos without losing the finish', 0],                  ####
                 'Counterattack' : ['Attacks right after being blocked does more damage', 0],
-                'Finishing Plus' : ['Allows to use a bonus combo finisher', 0],
+                'Finishing Plus' : ['Allows to use a bonus combo finisher', 0],                             ####
                 'Gravity Break' : ['(finisher)', 0],                                                        ######## incomplete
                 'Hurricane Blast' : ['(finisher)', 0],
                 'Jackpot' : ['Receive more munny in battle', 2],                                            ####
