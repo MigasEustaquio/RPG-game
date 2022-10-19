@@ -72,15 +72,15 @@ magics = {
 
 
 
-                'cure' : { 'speech' : ['You cast Cure and restore ', ' ♥', ' !'],
+                'cure' : { 'speech' : ['You cast Cure and restore ', '3 ♥', ' !'],
                         'MP' : 1, 'damage' : 0, 'heal' : 3,
                          },
 
-                'cura' : { 'speech' : ['You cast Cura and restore ', ' ♥', ' !'],
+                'cura' : { 'speech' : ['You cast Cura and restore ', '5 ♥', ' !'],
                         'MP' : 2, 'damage' : 0, 'heal' : 5,
                          },
 
-                'curaga' : { 'speech' : ['You cast Curaga and restore ', ' ♥', ' !'],
+                'curaga' : { 'speech' : ['You cast Curaga and restore ', '10 ♥', ' !'],
                         'MP' : 3, 'damage' : 0, 'heal' : 10,
                          },
 

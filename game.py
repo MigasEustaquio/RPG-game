@@ -315,7 +315,7 @@ def finishAttack(enemy, damage, defense, mPower, enemyDamageDealt):             
       player.MP += 2
       damageDealt = damage-enemy.defense
     else:
-      print('You shouldn\'t have thi keyblade... Anyway it has no bonus effect')
+      print('You shouldn\'t have this keyblade... Anyway it has no bonus effect')
       damageDealt = damage-enemy.defense
   elif finish == 'Stun Impact':
     print('You used ' + red +'Stun Impact' + white + ' and it caused the enemy to be stunned!')
@@ -327,8 +327,7 @@ def finishAttack(enemy, damage, defense, mPower, enemyDamageDealt):             
  
   if damageDealt<0: damageDealt=0
   print('You caused ' + red + str(damageDealt) + ' ♥ ' + white + 'of damage!')
-  enemy.HP = enemy.HP - damageDealt
-  return damage, defense, mPower, enemyDamageDealt
+  return damage, defense, mPower, enemyDamageDealt, damageDealt
 
 def battle(enemyName, arenaBattle=False):       ###BATTLE
   ###
@@ -358,6 +357,8 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
 
     finishingPlusCheck=False
     finishCount = 0
+    player.ignoreBlock=False
+    player.blocked=False
     command = ''
 
     while True:
@@ -384,8 +385,8 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
           if enemy.statusEffect != 'none':
             enemy.statusEffectDamage()
     ### Calculate damage
-          if bossBattle == False: enemySpeech, enemyDamageDealt = enemy.selectCommand(player, defense)
-          else: enemySpeech, enemyDamageDealt = enemy.selectCommandBoss(player, defense)
+          if bossBattle == False: enemySpeech, enemyDamageDealt = enemy.selectCommand(defense)
+          else: enemySpeech, enemyDamageDealt = enemy.selectCommandBoss(defense)
     ### Allies Help
           if player.allies:
             for ally in player.allies:
@@ -403,30 +404,50 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
         elif command == 'attack':       ###ATTACK
             command = ''
     ### Calculate enemy damage
-            if bossBattle == False: enemySpeech, enemyDamageDealt = enemy.selectCommand(player, defense)
-            else: enemySpeech, enemyDamageDealt = enemy.selectCommandBoss(player, defense)
+            if bossBattle == False: enemySpeech, enemyDamageDealt = enemy.selectCommand(defense)
+            else: enemySpeech, enemyDamageDealt = enemy.selectCommandBoss(defense)
     ### Finishers
             if any(item in player.finishers for item in finishersList) and finishCount == 3:
-              damage, defense, mPower, enemyDamageDealt = finishAttack(enemy, damage, defense, mPower, enemyDamageDealt)
+              damage, defense, mPower, enemyDamageDealt, damageDealt = finishAttack(enemy, damage, defense, mPower, enemyDamageDealt)
               finishCount = 0
               if finishingPlusCheck: finishingPlusCheck=False
               else: finishingPlusCheck=True
             elif any(item in player.finishers for item in finishersList) and ['Negative Combo', True] in player.abilities and finishCount == 2:
-              damage, defense, mPower, enemyDamageDealt = finishAttack(enemy, damage, defense, mPower, enemyDamageDealt)
+              damage, defense, mPower, enemyDamageDealt, damageDealt = finishAttack(enemy, damage, defense, mPower, enemyDamageDealt)
               finishCount = 0
               if finishingPlusCheck: finishingPlusCheck=False
               else: finishingPlusCheck=True
             elif any(item in player.finishers for item in finishersList) and ['Finishing Plus', True] in player.abilities and finishingPlusCheck:
-              damage, defense, mPower, enemyDamageDealt = finishAttack(enemy, damage, defense, mPower, enemyDamageDealt)
+              damage, defense, mPower, enemyDamageDealt, damageDealt = finishAttack(enemy, damage, defense, mPower, enemyDamageDealt)
               finishCount = 0
               finishingPlusCheck=False
             else:
+
+              if ['Counterattack', True] in player.abilities and player.blocked:
+                damage=math.ceil(1.5*damage)
+                if ['Counter Replenisher', True] in player.abilities:
+                  print(blue + 'Counterattack' + white + '!')
+                  replenishMP = math.ceil((player.TotalMP-player.MP)/8)
+                  print('You gained ' + blue + str(replenishMP) + ' ● ' + white + '!\n')
+                  player.MP += replenishMP
+                  if player.MP > player.TotalMP: player.MP = player.TotalMP
+                else: print('Counterattack!')
+
               finishCount += 1
               if player.ignoreBlock: damageDealt=damage-enemy.totalDefense
               else: damageDealt = (damage-enemy.defense)
               if damageDealt < 0: damageDealt=0
               print('You attacked and caused ' + red + str(damageDealt) + ' ♥ ' + white + 'of damage!')
-              enemy.HP = enemy.HP - damageDealt
+
+            enemy.HP = enemy.HP - damageDealt
+            player.blocked=False
+
+            if damageDealt==0:
+              finishCount = 0
+              finishingPlusCheck=False
+              if enemySpeech == 'The enemy tries to block all incoming phisical attacks!':
+                player.blocked=True
+
     ### Inflict enemy damage
             if enemy.statusEffect != 'none': enemySpeech, enemyDamageDealt = enemy.statusEffectDamageReduction(enemySpeech, enemyDamageDealt, mPower)
             print(enemySpeech)
@@ -454,17 +475,21 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
         elif "magic" in command:       ###MAGIC
           command = command.lower().split()
     ### Calculate enemy damage
-          if bossBattle == False: enemySpeech, enemyDamageDealt = enemy.selectCommand(player, defense)
-          else: enemySpeech, enemyDamageDealt = enemy.selectCommandBoss(player, defense)
+          if bossBattle == False: enemySpeech, enemyDamageDealt = enemy.selectCommand(defense)
+          else: enemySpeech, enemyDamageDealt = enemy.selectCommandBoss(defense)
     ###Check magic requirements
-          if ['Combo Master', True] not in player.abilities or finishCount == 3:
-            finishCount = 0
           if not player.magic:
             print('Magic is still a mystery to you!')
 
           else:
             if command[1] in player.magic:
               if player.MP >= magics[command[1]]['MP']:
+
+              #Combo finisher
+                if ['Combo Master', True] not in player.abilities or finishCount == 3:
+                  finishCount = 0
+                finishingPlusCheck=False
+                player.blocked=False
 
                 magicText = magics[command[1]]['speech']
     ###COLOR SPEECH
@@ -521,19 +546,24 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
     ###
         elif "item" in command:       ###ITEM
           command = command.lower().split()
-          finishCount = 0
           if not player.item:
             print('You have no items!')
           else:
             try:
               if command[1] in player.item:
+
+              #Combo finisher
+                finishCount = 0
+                finishingPlusCheck=False
+                player.blocked=False
+
                 useItem(command[1])
     ### Status effect damage
                 if 'fir' in enemy.statusEffect:
                   enemy.statusEffectDamage()
     ### Calculate enemy damage
-                if bossBattle == False: enemySpeech, enemyDamageDealt = enemy.selectCommand(player, defense)
-                else: enemySpeech, enemyDamageDealt = enemy.selectCommandBoss(player, defense)
+                if bossBattle == False: enemySpeech, enemyDamageDealt = enemy.selectCommand(defense)
+                else: enemySpeech, enemyDamageDealt = enemy.selectCommandBoss(defense)
     ### Inflict enemy damage
                 if enemy.statusEffect != 'none': enemySpeech, enemyDamageDealt = enemy.statusEffectDamageReduction(enemySpeech, enemyDamageDealt, mPower)
                 print(enemySpeech)

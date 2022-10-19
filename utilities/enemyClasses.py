@@ -2,7 +2,7 @@ from random import randint
 from colorama import Fore
 from colorama import init as colorama_init
 
-from utilities.player import *
+# from utilities.player import *
 
 from dictionaries.itemsNmagic import *
 from dictionaries.exp import *
@@ -96,14 +96,9 @@ class Heartless:
       self.totalDefense=99
       self.magicResistance=99
 
-    def block(self, player):
-      if player.ignoreBlock:
-        self.defense=99
-        return 'The enemy tries to block all incoming phisical attacks!', 0
-      else:
-        self.defense=99
-        player.blocked=True
-        return 'The enemy blocks all incoming phisical attacks!', 0
+    def block(self):
+      self.defense=99
+      return 'The enemy tries to block all incoming phisical attacks!', 0
 
     def calculateDamage(self, defense):   ###CALCULATE DAMAGE DEALT
       damageDealt = self.damage-defense
@@ -128,7 +123,7 @@ class Heartless:
       self.commandTurn = self.commandTurn-1
       return speech, damageDealt
 
-    def selectCommand(self, player, defense):     ###SELECT COMMAND
+    def selectCommand(self, defense):     ###SELECT COMMAND
       if not self.bossBattle:
         try:
             self.totalDefense = heartless[self.name]['defense']
@@ -146,11 +141,11 @@ class Heartless:
             self.commandName = heartless[self.name]['commands'][1]
             self.commandTurn = commands[self.commandName]['turns']
             speech, damageDealt = self.useCommand(defense)
-          elif number <= 50: speech, damageDealt = self.block(player)
+          elif number <= 50: speech, damageDealt = self.block()
           else: speech, damageDealt = self.calculateDamage(defense)
         else:
           if number<=40: speech, damageDealt = self.calculateDamage(defense)
-          else: speech, damageDealt = self.block(player)
+          else: speech, damageDealt = self.block()
       else: speech, damageDealt = self.useCommand(defense)
 
       return speech, damageDealt
