@@ -51,6 +51,7 @@ class player:
 
         self.abilities = [] #All unlocked abilities
         self.finishers = [] #Only equipped finishers
+        self.activeAbilities = [] #Only equipped active abilities
 
         #STORY RELATED
         self.world = 'TraverseTown'
@@ -515,6 +516,7 @@ MP: ''' + str(keybladeStatus[self.keyblades[i]]['MP']) + '''
                         self.AP=self.AP-abilityList[option[1]][1]
                         print(Fore.GREEN + option[1] + ' equipped!\n')
                         if option[1] in finishersList: self.finishers.append(option[1])
+                        if option[1] in activeAbilitiesList: self.activeAbilities.append(option[1])
                     else: print(Fore.RED + 'Not enought AP!')
                 else:
                     print(Fore.RED + 'Ability not found!')
@@ -527,6 +529,7 @@ MP: ''' + str(keybladeStatus[self.keyblades[i]]['MP']) + '''
                     self.AP+=abilityList[option[1]][1]
                     print(Fore.CYAN + option[1] + ' unequipped!\n')
                     if option[1] in finishersList: del(self.finishers[self.finishers.index(option[1])])
+                    if option[1] in activeAbilitiesList: del(self.activeAbilities[self.activeAbilities.index(option[1])])
                 else:
                     print(Fore.RED + 'Ability not found')
                 option=''

@@ -37,4 +37,31 @@ abilityList = {
 
 finishersList = ['Blitz', 'Gravity Break', 'Hurricane Blast', 'Ripple Drive', 'Stun Impact', 'Zantetsuken']
 
-activeAbilities = ['Ars Arcanum', 'Sonic Blade', 'Strike Raid', 'Ragnarok', 'Trinity Limit']
+activeAbilitiesList = ['Ars Arcanum', 'Sonic Blade', 'Strike Raid', 'Ragnarok', 'Trinity Limit']
+
+activeAbilitiesSimple = ['ars arcanum', 'sonic blade', 'strike raid', 'ragnarok', 'trinity limit', 'ars', 'arcanum', 'sonic', 'blade', 'strike', 'raid', 'ragnarok', 'trinity', 'limit']
+
+activeAbilitiesCommands = ['bash','finish','rave','blast','raid','judgment','impact','light']
+
+activeAbilities = {
+
+    'Ars Arcanum' : {'speech':['test'],
+                        'MP': 1, 'damage': 1, 'duration': 3, 'final damage': 2,
+                        'commands': ['bash','finish']},
+
+    'Sonic Blade' : {'speech':['test'],
+                        'MP': 1, 'damage': 1, 'duration': 2, 'final damage': 2,
+                        'commands': ['rave','blast']},
+
+    'Strike Raid' : {'speech':['test'],
+                        'MP': 1, 'damage': 1, 'duration': 2, 'final damage': 2,
+                        'commands': ['raid','judgment']},
+
+    'Ragnarok' : {'speech':['test'],
+                        'MP': 1, 'damage': 1, 'duration': 1, 'final damage': 2,
+                        'commands': ['impact','impact']},
+
+    'Trinity Limit' : {'speech':['test'],
+                        'MP': 1, 'damage': 5, 'duration': 0, 'final damage': 5,
+                        'commands': ['light','light']},
+}

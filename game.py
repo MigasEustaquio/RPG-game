@@ -217,7 +217,7 @@ def scan(enemy):                                ###SCAN
       colour=yellow
     else: colour=green
 
-  print(Fore.MAGENTA + '\n---------------------------')
+  print(Fore.MAGENTA + '---------------------------')
   print("Scan : " + enemy.name)
   print("HP : " + colour + heartlessHealthDisplay)
   print(Fore.MAGENTA + "---------------------------")
@@ -329,6 +329,15 @@ def finishAttack(enemy, damage, defense, mPower, enemyDamageDealt):             
   print('You caused ' + red + str(damageDealt) + ' ♥ ' + white + 'of damage!')
   return damage, defense, mPower, enemyDamageDealt, damageDealt
 
+def battleCommands(commandOptions, usingAbility, activeAbilityCount):
+    print("---------------------------")
+    if usingAbility!='':
+      ability=activeAbilities[usingAbility]
+      if activeAbilityCount==ability['duration']: print(commandOptions.replace('[item name]','[item name]'+yellow+'\n'+ability['commands'][1]+'/'+ability['commands'][0]+white))
+      else: print(commandOptions.replace('[item name]','[item name]'+yellow+'\n'+ability['commands'][0]+white))
+    else: print(commandOptions)
+      
+
 def battle(enemyName, arenaBattle=False):       ###BATTLE
   ###
     player.createBKP()
@@ -346,12 +355,11 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
       defense += equipments[accessory]['DEF']
 
     print("---------------------------")
-    if bossBattle == False:
-      print('You see a ' + red + 'Heartless' + white +'! It\'s a '+ red + enemyName + white + '!')
-      print('commands: \n\nattack \nmagic [magic name] \nitem [item name] \nrun')
+    commandOptions = 'commands: \n\nattack \nmagic [magic name] \nitem [item name]'
+    if bossBattle: print('Boss Battle! ' + enemyName  + '!\n')
     else:
-      print('Boss Battle! ' + enemyName  + '!')
-      print('commands: \n\nattack \nmagic [magic name] \nitem [item name]')
+      print('You see a ' + red + 'Heartless' + white +'! It\'s a '+ red + enemyName + white + '!')
+      commandOptions = commandOptions + ' \nrun'
     
     enemy = Heartless(enemyName, bossBattle)
 
@@ -359,6 +367,8 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
     finishCount = 0
     player.ignoreBlock=False
     player.blocked=False
+    activeAbilityCount=0
+    usingAbility = ''
     command = ''
 
     while True:
@@ -371,6 +381,8 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
 
         if ['Scan', True] in player.abilities:
           scan(enemy)
+
+        battleCommands(commandOptions, usingAbility, activeAbilityCount)
 
         while command == '':
             command = input('>')
@@ -399,6 +411,7 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
               if helpStatus != '':
                 enemy.statusEffect = helpStatus
                 enemy.statusDuration = magics[helpStatus]['status']['duration']
+          if player.HP > player.TotalHP: player.HP = player.TotalHP
   ###ATTACK
     ###
         elif command == 'attack':       ###ATTACK
@@ -422,7 +435,7 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
               finishCount = 0
               finishingPlusCheck=False
             else:
-
+          #Conterattack
               if ['Counterattack', True] in player.abilities and player.blocked:
                 damage=math.ceil(1.5*damage)
                 if ['Counter Replenisher', True] in player.abilities:
@@ -432,7 +445,7 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
                   player.MP += replenishMP
                   if player.MP > player.TotalMP: player.MP = player.TotalMP
                 else: print('Counterattack!')
-
+          #Normal attack
               finishCount += 1
               if player.ignoreBlock: damageDealt=damage-enemy.totalDefense
               else: damageDealt = (damage-enemy.defense)
@@ -470,20 +483,22 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
                 if helpStatus != '':
                   enemy.statusEffect = helpStatus
                   enemy.statusDuration = magics[helpStatus]['status']['duration']
+            if player.HP > player.TotalHP: player.HP = player.TotalHP
+
+            usingAbility = ''
   ###MAGIC
     ###
         elif "magic" in command:       ###MAGIC
           command = command.lower().split()
-    ### Calculate enemy damage
-          if bossBattle == False: enemySpeech, enemyDamageDealt = enemy.selectCommand(defense)
-          else: enemySpeech, enemyDamageDealt = enemy.selectCommandBoss(defense)
     ###Check magic requirements
-          if not player.magic:
-            print('Magic is still a mystery to you!')
-
+          if not player.magic:  print('Magic is still a mystery to you!')
           else:
             if command[1] in player.magic:
               if player.MP >= magics[command[1]]['MP']:
+
+    ### Calculate enemy damage
+                if bossBattle == False: enemySpeech, enemyDamageDealt = enemy.selectCommand(defense)
+                else: enemySpeech, enemyDamageDealt = enemy.selectCommandBoss(defense)
 
               #Combo finisher
                 if ['Combo Master', True] not in player.abilities or finishCount == 3:
@@ -491,8 +506,8 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
                 finishingPlusCheck=False
                 player.blocked=False
 
-                magicText = magics[command[1]]['speech']
     ###COLOR SPEECH
+                magicText = magics[command[1]]['speech']
                 print('You used ' + blue + str(magics[command[1]]['MP']) +' ● ' + white + '!')
                 if 'cur' not in command[1]:
                   magicDamage = mPower+magics[command[1]]['damage']-enemy.magicResistance
@@ -502,7 +517,6 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
                   print("You cast " + green + command[1].capitalize() + white + " and restore " + red + str(mPower+magics[command[1]]['heal']) + magicText[1] + white + magicText[2])
                 player.MP = player.MP - magics[command[1]]['MP']
     ###Calculate damage
-                if player.HP > player.TotalHP: player.HP = player.TotalHP
                 if ['Leaf Bracer', True] in player.abilities and 'cur' in command[1]:
                   print(green + 'Leaf Bracer' + white +' protects you from damage while casting a Healing spell!')
                   enemy.damage = 0
@@ -535,6 +549,7 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
                     if helpStatus != '':
                       enemy.statusEffect = helpStatus
                       enemy.statusDuration = magics[helpStatus]['status']['duration']
+                if player.HP > player.TotalHP: player.HP = player.TotalHP
     ###
               else:
                 print('Not enough MP!')
@@ -542,6 +557,7 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
               print('Magic not found!')
 
           command = ''
+          usingAbility = ''
   ###ITEM
     ###
         elif "item" in command:       ###ITEM
@@ -583,6 +599,7 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
                     if helpStatus != '':
                       enemy.statusEffect = helpStatus
                       enemy.statusDuration = magics[helpStatus]['status']['duration']
+                if player.HP > player.TotalHP: player.HP = player.TotalHP
     ###
               else:
                 print("You don\'t have any ", command[1])
@@ -590,6 +607,102 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
                 print('try: item [item name]')
 
           command = ''
+          usingAbility = ''
+
+  ###ACTIVE ABILITY
+    ###
+        elif command in activeAbilitiesSimple or command in activeAbilitiesCommands:       ###ACTIVE ABILITY
+          command = command.lower()
+          if ' ' in command:  command = command.split()[0]
+
+    ###Check ability requirements
+          if not player.activeAbilities:
+            print('You don\'t have any active ability equipped!')
+          else:
+            try:
+              command = [x for x in activeAbilitiesList if command.capitalize() in x][0] #identify ability
+            except:
+              command = [x for x in activeAbilitiesList if command in activeAbilities[x]['commands']][0] #identify ability
+
+            if command in player.activeAbilities:
+              if player.MP >= activeAbilities[command]['MP'] or command==usingAbility:
+                ability = activeAbilities[command]
+
+    ### Calculate enemy damage
+                if bossBattle == False: enemySpeech, enemyDamageDealt = enemy.selectCommand(defense)
+                else: enemySpeech, enemyDamageDealt = enemy.selectCommandBoss(defense)
+
+              #Combo finisher
+                finishCount = 0
+                finishingPlusCheck=False
+                player.blocked=False
+
+    ###ABILITY COUNT AND MP
+                if command!=usingAbility:
+                  print('You used ' + blue + str(ability['MP']) +' ● ' + white + '!')
+                  player.MP = player.MP - ability['MP']
+                usingAbility=command
+                if activeAbilityCount<ability['duration']:
+                  abilityDamageName='damage'
+                  activeAbilityCount+=1
+                else:
+                  abilityDamageName='final damage'
+                  activeAbilityCount=0
+
+    ###COLOR SPEECH
+                if usingAbility == 'Ragnarok' and abilityDamageName=='final damage':
+                  abilityDamage = mPower+ability[abilityDamageName]-enemy.magicResistance
+                  if abilityDamage<0: abilityDamage=0
+                  print('dano: ', abilityDamage)
+                  # print("You cast " + green + command[1].capitalize() + white + " and restore " + red + str(mPower+magics[command[1]]['heal']) + magicText[1] + white + magicText[2])
+                elif usingAbility != 'Trinity Limit':
+                  abilityDamage = damage+ability[abilityDamageName]-enemy.defense
+                  if abilityDamage<0: abilityDamage=0
+                  print('dano: ', abilityDamage)
+                  # print("You cast " + player.colors[magicText[4]] + command[1].capitalize() + white + " and deal " + red + str(magicDamage) + magicText[1] + white + magicText[2] + player.colors[magicText[4]] + magicText[3])
+                else:
+                  abilityDamage = mPower+ability[abilityDamageName]-enemy.magicResistance
+                  if abilityDamage<0: abilityDamage=0
+                  print('dano: ', abilityDamage)
+                  # print("You cast " + green + command[1].capitalize() + white + " and restore " + red + str(mPower+magics[command[1]]['heal']) + magicText[1] + white + magicText[2])
+                if activeAbilityCount == 0: usingAbility=''
+    ###Calculate damage
+                enemy.HP = enemy.HP - abilityDamage
+    ### Inflict enemy damage
+                if usingAbility == 'Trinity Limit':
+                  enemySpeech=enemySpeech.replace('You lost ' + str(damageDealt) + ' ♥','The enemy is lightstruck and causes no damage!')
+                  enemyDamageDealt=0
+                elif enemy.statusEffect != 'none': enemySpeech, enemyDamageDealt = enemy.statusEffectDamageReduction(enemySpeech, enemyDamageDealt, mPower)
+                print(enemySpeech)
+                player.HP -= enemyDamageDealt
+                if ['Second Chance', True] in player.abilities and player.HP<1 and player.HP+enemyDamageDealt>1:
+                  player.HP=1
+                  print(green +'Second Chance' + white)
+    ### Status effect damage
+                if 'fir' in enemy.statusEffect:
+                  enemy.statusEffectDamage()
+    ### Allies Help
+                if player.allies:
+                  for ally in player.allies:
+                    helpType, helpValue, helpStatus = ally.selectCommand(player)
+                    if helpType == 'heal': player.HP = player.HP + helpValue
+                    else:
+                      helpValue=helpValue-enemy.defense
+                      if helpValue<0: helpValue=0
+                      enemy.HP = enemy.HP - helpValue
+                    if helpStatus != '':
+                      enemy.statusEffect = helpStatus
+                      enemy.statusDuration = magics[helpStatus]['status']['duration']
+                if player.HP > player.TotalHP: player.HP = player.TotalHP
+    ###
+              else:
+                print('Not enough MP!')
+            else:
+              print('Ability not found!')
+
+          command = ''
+
+
   ###RUN
         elif "run" in command:       ###RUN
           if bossBattle == True:

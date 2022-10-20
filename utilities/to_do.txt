@@ -147,6 +147,7 @@ locations: {
         restrictions: none
     }
 
+
 implement:{
 
     allies (started)
@@ -157,9 +158,6 @@ implement:{
 
     add abilities (almost done)
 
-}
-
-}
 
 improve:{
 
@@ -171,7 +169,6 @@ improve:{
 
     enemy commands (started)
 
-}
 
 complete with data:{
 
@@ -181,11 +178,14 @@ complete with data:{
 
     enemy drops (half done)
 
+    active abilities stats (mp, damage...)
+
 }
 
 style:{
 
     make abilities, equipment and other displays pretty like items display is
+    
     make treasure items display
 
     change keyblade and equipment trading display to look like abilities?
