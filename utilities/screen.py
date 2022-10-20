@@ -36,6 +36,7 @@ def save(file, y, saves):
   x['tutorial'] = y.tutorial
   x['treasures'] = y.treasures
   x['restrictionLifted'] = y.restrictionLifted
+  x['visitedRooms'] = y.visitedRooms
   x['currentRoom'] = y.currentRoom
   x['story'] = y.story
   x['shipUnlocked'] = y.shipUnlocked
@@ -84,6 +85,7 @@ def load(file, y, saves):
   y.tutorial = x['tutorial']
   y.treasures = x['treasures']
   y.restrictionLifted = x['restrictionLifted']
+  y.visitedRooms = x['visitedRooms']
   y.currentRoom = x['currentRoom']
   y.story = x['story']
   y.shipUnlocked = x['shipUnlocked']

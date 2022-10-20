@@ -74,7 +74,7 @@ def showStatus():                               ###SHOW STATUS
   if "person" in rooms[player.world][currentRoom]:
     peopleToTalk, storyToTalk = verifyPersonStory(rooms[player.world][currentRoom]['person'])
     for person in peopleToTalk:
-      print('You see ' + person)
+      print('❕ You see ' + person)
   if "shop" in rooms[player.world][currentRoom]:
     if (currentRoom+' Shop location') in player.keyItems or rooms[player.world][rooms[player.world][currentRoom]['shop']]['key'] in player.keyItems:
       print('You see the ' + rooms[player.world][currentRoom]['shop'] + ', try: \'enter shop\'')
@@ -96,12 +96,16 @@ def showStatus():                               ###SHOW STATUS
       if player.treasures[player.world][currentRoom][number]['status']=='closed': count+=1
     if count == 0: return
     elif count == 1:
-      print('You see a treasure chest!')
+      print('🔸 You see a treasure chest!')
     elif count > 1:
-      print('You see ' + str(count) + ' treasure chests!')
+      print('🔸 You see ' + str(count) + ' treasure chests!')
     if player.tutorial['treasure chest'] == 0:
       print(Fore.YELLOW + "tutorial: " + Fore.WHITE + tutorialSpeech['treasure chest'])
       player.tutorial['treasure chest'] = 1
+  print()
+  for x in rooms[player.world][currentRoom]['move']:
+    if rooms[player.world][currentRoom][x] in player.visitedRooms[player.world]:
+      print('➤ ' + x + ': ' + rooms[player.world][currentRoom][x])
   print(Fore.RED + "---------------------------")
 
 def openTreasure(number, currentRoom):
@@ -336,7 +340,6 @@ def battleCommands(commandOptions, usingAbility, activeAbilityCount):
       if activeAbilityCount==ability['duration']: print(commandOptions.replace('[item name]','[item name]'+yellow+'\n'+ability['commands'][1]+'/'+ability['commands'][0]+white))
       else: print(commandOptions.replace('[item name]','[item name]'+yellow+'\n'+ability['commands'][0]+white))
     else: print(commandOptions)
-      
 
 def battle(enemyName, arenaBattle=False):       ###BATTLE
   ###
@@ -827,20 +830,23 @@ def determineBattle(story, currentRoom, previousRoom):   ###DETERMINE ENEMY TO B
           return 0, rooms[player.world][0], rooms[player.world][0]
     else: return 0, currentRoom, previousRoom
   
-def unrestrict(currentRoom):                    ###UNRESTRICT AREAS
+def unrestrict(room):                           ###UNRESTRICT AREAS
 
-  if len(rooms[player.world][currentRoom]['unlock'][x])>2:
-    del rooms[player.world][rooms[player.world][currentRoom]['unlock'][x][2]]['restricted'][rooms[player.world][currentRoom]['unlock'][x][3]]
-    if rooms[player.world][currentRoom]['unlock'][x][2] in player.restrictionLifted[player.world]:
-      player.restrictionLifted[player.world][rooms[player.world][currentRoom]['unlock'][x][2]].append(rooms[player.world][currentRoom]['unlock'][x][3])
+  if len(rooms[player.world][room]['unlock'][x])>2:
+    del rooms[player.world][rooms[player.world][room]['unlock'][x][2]]['restricted'][rooms[player.world][room]['unlock'][x][3]]
+    if rooms[player.world][room]['unlock'][x][2] in player.restrictionLifted[player.world]:
+      player.restrictionLifted[player.world][rooms[player.world][room]['unlock'][x][2]].append(rooms[player.world][room]['unlock'][x][3])
     else:
-      player.restrictionLifted[player.world][rooms[player.world][currentRoom]['unlock'][x][2]]=[rooms[player.world][currentRoom]['unlock'][x][3]]
-  del rooms[player.world][currentRoom]['restricted'][rooms[player.world][currentRoom]['unlock'][x][0]]
+      player.restrictionLifted[player.world][rooms[player.world][room]['unlock'][x][2]]=[rooms[player.world][room]['unlock'][x][3]]
+  del rooms[player.world][room]['restricted'][rooms[player.world][room]['unlock'][x][0]]
 
-  if currentRoom in player.restrictionLifted[player.world]:
-    player.restrictionLifted[player.world][currentRoom].append(rooms[player.world][currentRoom]['unlock'][x][0])
+  if room in player.restrictionLifted[player.world]:
+    player.restrictionLifted[player.world][room].append(rooms[player.world][room]['unlock'][x][0])
   else:
-    player.restrictionLifted[player.world][currentRoom]=[rooms[player.world][currentRoom]['unlock'][x][0]]
+    player.restrictionLifted[player.world][room]=[rooms[player.world][room]['unlock'][x][0]]
+
+def addVisitedRoom(room):                       ###SAVE VISITED AREAS
+  if room not in player.visitedRooms[player.world]: player.visitedRooms[player.world].append(room)
 
 def worldMap():                                 ###WORLD MAP
   while True:
@@ -869,6 +875,7 @@ def worldMap():                                 ###WORLD MAP
       if 'yes' in answer.lower():
         resetHeartless('Rooms List')
         player.world=world
+        addVisitedRoom(rooms[world][0])
         return rooms[world][0]  ###############################
 
     if 'save' in move:
@@ -1023,7 +1030,7 @@ while True:                        ###MAIN
 
       # player.allies.append(Ally('Donald&Goofy', player))
 
-      print(player.finishers)
+      print(player.visitedRooms)
 
       # if bool(player.arenaRecords):
       #   for record in player.arenaRecords:
@@ -1146,8 +1153,8 @@ while True:                        ###MAIN
             unlockCast='no'
             for x in rooms[player.world][currentRoom]['unlock']:
               if x in move[1]:
-                unlockCast = 'yes'
                 if player.MP >= magics[move[1]]['MP']:
+                  unlockCast = 'yes'
                   magicText = magics[move[1]]['speech']
                   print('You used ' + blue + str(magics[move[1]]['MP']) +' ● ' + white + '!')
 
@@ -1203,6 +1210,7 @@ while True:                        ###MAIN
           alreadyBattled = 0
           previousRoom = currentRoom
           currentRoom = rooms[player.world][currentRoom][move[1]]
+          addVisitedRoom(currentRoom)
 
           resetHeartless(currentRoom) ####
 

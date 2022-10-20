@@ -69,6 +69,7 @@ class player:
         self.tutorial = tutorials
         self.treasures = treasureList
         self.restrictionLifted = restrictionLiftedList
+        self.visitedRooms = worlds
 
         self.saveFile = 0
         self.editedSaves = saves
@@ -486,16 +487,15 @@ MP: ''' + str(keybladeStatus[self.keyblades[i]]['MP']) + '''
         while option == '':
             self.abilities=sorted(self.abilities, key=lambda x: x[0])
 
-            print('\nTo equip an ability use \'equip [ability]\', to unequip use \'unequip [ability]\'. If you want to see an ability description use \'see [ability]\'. (0 to cancel)\n')
+            print('\nTo equip an ability use \'equip [ability]\', to unequip use \'unequip [ability]\'. If you want to see an ability description use \'see [ability]\'. (0 to cancel)')
 
             print('\nAP: ' + str(self.AP) + '\\' + str(self.TotalAP) + '\n')
             for ability in self.abilities: #● ○
-                tab='\t'
                 name=ability[0]
                 if ability[0] in self.finishers: name=name+' (F)'
-                if len(name)<=6: tab=tab+tab+tab+tab
-                elif len(name)<=12: tab=tab+tab+tab
-                elif len(name)<=16: tab=tab+tab
+                if len(name)<=6: tab='\t\t\t\t'
+                elif len(name)<=13: tab='\t\t\t'
+                elif len(name)<=20: tab='\t\t'
                 if ability[1]: print(Fore.YELLOW + '● ' + Fore.WHITE + name + tab + 'cost: ' + str(abilityList[ability[0]][1]))
                 else: print('○ ' + name + tab + 'cost: ' + str(abilityList[ability[0]][1]))
 
@@ -505,8 +505,7 @@ MP: ''' + str(keybladeStatus[self.keyblades[i]]['MP']) + '''
             elif len(option)>1: option[1] = option[1].capitalize()
 
 
-            if option == '0' or option[0] == '0':
-                break
+            if option == '0' or option[0] == '0':   break
 
             elif option[0] == 'equip':
                 if [option[1], True] in self.abilities: print(Fore.RED + 'This ability is already equipped!')
@@ -518,8 +517,7 @@ MP: ''' + str(keybladeStatus[self.keyblades[i]]['MP']) + '''
                         if option[1] in finishersList: self.finishers.append(option[1])
                         if option[1] in activeAbilitiesList: self.activeAbilities.append(option[1])
                     else: print(Fore.RED + 'Not enought AP!')
-                else:
-                    print(Fore.RED + 'Ability not found!')
+                else:   print(Fore.RED + 'Ability not found!')
                 option=''
 
             elif option[0] == 'unequip':
@@ -530,8 +528,11 @@ MP: ''' + str(keybladeStatus[self.keyblades[i]]['MP']) + '''
                     print(Fore.CYAN + option[1] + ' unequipped!\n')
                     if option[1] in finishersList: del(self.finishers[self.finishers.index(option[1])])
                     if option[1] in activeAbilitiesList: del(self.activeAbilities[self.activeAbilities.index(option[1])])
-                else:
-                    print(Fore.RED + 'Ability not found')
+                else:   print(Fore.RED + 'Ability not found')
+                option=''
+
+            elif option[0] == 'see':
+                if [option[1], True] in self.abilities or [option[1], False] in self.abilities: print('\n' + Fore.YELLOW + option[1] + Fore.WHITE + ': ' + abilityList[option[1]][0])
                 option=''
             
             else:

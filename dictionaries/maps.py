@@ -85,3 +85,22 @@ worldDisplayName = {
 
 
 }
+
+worlds = {
+
+        'DestinyIslands' : [],
+        'TraverseTown' : [],
+        'Wonderland' : [],
+        'DeepJungle' : [],
+        'Atlantica' : [],
+        'OlympusColiseum' : [],
+        'Agrabah' : [],
+        'Monstro' : [],
+        '100AcreWood' : [],
+        'HalloweenTown' : [],
+        'Neverland' : [],
+        'HollowBastion' : [],
+        'EndOfTheWorld' : [],
+        'CastleOblivion' : []
+
+}
