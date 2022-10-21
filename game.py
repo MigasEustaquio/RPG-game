@@ -512,22 +512,30 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
     ###COLOR SPEECH
                 magicText = magics[command[1]]['speech']
                 print('You used ' + blue + str(magics[command[1]]['MP']) +' ● ' + white + '!')
-                if 'cur' not in command[1]:
+                if 'cur' not in command[1] and 'grav' not in command[1] and enemy.magicImmunity==False:
                   magicDamage = mPower+magics[command[1]]['damage']-enemy.magicResistance
                   if magicDamage<0: magicDamage=0
                   print("You cast " + player.colors[magicText[4]] + command[1].capitalize() + white + " and deal " + red + str(magicDamage) + magicText[1] + white + magicText[2] + player.colors[magicText[4]] + magicText[3])
+                elif 'grav' in command[1] and enemy.magicImmunity==False:
+                  magicDamage = mPower+math.ceil(enemy.MaxHP/5)-enemy.magicResistance
+                  if magicDamage<0: magicDamage=0
+                  print("You cast " + player.colors[magicText[4]] + command[1].capitalize() + white + " and deal " + red + str(magicDamage) + magicText[1] + white + magicText[2] + player.colors[magicText[4]] + magicText[3])
+                elif 'cur' not in command[1]:
+                  magicDamage=0
+                  print("You cast " + player.colors[magicText[4]] + command[1].capitalize() + white + " but it doesn\'t have any effect!")
                 else:
                   print("You cast " + green + command[1].capitalize() + white + " and restore " + red + str(mPower+magics[command[1]]['heal']) + magicText[1] + white + magicText[2])
                 player.MP = player.MP - magics[command[1]]['MP']
     ###Calculate damage
                 if ['Leaf Bracer', True] in player.abilities and 'cur' in command[1]:
                   print(green + 'Leaf Bracer' + white +' protects you from damage while casting a Healing spell!')
-                  enemy.damage = 0
+                  enemySpeech=enemySpeech.replace(str(enemyDamageDealt) + ' ♥',Fore.RED + '0 ♥' + Fore.WHITE)
+                  enemyDamageDealt = 0
                 else:
                   enemy.HP = enemy.HP - magicDamage
                 if 'cur' in command[1]: player.HP = player.HP + (magics[command[1]]['heal']+mPower)
     ### Start status effect
-                if 'cur' not in command[1]:
+                if 'cur' not in command[1] and enemy.magicImmunity==False:
                   enemy.statusEffect = command[1]
                   enemy.statusDuration = magics[command[1]]['status']['duration']
     ### Inflict enemy damage
@@ -1012,7 +1020,7 @@ while True:                        ###MAIN
         move = input('>')
       move = move.lower().split()
 
-    if 'journal' in move:
+    if 'journal' in move:                           ###INCOMPLETE
                             #MAKE TUTORIAL
       try:
         option=move[1].lower()
@@ -1026,7 +1034,7 @@ while True:                        ###MAIN
           elif 'map' in option: player.mapJournal()
           else: print('\nJournal closed...\n')
 
-    elif 'map' in move and 'world' not in move:           ##### OPEN MAP
+    elif 'map' in move and 'world' not in move:         ##### OPEN MAP
       if player.tutorial['open map'] == 0:
         print('The first time opening a map may glitch out and refuse to open, just close the map and open it again!')
         player.tutorial['open map'] = 1

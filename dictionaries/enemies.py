@@ -3,13 +3,17 @@ heartless = {
 
             'shadow' : {'commands' : 'attack', 
                     'HP': 1 , 'damage': 1,
+                    'defense': 2,
+                    'magic resistance' : 0, 'magicImmunity' : False,
                     'munny' : [1,5],
                     'exp' : 10,
                     'drop' : {5 : 'ether'}
             },
 
             'soldier' : {'commands' : 'attack', 
-                    'HP': 2 , 'damage': 1,
+                    'HP': 40 , 'damage': 5,
+                    'defense': 2,
+                    'magic resistance' : 0, 'magicImmunity' : False,
                     'munny' : [2,6],
                     'exp' : 20,
                     'drop' : {5 : 'potion', 10 : 'ether'}
@@ -123,7 +127,7 @@ heartless = {
             'invisible' : {'commands' : ['attack', 'invisible strike'],
                     'HP': 40 , 'damage': 5, #4
                     'defense': 2,
-                    'magic resistance' : 0,
+                    'magic resistance' : 0, 'magicImmunity' : False,
                     'munny' : [2,6],
                     'exp' : 20,
                     'drop' : {5 : 'potion', 10 : 'ether'}
@@ -231,8 +235,8 @@ bosses = {
 commands = {
 
         'invisible strike' : {'turns': 2,
-         2 : {'defense' : 99, 'damage' : 0, 'speech' : 'The enemy vanishes before you!', 'unpenetrableBlock':''},
-         1 : {'defense' : 2, 'damage' : 7},
+         2 : {'defense' : 99, 'magic immunity' : True, 'damage' : 0, 'speech' : 'The enemy vanishes before you!', 'unpenetrableBlock':''},
+         1 : {'defense' : 2, 'magic immunity' : False, 'damage' : 7},
          },
 
         'barrier' : {'turns': 1,

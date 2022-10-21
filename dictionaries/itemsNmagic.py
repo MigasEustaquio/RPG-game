@@ -38,17 +38,17 @@ magics = {
 
 
 
-                'blizzard' : { 'speech' : ['You cast Blizzard and deal ', ' ♥',  ' of damage!\nThe enemy is now ', 'Freezing', 'BLUE'],
+                'blizzard' : { 'speech' : ['You cast Blizzard and deal ', ' ♥',  ' of damage!\nThe enemy is now ', 'Freezing', 'CYAN'],
                         'MP' : 1, 'damage' : 1, 'heal' : 0,
                         'status' : {'name': 'Freezing', 'speech': ['The enemy is ','freezing',' and inflicts ','1 ♥',' less of damage!'], 'damage' : 0, 'duration' : 2, 'reduction' : 1}
                         },
 
-                'blizzara' : { 'speech' : ['You cast Blizzara and deal ', ' ♥',  ' of damage!\nThe enemy is now ', 'Freezing', 'BLUE'],
+                'blizzara' : { 'speech' : ['You cast Blizzara and deal ', ' ♥',  ' of damage!\nThe enemy is now ', 'Freezing', 'CYAN'],
                         'MP' : 2, 'damage' : 1, 'heal' : 0,
                         'status' : {'name': 'Freezing', 'speech': ['The enemy is ','freezing',' and inflicts ','2 ♥',' less of damage!'], 'damage' : 0, 'duration' : 3, 'reduction' : 2}
                         },
 
-                'blizzaga' : { 'speech' : ['You cast Blizzaga and deal ', ' ♥',  ' of damage!\nThe enemy is now ', 'Freezing', 'BLUE'],
+                'blizzaga' : { 'speech' : ['You cast Blizzaga and deal ', ' ♥',  ' of damage!\nThe enemy is now ', 'Freezing', 'CYAN'],
                         'MP' : 3, 'damage' : 2, 'heal' : 0,
                         'status' : {'name': 'Freezing', 'speech': ['The enemy is ','freezing',' and inflicts ','2 ♥',' less of damage!'], 'damage' : 0, 'duration' : 4, 'reduction' : 2}
                         },
@@ -72,20 +72,22 @@ magics = {
 
 
 
-                'cure' : { 'speech' : ['You cast Cure and restore ', '3 ♥', ' !', '', 'GREEN'],
+                'cure' : { 'speech' : ['You cast Cure and restore ', ' ♥', ' !', '', 'GREEN'],
                         'MP' : 1, 'damage' : 0, 'heal' : 3,
                          },
 
-                'cura' : { 'speech' : ['You cast Cura and restore ', '5 ♥', ' !', '', 'GREEN'],
+                'cura' : { 'speech' : ['You cast Cura and restore ', ' ♥', ' !', '', 'GREEN'],
                         'MP' : 2, 'damage' : 0, 'heal' : 5,
                          },
 
-                'curaga' : { 'speech' : ['You cast Curaga and restore ', '10 ♥', ' !', '', 'GREEN'],
+                'curaga' : { 'speech' : ['You cast Curaga and restore ', ' ♥', ' !', '', 'GREEN'],
                         'MP' : 3, 'damage' : 0, 'heal' : 10,
                          },
 
                 #damage based on enemy health and player total mp?
-                'gravity' : {'speech' : ['', '', '', '', 'BLUE'] , 'status' : {'name': 'gravity', 'speech': ['The ','gravity',' effect makes the enemy too heavy too attack! It inflicts ','0 ♥',' of damage!'], 'damage' : 0, 'duration' : 1, 'reduction' : 1}
+                'gravity' : {'speech' : ['You cast Thundaga and deal ', ' ♥', ' of damage!\nThe enemy is now too heavy too attack!', '', 'BLUE'],
+                                'MP' : 3, 'damage' : 1, 'heal' : 0,
+                                'status' : {'name': 'gravity', 'speech': ['The ','gravity',' effect makes the enemy too heavy too attack! It inflicts ','0 ♥',' of damage!'], 'damage' : 0, 'duration' : 0, 'reduction' : 99}
                         },
 
                 #defense

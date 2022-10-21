@@ -17,30 +17,20 @@ class Heartless:
         self.name = name
         self.bossBattle = bossBattle
 
-        if bossBattle == False: self.MaxHP = heartless[name]['HP']
-        else: self.MaxHP = bosses[name]['HP']
+        if bossBattle:  enemy=bosses[name]
+        else: enemy=heartless[name]
+
+        self.MaxHP = enemy['HP']
+        self.totalDamage = enemy['damage']
+        self.totalDefense = enemy['defense']
+        self.totalMagicResistance = enemy['magic resistance']
+
         self.HP = self.MaxHP  ## full: ♥,  empty: ♡
-
-        if bossBattle == False: self.totalDamage = heartless[name]['damage']
-        else: self.totalDamage = bosses[name]['damage']
-        
-        if not bossBattle:
-          try:
-              self.totalDefense = heartless[name]['defense']
-          except:
-              self.totalDefense = 0
-        else: self.totalDefense = bosses[name]['defense']
-
-        if not bossBattle:
-          try:
-              self.totalMagicResistance = heartless[name]['magic resistance']
-          except:
-              self.totalMagicResistance = 0
-        else: self.totalMagicResistance = bosses[name]['magic resistance']
 
         self.damage = self.totalDamage
         self.defense = self.totalDefense
         self.magicResistance = self.totalMagicResistance
+        self.magicImmunity=enemy['magicImmunity']
 
         self.commandTurn = 0
         self.commandName = ''
@@ -72,7 +62,7 @@ class Heartless:
       print("---------------------------")
 
     def statusEffectDuration(self):               ###STATUS EFFECT DURATION
-      if 'blizza' in self.statusEffect or 'thund' in self.statusEffect:
+      if 'blizza' in self.statusEffect or 'thund' in self.statusEffect or 'gravi' in self.statusEffect:
         self.statusDuration = self.statusDuration - 1
       print("---------------------------")
 
@@ -119,6 +109,7 @@ class Heartless:
     def useCommand(self, defense):        ###CALCULATE COMMAND DETAILS
       self.defense = commands[self.commandName][self.commandTurn]['defense']
       self.damage = commands[self.commandName][self.commandTurn]['damage']
+      if 'magic immunity' in commands[self.commandName][self.commandTurn]: self.magicImmunity=commands[self.commandName][self.commandTurn]['magic immunity']
       speech, damageDealt = self.calculateDamage(defense)
       self.commandTurn = self.commandTurn-1
       return speech, damageDealt
@@ -144,7 +135,7 @@ class Heartless:
           elif number <= 50: speech, damageDealt = self.block()
           else: speech, damageDealt = self.calculateDamage(defense)
         else:
-          if number<=40: speech, damageDealt = self.calculateDamage(defense)
+          if number<=80: speech, damageDealt = self.calculateDamage(defense)
           else: speech, damageDealt = self.block()
       else: speech, damageDealt = self.useCommand(defense)
 
