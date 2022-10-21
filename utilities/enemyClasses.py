@@ -64,7 +64,7 @@ class Heartless:
     def statusEffectDuration(self):               ###STATUS EFFECT DURATION
       if 'blizza' in self.statusEffect or 'thund' in self.statusEffect or 'gravi' in self.statusEffect:
         self.statusDuration = self.statusDuration - 1
-      print("---------------------------")
+      print("\n---------------------------")
 
     def statusEffectDamageReduction(self, speech, damageDealt, mPower):
       reduction = magics[self.statusEffect]['status']['reduction']+mPower-self.magicResistance

@@ -76,7 +76,7 @@ enemyLocations = {
         '5th Floor':{
             2: {
                 'waves' : 1, 'status' : 1,
-                'wave' : { 1 : 'invisible'}
+                'wave' : { 1 : 'soldier'}
             },
             3: {
                 'waves' : 1, 'status' : 1,

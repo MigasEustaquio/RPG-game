@@ -233,9 +233,19 @@ def finishAttack(enemy, damage, defense, mPower, enemyDamageDealt):             
   if finish == 'Blitz':
     print("You used " + yellow + "Blitz" + white + " and dealt " + yellow + "critical" + white + " damage!")
     damageDealt = math.ceil(1.5*damage)-enemy.defense
-  elif finish == 'Gravity Break':   ##NOT IMPLEMENTED
-    print("You used " + blue + "Gravity Break" + white + " and casts the gravity spell!")
-    damageDealt = damage-enemy.defense
+  elif finish == 'Gravity Break':
+    print("You used " + blue + "Gravity Break" + white + " and cast the gravity spell!")
+    if enemy.magicImmunity:
+      print("You cast " + blue + "Gravity" + white + " but it doesn\'t have any effect!")
+      damageDealt=0
+    else:
+      damageDealt = math.ceil(damage/2)+mPower+math.ceil(enemy.MaxHP/5)-enemy.magicResistance
+      if damageDealt<0: damageDealt=0
+      print("You cast " + blue + "Gravity" + white + " and deal " + red + str(damageDealt) + " ♥" + white + " of damage!\nThe enemy is now too heavy too attack!")
+      enemy.statusEffect = "gravity"
+      enemy.statusDuration = magics["gravity"]['status']['duration']
+    return damage, defense, mPower, enemyDamageDealt, damageDealt
+
   elif finish == 'Hurricane Blast':   ##NOT IMPLEMENTED
     # print("You used Zantetsuken and dealt " + yellow + "triple" + white + " damage!" + ' You caused ' + red + str(3*damage) + ' ♥ ' + white + 'of damage!')
     print('Hurricane Blast (not implemented)')
