@@ -52,7 +52,6 @@ def save(file, y, saves):
 
   print('Save complete!\n')
 
-
 def load(file, y, saves):
   print('Loading save file...\n')
   x=saves[file]

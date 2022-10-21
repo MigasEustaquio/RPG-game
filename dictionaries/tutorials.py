@@ -43,3 +43,5 @@ tutorialSpeech = {
             
 
 }
+
+journalOptions=['Treasures', 'Maps']

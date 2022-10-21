@@ -161,8 +161,6 @@ implement:{
 
 improve:{
 
-    add enemies (half done)
-
     add magic spells and effects
 
     world map (almost done)
@@ -183,12 +181,8 @@ complete with data:{
 }
 
 style:{
-
-    make abilities, equipment and other displays pretty like items display is
     
     make treasure items display
-
-    change keyblade and equipment trading display to look like abilities?
 
     sort items, magics...
 

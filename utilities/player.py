@@ -146,23 +146,9 @@ class player:
                 currentMP += '○'
             i+=1
         return currentHP, currentMP
-    def buildItemDisplay(self):
+    def buildItemDisplay(self, item):
         itemRepeat = {}
-        for individualItem in self.item:
-            if individualItem in itemRepeat:
-                itemRepeat[individualItem] += 1
-            else:
-                itemRepeat[individualItem] = 1
-        itemsDisplay = ''
-        for individualItem in itemRepeat:
-            if itemRepeat[individualItem] == 1:
-                itemsDisplay = itemsDisplay + Fore.GREEN + individualItem + Fore.WHITE + ', '
-            else:
-                itemsDisplay = itemsDisplay + Fore.GREEN + individualItem + Fore.WHITE + 'x' + str(itemRepeat[individualItem]) + ', '
-        return itemsDisplay[:-2]
-    def buildStockDisplay(self):
-        itemRepeat = {}
-        for individualItem in self.stock:
+        for individualItem in item:
             if individualItem in itemRepeat:
                 itemRepeat[individualItem] += 1
             else:
@@ -183,6 +169,50 @@ class player:
             defense += equipments[accessory]['DEF']
         return damage, defense
 
+    def showEquipments(self):
+        print('\nEquipment Slots: ' + str(len(self.equipment)) + '\\' + str(self.equipmentNumber) + '\n')
+        for equipment in self.equipmentList: #● ○
+            tab=''
+            for _ in range(30-len(equipment)):
+                tab=tab+'-'
+            tab = equipment + tab + 'HP: ' + str(equipments[equipment]['HP']) + '  MP: ' + str(equipments[equipment]['MP']) + '  STR: ' + str(equipments[equipment]['STR']) + '  DEF: ' + str(equipments[equipment]['DEF'])
+            if ' -' in tab: tab=tab.replace(' -', '-')
+            if equipment in self.equipment: print(Fore.YELLOW + '● ' + Fore.WHITE + tab)
+            else: print(Fore.YELLOW + '○ ' + Fore.WHITE + tab)
+    def showKeyblades(self):
+        for keyblade in self.keyblades: #● ○
+            tab=''
+            for _ in range(30-len(keyblade)):
+                tab=tab+'-'
+            tab = keyblade + tab + 'Damage: ' + str(keybladeStatus[keyblade]['damage']) + '   MP: ' + str(keybladeStatus[keyblade]['MP'])
+            if keybladeStatus[keyblade]['damage'] > 9: tab=tab.replace('  MP:', ' MP:')
+            if ' -' in tab: tab=tab.replace(' -', '-')
+            if keyblade == self.keyblade: print(Fore.BLUE + '● ' + Fore.WHITE + tab)
+            else: print(Fore.BLUE + '○ ' + Fore.WHITE + tab)
+    def showAbilities(self):
+        print('\nAP: ' + str(self.AP) + '\\' + str(self.TotalAP) + '\n')
+        for ability in self.abilities: #● ○
+            name=ability[0]
+            if ability[0] in self.finishers: name=name+' (F)'
+            if len(name)<=6: tab='\t\t\t\t'
+            elif len(name)<=13: tab='\t\t\t'
+            elif len(name)<=20: tab='\t\t'
+            if ability[1]: print(Fore.YELLOW + '● ' + Fore.WHITE + name + tab + 'cost: ' + str(abilityList[ability[0]][1]))
+            else: print('○ ' + name + tab + 'cost: ' + str(abilityList[ability[0]][1]))
+    def showSpells(self):
+        i=-1
+        previousSpell='aaa'
+        spellList = []
+        for spell in self.magic:
+            if previousSpell in spell:  spellList[i].append(spell)
+            else:
+                i+=1
+                spellList.append([spell])
+                previousSpell=spell[:3]
+
+        for line in spellList:
+            print(self.colors[magics[line[0]]['speech'][4]] + ', '.join(line))
+
     def startingGame(self):
         self.calculateHealth()
         self.HP = self.TotalHP
@@ -195,7 +225,7 @@ class player:
         self.calculateHealth()
 
         currentHP, currentMP = self.buildHPMPDisplay()
-        itemsDisplay = self.buildItemDisplay()        
+        itemsDisplay = self.buildItemDisplay(self.item)        
 
         print(Fore.YELLOW + '\n---------------------------')
         print("HP : " + self.colors[self.HPBarColour] + str(currentHP))
@@ -207,7 +237,7 @@ class player:
 
     def menu(self):
         
-        itemsDisplay = self.buildStockDisplay()
+        itemsDisplay = self.buildItemDisplay(self.stock) 
 
         self.showBattleStatus()
         print("Keyblade: " + Fore.CYAN +  self.keyblade + Fore.WHITE)
@@ -228,49 +258,60 @@ class player:
         damage, defense = self.buildSTRDEFDisplay()
 
         self.menu()
-        print(Fore.GREEN + "---------------------------")
-        print("Keyblade List: ", *self.keyblades)
-        print("\nEquipment: " + str(self.equipment))
-        print("Number of equipable equipment: " + str(self.equipmentNumber))
-        print("Equipment List: " + str(self.equipmentList))
-        print("\nExp: " + str(self.exp))
-        print("Next level: " + str(levelUp[self.level]['next']-self.exp) + ' xp')
-        print("\nKey items: ", self.keyItems)
-        print(Fore.BLUE + "---------------------------")
-        print("Spells learned: ", *self.magic)
-        print("Abilities: ", self.abilities)
         print("\nStrength: ", self.STR)
         print("Defense: ", self.DEF)
         print("Total Strength: ", damage)
         print("Total Defense: ", defense)
+        print("\nExp: " + str(self.exp))
+        print("Next level: " + str(levelUp[self.level]['next']-self.exp) + ' xp')
+        print(Fore.GREEN + "---------------------------\n"+Fore.WHITE+"Keyblades:")
+        self.showKeyblades()
+        print(Fore.BLUE + "---------------------------\n"+Fore.WHITE+"Equipment")
+        self.showEquipments()
+        print(Fore.GREEN + "---------------------------\n"+Fore.WHITE+"Spells:")
+        self.showSpells()
+        print(Fore.BLUE + "---------------------------\n"+Fore.WHITE+"Abilities")
+        self.showAbilities()
+        print("\nKey items: " + ', '.join(self.keyItems))
 
     def showTutorials(self):
         for text in self.tutorial:
-            if self.tutorial[text] == 1:
-                print(tutorialSpeech[text])
+            if self.tutorial[text] == 1:    print(tutorialSpeech[text])
+
+    def treasureJournal(self):
+        print('\nTreasures opened/total:\n')
+        for world in self.treasures:
+            total=0
+            opened=0
+            print(worldDisplayName[world])
+            for room in self.treasures[world]:
+                for number in self.treasures[world][room]:
+                    total+=1
+                    if self.treasures[world][room][number]['status']=='opened':
+                        opened+=1
+            print(str(opened)+'/'+str(total)+'\n')
+
+    def mapJournal(self):
+        print('\nMaps owned\n')
+        for world in self.map:
+            print(worldDisplayName[world])
+            for mapNumber in self.map[world]:
+                print('Map '+mapNumber+': '+self.map[world][mapNumber])
 
 #####TRADE EQUIPMENTS
     def tradeEquipment(self):
         option = ''
         while option == '':
             self.equipmentList=sorted(self.equipmentList, key=lambda x: x[0])
-            print('To equip or unequip use equip/unequip [equipment]. (0 to cancel)\n')
+            print('To equip or unequip use equip/unequip [equipment]. (0 to cancel)')
 
-            print('Equipment Slots: ' + str(len(self.equipment)) + '\\' + str(self.equipmentNumber) + '\n')
-            for equipment in self.equipmentList: #● ○
-                tab=''
-                for _ in range(30-len(equipment)):
-                    tab=tab+'-'
-                tab = equipment + tab + 'HP: ' + str(equipments[equipment]['HP']) + '  MP: ' + str(equipments[equipment]['MP']) + '  STR: ' + str(equipments[equipment]['STR']) + '  DEF: ' + str(equipments[equipment]['DEF'])
-                if equipment in self.equipment: print(Fore.YELLOW + '● ' + Fore.WHITE + tab)
-                else: print(Fore.YELLOW + '○ ' + Fore.WHITE + tab)
+            self.showEquipments()
 
             option = input('>')
             option = option.lower().split()
             if len(option)>2: option[1] = option[1] + ' ' + option[2]
 
-            if option == '0' or option[0] == '0':
-                break
+            if option == '0' or option[0] == '0':   break
 
             elif option[0] == 'equip':
                 if option[1] in self.equipmentList:
@@ -320,14 +361,7 @@ class player:
             self.keyblades=sorted(self.keyblades, key=lambda x: x[0])
             print('To equip a different keyblade use \'equip [keyblade]\'. (0 to cancel)\n')
 
-            for keyblade in self.keyblades: #● ○
-                tab=''
-                for _ in range(30-len(keyblade)):
-                    tab=tab+'-'
-                tab = keyblade + tab + 'Damage: ' + str(keybladeStatus[keyblade]['damage']) + '   MP: ' + str(keybladeStatus[keyblade]['MP'])
-                if keybladeStatus[keyblade]['damage'] > 9: tab=tab.replace('  MP:', ' MP:')
-                if keyblade == self.keyblade: print(Fore.BLUE + '● ' + Fore.WHITE + tab)
-                else: print(Fore.BLUE + '○ ' + Fore.WHITE + tab)
+            self.showKeyblades()
 
             option = input('>')
             option = option.lower().split()
@@ -362,22 +396,12 @@ class player:
             self.abilities=sorted(self.abilities, key=lambda x: x[0])
 
             print('\nTo equip an ability use \'equip [ability]\', to unequip use \'unequip [ability]\'. If you want to see an ability description use \'see [ability]\'. (0 to cancel)')
-
-            print('\nAP: ' + str(self.AP) + '\\' + str(self.TotalAP) + '\n')
-            for ability in self.abilities: #● ○
-                name=ability[0]
-                if ability[0] in self.finishers: name=name+' (F)'
-                if len(name)<=6: tab='\t\t\t\t'
-                elif len(name)<=13: tab='\t\t\t'
-                elif len(name)<=20: tab='\t\t'
-                if ability[1]: print(Fore.YELLOW + '● ' + Fore.WHITE + name + tab + 'cost: ' + str(abilityList[ability[0]][1]))
-                else: print('○ ' + name + tab + 'cost: ' + str(abilityList[ability[0]][1]))
+            self.showAbilities()
 
             option = input('>')
             option = option.lower().split()
             if len(option)>2: option[1] = option[1].capitalize() + ' ' + option[2].capitalize()
             elif len(option)>1: option[1] = option[1].capitalize()
-
 
             if option == '0' or option[0] == '0':   break
 

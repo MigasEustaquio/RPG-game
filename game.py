@@ -1012,7 +1012,21 @@ while True:                        ###MAIN
         move = input('>')
       move = move.lower().split()
 
-    if 'map' in move and 'world' not in move:           ##### OPEN MAP
+    if 'journal' in move:
+                            #MAKE TUTORIAL
+      try:
+        option=move[1].lower()
+        if 'treasure' in option: player.treasureJournal()
+        elif 'map' in option: player.mapJournal()
+        else: print(red + '\nJournal section not found.\n')
+      except:
+          print('\nWhat section of the Journal you want to open?\n'+', '.join(journalOptions))
+          option = input('>').lower()
+          if 'treasure' in option: player.treasureJournal()
+          elif 'map' in option: player.mapJournal()
+          else: print('\nJournal closed...\n')
+
+    elif 'map' in move and 'world' not in move:           ##### OPEN MAP
       if player.tutorial['open map'] == 0:
         print('The first time opening a map may glitch out and refuse to open, just close the map and open it again!')
         player.tutorial['open map'] = 1
@@ -1030,7 +1044,7 @@ while True:                        ###MAIN
 
       # player.allies.append(Ally('Donald&Goofy', player))
 
-      print(player.visitedRooms)
+      player.treasureInfo()
 
       # if bool(player.arenaRecords):
       #   for record in player.arenaRecords:
