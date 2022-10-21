@@ -96,63 +96,52 @@ def load(file, y, saves):
   y.HP = y.MaxHP
   y.MP = y.MaxMP
 
+def deleteFile(file, saves):
+  saves.pop(file)
+  with open('utilities/saveFile.txt', 'w') as file:
+    file.write(str(saves))
+  print('\nDelete complete!\n')
+
 def loadScreen(player, saves):
   option = ''
-  i=1
   while option == '':
     if player.HPBKP == 0:
-      print('Select a save file or navigate with \'next\' or \'previous\'. (0 to cancel)\n')
+      print('Select a save file. (0 to cancel) (\'delete\' [file] to permanently delete a save file)\n')
     else:
-      print('Select a save file or navigate with \'next\' or \'previous\'.\n')
-    if 2 in saves:
-      if 3 in saves:
-        print(Fore.BLUE + '''
-    Save ''' + str(i) + '''   \t\t\t\tSave ''' + str(i+1) + '''   \t\t\t\tSave ''' + str(i+2) + Fore.WHITE + '''
+      print('Select a save file.\n')
 
-    Lvl: ''' + str(saves[i]['level']) + '''   \t\t\t\tLvl: ''' + str(saves[i+1]['level']) + '''   \t\t\t\tLvl: ''' + str(saves[i+2]['level']) + '''
-    World: ''' + str(saves[i]['world']) + '''   \t\tWorld: ''' + str(saves[i+1]['world']) + '''   \t\tWorld: ''' + str(saves[i+2]['world']) + '''
-        ''')
-      else:
-        print(Fore.BLUE + '''
-    Save ''' + str(i) + '''   \t\t\t\tSave ''' + str(i+1) + Fore.WHITE + '''
+    for save in saves:
+        tab = 'Save ' + str(save) +'\tLvl: ' + str(saves[save]['level']) + '   World: ' + str(saves[save]['world'])
+        if saves[save]['level'] > 9: tab=tab.replace('   World:', '  World:')
+        print(tab)
 
-    Lvl: ''' + str(saves[i]['level']) + '''   \t\t\t\tLvl: ''' + str(saves[i+1]['level']) + '''
-    World: ''' + str(saves[i]['world']) + '''   \t\tWorld: ''' + str(saves[i+1]['world']) + '''
-        ''')
-    else:
-      print(Fore.BLUE + '''
-    Save ''' + str(i) + Fore.WHITE + '''
+    option = input('\n>')
 
-    Lvl: ''' + str(saves[i]['level']) + '''
-    World: ''' + str(saves[i]['world']) + '''
-        ''')
-    option = input('>')
-    if str(option).lower() == 'next':
-      if (i+3) in saves:
-        i+=1
-      else:
-        print(Fore.RED + 'No save file after this!')
-      option=''
-    elif str(option).lower() == 'previous':
-      if i>1:
-        i-=1
-      else:
-        print(Fore.RED + 'No save file previous to this!')
-      option=''
-    elif option == '0' and player.HPBKP == 0:
+    if option == '0' and player.HPBKP == 0:
       titleScreen(player, saves)
+
     elif option.isnumeric():
         if int(option) in saves:
             load(int(option), player, saves)
             break
-        else:
-            print(Fore.RED + 'Save file not found')
-            option=''
+        else: print(Fore.RED + 'Save file not found')
+        option=''
+
+    elif 'delete' in option:
+      try:
+        option=option.split(' ')
+        fileNumber=int(option[1])
+        if fileNumber in saves:
+          answer = input('\nAre you sure you want to permanently delete the save file ' + option[1] + '? (yes/no)\n>')
+          if answer.lower() == 'yes': deleteFile(fileNumber, saves)
+          else: print('\nDelete canceled\n')
+        else: print(Fore.RED + 'Save file not found')
+      except: print(Fore.RED + 'Please select a file. (\'delete\' [file])\n')
+      option=''
+
     else:
       print(Fore.RED + 'Save file not found')
       option=''
-
-
 
 def editSaveFile(player):
   if 'edit' in sys.argv or (input('To write the save file from the \'saves\' dict inside \"utilities\\save.py\" to the saveFile.txt write \'save\'.')) == 'save':
@@ -200,7 +189,6 @@ Load Game
     else:
       print('Command not foud')
 
-
 def saveScreen(y, saves):
     if y.saveFile !=0:
         answer = input('You wish to overwrite the save file ' + str(y.saveFile) + ' ? (yes/no)\n>')
@@ -214,63 +202,47 @@ def saveScreen(y, saves):
             return
     
     option = ''
-    i=1
     while option == '':
-        print('Select a save file or navigate with \'next\' or \'previous\'. (0 to cancel)\n')
-        if 2 in saves:
-            if 3 in saves:
-                print(Fore.BLUE + '''
-Save ''' + str(i) + '''   \t\t\t\tSave ''' + str(i+1) + '''   \t\t\t\tSave ''' + str(i+2) + Fore.WHITE + '''
+      print('Select a save file or create a new one. (0 to cancel)\n')
 
-Lvl: ''' + str(saves[i]['level']) + '''   \t\t\t\tLvl: ''' + str(saves[i+1]['level']) + '''   \t\t\t\tLvl: ''' + str(saves[i+2]['level']) + '''
-World: ''' + str(saves[i]['world']) + '''   \t\tWorld: ''' + str(saves[i+1]['world']) + '''   \t\t\tWorld: ''' + str(saves[i+2]['world']) + '''
-        ''')
-            else:
-                print(Fore.BLUE + '''
-Save ''' + str(i) + '''   \t\t\t\tSave ''' + str(i+1) + Fore.WHITE + '''
+      for file in saves:
+        tab = 'Save ' + str(file) +'\tLvl: ' + str(saves[file]['level']) + '   World: ' + str(saves[file]['world'])
+        if saves[file]['level'] > 9: tab=tab.replace('   World:', '  World:')
+        print(tab)
 
-Lvl: ''' + str(saves[i]['level']) + '''   \t\t\t\tLvl: ''' + str(saves[i+1]['level']) + '''
-World: ''' + str(saves[i]['world']) + '''   \t\tWorld: ''' + str(saves[i+1]['world']) + '''
-        ''')
-        else:
-            print(Fore.BLUE + '''
-Save ''' + str(i) + Fore.WHITE + '''
+      option = input('>')
 
-Lvl: ''' + str(saves[i]['level']) + '''
-World: ''' + str(saves[i]['world']) + '''
-        ''')
+      if str(option).lower() == 'next':
+          if (i+3) in saves:
+              i+=1
+          else:
+              print(Fore.RED + 'No save file after these!')
+          option=''
+      elif str(option).lower() == 'previous':
+          if i>1:
+              i-=1
+          else:
+              print(Fore.RED + 'No save file previous to these!')
+          option=''
 
-        option = input('>')
-        if str(option).lower() == 'next':
-            if (i+3) in saves:
-                i+=1
-            else:
-                print(Fore.RED + 'No save file after these!')
-            option=''
-        elif str(option).lower() == 'previous':
-            if i>1:
-                i-=1
-            else:
-                print(Fore.RED + 'No save file previous to these!')
-            option=''
-        elif option == '0':
-          print('Save canceled')
-          return
-        elif option.isnumeric():
-            if int(option) in saves:
-                answer = input('You wish to overwrite the save file ' + option + ' ? (yes/no)')
-                if answer.lower() == 'yes':
-                    save(int(option), y, saves)
-                    return
-                else:
-                    print('Save canceled')
-            else:
-                if (int(option)-1) in saves:
+      elif option == '0':
+        print('Save canceled')
+        return
+      elif option.isnumeric():
+          if int(option) in saves:
+              answer = input('You wish to overwrite the save file ' + option + ' ? (yes/no)')
+              if answer.lower() == 'yes':
                   save(int(option), y, saves)
-                else:
-                  print("Save file too far! Saving in new file...")
-                  save(len(saves)+1, y, saves)
-                return
-        else:
+                  return
+              else:
+                  print('Save canceled')
+          else:
+              if (int(option)-1) in saves:
+                save(int(option), y, saves)
+              else:
+                print("Save file too far! Saving in new file...")
+                save(len(saves)+1, y, saves)
+              return
+      else:
             print(Fore.RED + 'Save file not found')
             option=''

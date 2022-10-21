@@ -249,119 +249,33 @@ class player:
             if self.tutorial[text] == 1:
                 print(tutorialSpeech[text])
 
+#####TRADE EQUIPMENTS
     def tradeEquipment(self):
         option = ''
-        i=0
-        j=0
         while option == '':
-            print('To equip or unequip use equip/unequip [equipment] or navigate with \'next equipped/unequipped\' or \'previous equipped/unequipped\'. (0 to cancel)\n')
-            print(Fore.YELLOW + 'Equipped:\n')
-            if len(self.equipment) > 1:
-                if len(self.equipment) > 2:
-                    print(Fore.BLUE +
-                self.equipment[i] + '''   \t\t\t''' + self.equipment[i+1] + '''   \t\t\t''' + self.equipment[i+2] + Fore.WHITE + '''
+            self.equipmentList=sorted(self.equipmentList, key=lambda x: x[0])
+            print('To equip or unequip use equip/unequip [equipment]. (0 to cancel)\n')
 
-HP: ''' + str(equipments[self.equipment[i]]['HP']) + '''   \t\t\tHP: ''' + str(equipments[self.equipment[i+1]]['HP']) + '''   \t\t\t\tHP: ''' + str(equipments[self.equipment[i+2]]['HP']) + '''
-MP: ''' + str(equipments[self.equipment[i]]['MP']) + '''   \t\t\tMP: ''' + str(equipments[self.equipment[i+1]]['MP']) + '''   \t\t\t\tMP: ''' + str(equipments[self.equipment[i+2]]['MP']) + '''
-STR: ''' + str(equipments[self.equipment[i]]['STR']) + ''' \t\t\t\tSTR: ''' + str(equipments[self.equipment[i+1]]['STR']) + '''\t\t\t\t\tSTR: ''' + str(equipments[self.equipment[i+2]]['STR']) + '''
-DEF: ''' + str(equipments[self.equipment[i]]['DEF']) + ''' \t\t\t\tDEF: ''' + str(equipments[self.equipment[i+1]]['DEF']) + '''\t\t\t\t\tDEF: ''' + str(equipments[self.equipment[i+2]]['DEF']) + '''
-                    ''')
-                else:
-                    print(Fore.BLUE +
-                self.equipment[i] + '''   \t\t\t''' + self.equipment[i+1] + Fore.WHITE + '''
-
-HP: ''' + str(equipments[self.equipment[i]]['HP']) + '''   \t\t\tHP: ''' + str(equipments[self.equipment[i+1]]['HP']) + '''
-MP: ''' + str(equipments[self.equipment[i]]['MP']) + '''   \t\t\tMP: ''' + str(equipments[self.equipment[i+1]]['MP']) + '''
-STR: ''' + str(equipments[self.equipment[i]]['STR']) + ''' \t\t\t\tSTR: ''' + str(equipments[self.equipment[i+1]]['STR']) + '''
-DEF: ''' + str(equipments[self.equipment[i]]['DEF']) + ''' \t\t\t\tDEF: ''' + str(equipments[self.equipment[i+1]]['DEF']) + '''
-                    ''')
-            elif len(self.equipment) == 1:
-                print(Fore.BLUE +
-                self.equipment[i] +  Fore.WHITE +  '''
-
-HP: ''' + str(equipments[self.equipment[i]]['HP']) + '''
-MP: ''' + str(equipments[self.equipment[i]]['MP']) + '''
-STR: ''' + str(equipments[self.equipment[i]]['STR']) + '''
-DEF: ''' + str(equipments[self.equipment[i]]['DEF']) + '''
-                    ''')
-            else:
-                print('You have nothing equipped!\n')
-
-
-            print(Fore.YELLOW + 'Unequipped:\n')
-            if len(self.equipmentList) > 1:
-                if len(self.equipmentList) > 2:
-                    print(Fore.BLUE +
-                self.equipmentList[j] + '''   \t\t\t''' + self.equipmentList[j+1] + '''   \t\t\t\t''' + self.equipmentList[j+2] + Fore.WHITE + '''
-
-HP: ''' + str(equipments[self.equipmentList[j]]['HP']) + '''   \t\t\tHP: ''' + str(equipments[self.equipmentList[j+1]]['HP']) + '''   \t\t\t\tHP: ''' + str(equipments[self.equipmentList[j+2]]['HP']) + '''
-MP: ''' + str(equipments[self.equipmentList[j]]['MP']) + '''   \t\t\tMP: ''' + str(equipments[self.equipmentList[j+1]]['MP']) + '''   \t\t\t\tMP: ''' + str(equipments[self.equipmentList[j+2]]['MP']) + '''
-STR: ''' + str(equipments[self.equipmentList[j]]['STR']) + ''' \t\t\t\tSTR: ''' + str(equipments[self.equipmentList[j+1]]['STR']) + '''\t\t\t\t\tSTR: ''' + str(equipments[self.equipmentList[j+2]]['STR']) + '''
-DEF: ''' + str(equipments[self.equipmentList[j]]['DEF']) + ''' \t\t\t\tDEF: ''' + str(equipments[self.equipmentList[j+1]]['DEF']) + '''\t\t\t\t\tDEF: ''' + str(equipments[self.equipmentList[j+2]]['DEF']) + '''
-                    ''')
-                else:
-                    print(Fore.BLUE +
-                self.equipmentList[j] + '''   \t\t\t''' + self.equipmentList[j+1] + Fore.WHITE + '''
-
-HP: ''' + str(equipments[self.equipmentList[j]]['HP']) + '''   \t\t\tHP: ''' + str(equipments[self.equipmentList[j+1]]['HP']) + '''
-MP: ''' + str(equipments[self.equipmentList[j]]['MP']) + '''   \t\t\tMP: ''' + str(equipments[self.equipmentList[j+1]]['MP']) + '''
-STR: ''' + str(equipments[self.equipmentList[j]]['STR']) + ''' \t\t\t\tSTR: ''' + str(equipments[self.equipmentList[j+1]]['STR']) + '''
-DEF: ''' + str(equipments[self.equipmentList[j]]['DEF']) + ''' \t\t\t\tDEF: ''' + str(equipments[self.equipmentList[j+1]]['DEF']) + '''
-                    ''')
-            elif len(self.equipmentList) == 1:
-                print(Fore.BLUE +
-                self.equipmentList[j] + Fore.WHITE + '''
-
-HP: ''' + str(equipments[self.equipmentList[j]]['HP']) + '''
-MP: ''' + str(equipments[self.equipmentList[j]]['MP']) + '''
-STR: ''' + str(equipments[self.equipmentList[j]]['STR']) + '''
-DEF: ''' + str(equipments[self.equipmentList[j]]['DEF']) + '''
-                    ''')
-            else:
-                print('You have nothing unequipped!\n')
+            print('Equipment Slots: ' + str(len(self.equipment)) + '\\' + str(self.equipmentNumber) + '\n')
+            for equipment in self.equipmentList: #● ○
+                tab=''
+                for _ in range(30-len(equipment)):
+                    tab=tab+'-'
+                tab = equipment + tab + 'HP: ' + str(equipments[equipment]['HP']) + '  MP: ' + str(equipments[equipment]['MP']) + '  STR: ' + str(equipments[equipment]['STR']) + '  DEF: ' + str(equipments[equipment]['DEF'])
+                if equipment in self.equipment: print(Fore.YELLOW + '● ' + Fore.WHITE + tab)
+                else: print(Fore.YELLOW + '○ ' + Fore.WHITE + tab)
 
             option = input('>')
             option = option.lower().split()
             if len(option)>2: option[1] = option[1] + ' ' + option[2]
 
-            if option[0] == 'next':
-                if option[1] == 'equipped':
-                    if len(self.equipment) > (i+3):
-                        i+=1
-                    else:
-                        print(Fore.RED + 'No more equipments after these!')
-                elif option[1] == 'unequipped':
-                    if len(self.equipmentList) > (j+3):
-                        j+=1
-                    else:
-                        print(Fore.RED + 'No more equipments after these!')
-                else:
-                    print('usage: next [equipped/unequipped]!')
-                option=''
-
-            elif option[0] == 'previous':
-                if option[1] == 'equipped':
-                    if i>0:
-                        i-=1
-                    else:
-                        print(Fore.RED + 'No more equipments previous to these!')
-                elif option[1] == 'unequipped':
-                    if j>0:
-                        j-=1
-                    else:
-                        print(Fore.RED + 'No more equipments previous to these!')
-                else:
-                    print('usage: previous [equipped/unequipped]!')
-                option=''
-
-            elif option == '0' or option[0] == '0':
+            if option == '0' or option[0] == '0':
                 break
 
             elif option[0] == 'equip':
                 if option[1] in self.equipmentList:
                     if len(self.equipment)<self.equipmentNumber:
                         self.equipment.append(option[1])
-                        self.equipmentList.remove(option[1])
                         print(option[1] + ' equipped!\n')
                         self.TotalHP += equipments[option[1]]['HP']
                         self.HP += equipments[option[1]]['HP']
@@ -379,7 +293,6 @@ DEF: ''' + str(equipments[self.equipmentList[j]]['DEF']) + '''
             
             elif option[0] == 'unequip':
                 if option[1] in self.equipment:
-                    self.equipmentList.append(option[1])
                     self.equipment.remove(option[1])
                     print(option[1] + ' unequipped!\n')
                     self.TotalHP = self.TotalHP - equipments[option[1]]['HP']
@@ -403,43 +316,18 @@ DEF: ''' + str(equipments[self.equipmentList[j]]['DEF']) + '''
 #####TRADE KEYBLADES 
     def tradeKeyblade(self):
         option = ''
-        i=0
         while option == '':
-            print('To equip a different keyblade use \'equip [keyblade]\' or navigate with \'next\' or \'previous\'. (0 to cancel)\n')
-            print(Fore.YELLOW + 'Equipped:\n')
+            self.keyblades=sorted(self.keyblades, key=lambda x: x[0])
+            print('To equip a different keyblade use \'equip [keyblade]\'. (0 to cancel)\n')
 
-            print(Fore.BLUE +
-                self.keyblade +  Fore.WHITE +  '''
-
-Damage: ''' + str(keybladeStatus[self.keyblade]['damage']) + '''
-MP: ''' + str(keybladeStatus[self.keyblade]['MP']) + '''
-                    ''')
-
-            print(Fore.YELLOW + 'Unquipped:\n')
-            if len(self.keyblades) > 1:
-                if len(self.keyblades) > 2:
-                    print(Fore.BLUE +
-                self.keyblades[i] + '''   \t\t\t''' + self.keyblades[i+1] + '''   \t\t\t''' + self.keyblades[i+2] + Fore.WHITE + '''
-
-Damage: ''' + str(keybladeStatus[self.keyblades[i]]['damage']) + ''' \t\t\tDamage: ''' + str(keybladeStatus[self.keyblades[i+1]]['damage']) + '''\t\t\tDamage: ''' + str(keybladeStatus[self.keyblades[i+2]]['damage']) + '''
-MP: ''' + str(keybladeStatus[self.keyblades[i]]['MP']) + '''   \t\t\tMP: ''' + str(keybladeStatus[self.keyblades[i+1]]['MP']) + '''   \t\t\tMP: ''' + str(keybladeStatus[self.keyblades[i+2]]['MP']) + '''
-                    ''')
-                else:
-                    print(Fore.BLUE +
-                self.keyblades[i] + '''   \t\t\t''' + self.keyblades[i+1] + Fore.WHITE + '''
-
-Damage: ''' + str(keybladeStatus[self.keyblades[i]]['damage']) + ''' \t\t\tDamage: ''' + str(keybladeStatus[self.keyblades[i+1]]['damage']) + '''
-MP: ''' + str(keybladeStatus[self.keyblades[i]]['MP']) + '''   \t\t\tMP: ''' + str(keybladeStatus[self.keyblades[i+1]]['MP']) + '''
-                    ''')
-            elif len(self.keyblades) == 1:
-                print(Fore.BLUE +
-                self.keyblades[i] +  Fore.WHITE +  '''
-
-Damage: ''' + str(keybladeStatus[self.keyblades[i]]['damage']) + '''
-MP: ''' + str(keybladeStatus[self.keyblades[i]]['MP']) + '''
-                    ''')
-            else:
-                print('You don\' have other keyblades!\n')
+            for keyblade in self.keyblades: #● ○
+                tab=''
+                for _ in range(30-len(keyblade)):
+                    tab=tab+'-'
+                tab = keyblade + tab + 'Damage: ' + str(keybladeStatus[keyblade]['damage']) + '   MP: ' + str(keybladeStatus[keyblade]['MP'])
+                if keybladeStatus[keyblade]['damage'] > 9: tab=tab.replace('  MP:', ' MP:')
+                if keyblade == self.keyblade: print(Fore.BLUE + '● ' + Fore.WHITE + tab)
+                else: print(Fore.BLUE + '○ ' + Fore.WHITE + tab)
 
             option = input('>')
             option = option.lower().split()
@@ -447,21 +335,7 @@ MP: ''' + str(keybladeStatus[self.keyblades[i]]['MP']) + '''
             elif len(option)>2: option[1] = option[1].capitalize() + ' ' + option[2].capitalize()
             elif len(option)>1: option[1] = option[1].capitalize()
 
-            if 'next' in option:
-                if len(self.keyblades) > (i+3):
-                    i+=1
-                else:
-                    print(Fore.RED + 'No more keyblades after these!')
-                option=''
-
-            elif 'previus' in option:
-                if i>0:
-                    i-=1
-                else:
-                    print(Fore.RED + 'No more equipments previous to these!')
-                option=''
-
-            elif option == '0' or option[0] == '0':
+            if option == '0' or option[0] == '0':
                 break
 
             elif option[0] == 'equip':
