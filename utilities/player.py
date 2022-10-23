@@ -51,7 +51,9 @@ class player:
 
         self.abilities = [] #All unlocked abilities
         self.finishers = [] #Only equipped finishers
+        self.comboModifiers = [] #Only equipped combo modifiers
         self.activeAbilities = [] #Only equipped active abilities
+        self.combo = [] #Avaliable combo modifiers for current combo
 
         #STORY RELATED
         self.world = 'TraverseTown'
@@ -194,11 +196,13 @@ class player:
         for ability in self.abilities: #● ○
             name=ability[0]
             if ability[0] in self.finishers: name=name+' (F)'
-            if len(name)<=6: tab='\t\t\t\t'
-            elif len(name)<=13: tab='\t\t\t'
-            elif len(name)<=20: tab='\t\t'
-            if ability[1]: print(Fore.YELLOW + '● ' + Fore.WHITE + name + tab + 'cost: ' + str(abilityList[ability[0]][1]))
-            else: print('○ ' + name + tab + 'cost: ' + str(abilityList[ability[0]][1]))
+            for _ in range(30-len(name)):
+                name=name+' '
+            # if len(name)<=5: tab='\t\t\t\t'
+            # elif len(name)<=13: tab='\t\t\t'
+            # elif len(name)<=20: tab='\t\t'
+            if ability[1]: print(Fore.YELLOW + '● ' + Fore.WHITE + name + 'cost: ' + str(abilityList[ability[0]][1]))
+            else: print('○ ' + name + 'cost: ' + str(abilityList[ability[0]][1]))
     def showSpells(self):
         i=-1
         previousSpell='aaa'
@@ -413,6 +417,7 @@ class player:
                         self.AP=self.AP-abilityList[option[1]][1]
                         print(Fore.GREEN + option[1] + ' equipped!\n')
                         if option[1] in finishersList: self.finishers.append(option[1])
+                        if option[1] in comboModifiersList: self.comboModifiers.append(option[1])
                         if option[1] in activeAbilitiesList: self.activeAbilities.append(option[1])
                     else: print(Fore.RED + 'Not enought AP!')
                 else:   print(Fore.RED + 'Ability not found!')
@@ -425,6 +430,7 @@ class player:
                     self.AP+=abilityList[option[1]][1]
                     print(Fore.CYAN + option[1] + ' unequipped!\n')
                     if option[1] in finishersList: del(self.finishers[self.finishers.index(option[1])])
+                    if option[1] in comboModifiersList: del(self.comboModifiers[self.comboModifiers.index(option[1])])
                     if option[1] in activeAbilitiesList: del(self.activeAbilities[self.activeAbilities.index(option[1])])
                 else:   print(Fore.RED + 'Ability not found')
                 option=''
