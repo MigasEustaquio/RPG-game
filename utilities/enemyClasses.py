@@ -17,8 +17,13 @@ class Heartless:
         self.name = name
         self.bossBattle = bossBattle
 
-        if bossBattle:  enemy=bosses[name]
-        else: enemy=heartless[name]
+        if bossBattle:
+          enemy=bosses[name]
+          self.stopImunnity=True
+        else:
+          enemy=heartless[name]
+          try: self.stopImmunity=enemy['stopImmunity']
+          except: self.stopImmunity=False
 
         self.MaxHP = enemy['HP']
         self.totalDamage = enemy['damage']
@@ -41,6 +46,9 @@ class Heartless:
         self.aeroEffect = 'none'
         self.aeroDuration = 99
 
+        self.stopEffect = False
+        self.stopDuration = 99
+
         if bossBattle == False:
           self.exp = heartless[name]['exp']
           self.munny = heartless[name]['munny']
@@ -57,6 +65,10 @@ class Heartless:
         self.colors = dict(Fore.__dict__.items())
 
 
+    def stopped(self):
+      self.commandTurn = 0
+      return 'The enemy is magically stopped in time!', 0
+
     def statusEffectEnd(self):                    ###STATUS EFFECT END
       if self.statusDuration == 0 and self.statusEffect != 'none':
         print('\nThe ' + self.colors[magics[self.statusEffect]['speech'][4]] + magics[self.statusEffect]['status']['name'] + Fore.WHITE + ' effect has passed\n')
@@ -66,13 +78,19 @@ class Heartless:
         print('\nThe ' + self.colors[magics[self.aeroEffect]['speech'][4]] + magics[self.aeroEffect]['status']['name'] + Fore.WHITE + ' effect has passed\n')
         self.aeroEffect = 'none'
         self.aeroDuration = 99
+      if self.stopDuration == 0 and self.stopEffect:
+        print('\nThe ' + Fore.YELLOW + 'Stop' + Fore.WHITE + ' effect has passed\n')
+        self.stopEffect = False
+        self.stopDuration = 99
       print("---------------------------")
 
     def statusEffectDuration(self):               ###STATUS EFFECT DURATION
       if 'blizza' in self.statusEffect or 'thund' in self.statusEffect or 'gravi' in self.statusEffect:
-        self.statusDuration = self.statusDuration - 1
+        self.statusDuration -= 1
       if 'aer' in self.aeroEffect:
-        self.aeroDuration = self.aeroDuration - 1
+        self.aeroDuration -= 1
+      if self.stopEffect:
+        self.stopDuration -= 1
       print("\n---------------------------")
 
     def statusEffectDamageReduction(self, speech, damageDealt, mPower, aero=False):
@@ -125,6 +143,9 @@ class Heartless:
       return speech, damageDealt
 
     def selectCommand(self, defense):     ###SELECT COMMAND
+
+      if self.stopEffect: return 'The enemy is magically stopped in time!', 0
+
       if not self.bossBattle:
         try:
             self.totalDefense = heartless[self.name]['defense']

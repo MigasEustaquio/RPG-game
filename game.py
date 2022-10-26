@@ -393,6 +393,38 @@ def comboModifiers(damage, enemy, enemyDamageDealt, enemySpeech):
 
   return damageDealt, enemyDamageDealt, enemySpeech, slapshotUsed
 
+def calculateEnemyDamage(bossBattle, enemy, defense):
+  if bossBattle == False: enemySpeech, enemyDamageDealt = enemy.selectCommand(defense)
+  else: enemySpeech, enemyDamageDealt = enemy.selectCommandBoss(defense)
+  return enemySpeech, enemyDamageDealt
+
+def inflictEnemyDamage(enemySpeech, enemyDamageDealt, mPower, enemy, command='', damageDealt=0):
+
+  if command == 'Trinity Limit':
+    enemySpeech=enemySpeech.replace('You lost ' + str(damageDealt) + ' ♥','The enemy is lightstruck and causes no damage!')
+    enemyDamageDealt=0
+  else:
+    if enemy.statusEffect != 'none': enemySpeech, enemyDamageDealt = enemy.statusEffectDamageReduction(enemySpeech, enemyDamageDealt, mPower)
+    if enemy.aeroEffect != 'none': enemySpeech, enemyDamageDealt = enemy.statusEffectDamageReduction(enemySpeech, enemyDamageDealt, mPower, aero=True)
+    if enemy.stopEffect and 'stop' in command[1]: enemySpeech, enemyDamageDealt = enemy.stopped()
+  print(enemySpeech)
+  player.HP -= enemyDamageDealt
+  if ['Second Chance', True] in player.abilities and player.HP<1 and player.HP+enemyDamageDealt>1:
+    player.HP=1
+    print(green +'Second Chance' + white)
+
+def alliesHelp(enemy):
+  for ally in player.allies:
+    helpType, helpValue, helpStatus = ally.selectCommand(player)
+    if helpType == 'heal': player.HP = player.HP + helpValue
+    else:
+      helpValue=helpValue-enemy.defense
+      if helpValue<0: helpValue=0
+      enemy.HP = enemy.HP - helpValue
+    if helpStatus != '':
+      enemy.statusEffect = helpStatus
+      enemy.statusDuration = magics[helpStatus]['status']['duration']
+
 def battle(enemyName, arenaBattle=False):       ###BATTLE
   ###
     player.createBKP()
@@ -440,6 +472,8 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
 
       battleCommands(commandOptions, usingAbility, activeAbilityCount)
 
+      # print(enemy.stopEffect, enemy.stopDuration)
+
       while command == '':
         command = input('>')
       command = command.lower()
@@ -452,29 +486,18 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
         print('Turn passed!\n')
         if enemy.statusEffect != 'none':
           enemy.statusEffectDamage()
-  ### Calculate damage
-        if bossBattle == False: enemySpeech, enemyDamageDealt = enemy.selectCommand(defense)
-        else: enemySpeech, enemyDamageDealt = enemy.selectCommandBoss(defense)
+  ### Calculate enemy damage
+        enemySpeech, enemyDamageDealt = calculateEnemyDamage(bossBattle, enemy, defense)
   ### Allies Help
-        if player.allies:
-          for ally in player.allies:
-            helpType, helpValue, helpStatus = ally.selectCommand(player)
-            if helpType == 'heal': player.HP = player.HP + helpValue
-            else:
-              helpValue=helpValue-enemy.defense
-              if helpValue<0: helpValue=0
-              enemy.HP = enemy.HP - helpValue
-            if helpStatus != '':
-              enemy.statusEffect = helpStatus
-              enemy.statusDuration = magics[helpStatus]['status']['duration']
+        if player.allies: alliesHelp(enemy)
+
         if player.HP > player.TotalHP: player.HP = player.TotalHP
 ###ATTACK
   ###
       elif command == 'attack':       ###ATTACK
           command = ''
   ### Calculate enemy damage
-          if bossBattle == False: enemySpeech, enemyDamageDealt = enemy.selectCommand(defense)
-          else: enemySpeech, enemyDamageDealt = enemy.selectCommandBoss(defense)
+          enemySpeech, enemyDamageDealt = calculateEnemyDamage(bossBattle, enemy, defense)
           if enemy.statusEffect == 'gravity': enemy.defense=enemy.defense-(mPower+1)
   ### Finishers
           if finishCount == 3:
@@ -522,28 +545,12 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
               player.blocked=True
 
   ### Inflict enemy damage
-          if enemy.statusEffect != 'none': enemySpeech, enemyDamageDealt = enemy.statusEffectDamageReduction(enemySpeech, enemyDamageDealt, mPower)
-          if enemy.aeroEffect != 'none': enemySpeech, enemyDamageDealt = enemy.statusEffectDamageReduction(enemySpeech, enemyDamageDealt, mPower, aero=True)
-          print(enemySpeech)
-          player.HP -= enemyDamageDealt
-          if  ['Second Chance', True] in player.abilities and player.HP<1 and player.HP+enemyDamageDealt>1:
-            player.HP=1
-            print(green +'Second Chance' + white)
+          inflictEnemyDamage(enemySpeech, enemyDamageDealt, mPower, enemy)
   ### Status effect damage
           if 'fir' in enemy.statusEffect:
             enemy.statusEffectDamage()
   ### Allies Help
-          if player.allies:
-            for ally in player.allies:
-              helpType, helpValue, helpStatus = ally.selectCommand(player)
-              if helpType == 'heal': player.HP = player.HP + helpValue
-              else:
-                helpValue=helpValue-enemy.defense
-                if helpValue<0: helpValue=0
-                enemy.HP = enemy.HP - helpValue
-              if helpStatus != '':
-                enemy.statusEffect = helpStatus
-                enemy.statusDuration = magics[helpStatus]['status']['duration']
+          if player.allies: alliesHelp(enemy)
           if player.HP > player.TotalHP: player.HP = player.TotalHP
 
           usingAbility = ''
@@ -558,8 +565,7 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
             if player.MP >= magics[command[1]]['MP']:
 
   ### Calculate enemy damage
-              if bossBattle == False: enemySpeech, enemyDamageDealt = enemy.selectCommand(defense)
-              else: enemySpeech, enemyDamageDealt = enemy.selectCommandBoss(defense)
+              enemySpeech, enemyDamageDealt = calculateEnemyDamage(bossBattle, enemy, defense)
 
             #Combo finisher
               if ['Combo Master', True] not in player.abilities or finishCount == 3:
@@ -570,17 +576,20 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
   ###COLOR SPEECH
               magicText = magics[command[1]]['speech']
               print('You used ' + blue + str(magics[command[1]]['MP']) +' ● ' + white + '!')
-              if 'cur' not in command[1] and 'grav' not in command[1] and 'aer' not in command[1] and enemy.magicImmunity==False:
+              if 'cur' not in command[1] and 'grav' not in command[1] and 'aer' not in command[1] and 'stop' not in command[1] and not enemy.magicImmunity:
                 magicDamage = mPower+magics[command[1]]['damage']-enemy.magicResistance
                 if magicDamage<0: magicDamage=0
                 print("You cast " + player.colors[magicText[4]] + command[1].capitalize() + white + " and deal " + red + str(magicDamage) + magicText[1] + white + magicText[2] + player.colors[magicText[4]] + magicText[3])
-              elif 'grav' in command[1] and enemy.magicImmunity==False:
+              elif 'grav' in command[1] and not enemy.magicImmunity:
                 magicDamage = mPower+math.ceil(enemy.MaxHP/5)-enemy.magicResistance
                 if magicDamage<0: magicDamage=0
                 print("You cast " + player.colors[magicText[4]] + command[1].capitalize() + white + " and deal " + red + str(magicDamage) + magicText[1] + white + magicText[2] + player.colors[magicText[4]] + magicText[3])
               elif 'aer' in command[1]:
                 magicDamage=0
                 print("You cast " + blue + command[1].capitalize() + white + " and it reduces the damage taken!")
+              elif 'stop' in command[1] and enemy.magicImmunity==False and not enemy.stopImmunity:
+                magicDamage=0
+                print("You cast " + yellow + command[1].capitalize() + white + " and the enemy suddenly stops moving!")
               elif 'cur' not in command[1]:
                 magicDamage=0
                 print("You cast " + player.colors[magicText[4]] + command[1].capitalize() + white + " but it doesn\'t have any effect!")
@@ -599,33 +608,20 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
               if 'aer' in command[1]:
                 enemy.aeroEffect = command[1]
                 enemy.aeroDuration = magics[command[1]]['status']['duration']
-              elif 'cur' not in command[1] and enemy.magicImmunity==False:
+              elif 'stop' in command[1] and not enemy.magicImmunity and not enemy.stopImmunity:
+                enemy.stopEffect = True
+                enemy.stopDuration = magics[command[1]]['status']['duration']
+              elif 'cur' not in command[1] and not enemy.magicImmunity:
                 enemy.statusEffect = command[1]
                 enemy.statusDuration = magics[command[1]]['status']['duration']
 
   ### Inflict enemy damage
-              if enemy.statusEffect != 'none': enemySpeech, enemyDamageDealt = enemy.statusEffectDamageReduction(enemySpeech, enemyDamageDealt, mPower)
-              if enemy.aeroEffect != 'none': enemySpeech, enemyDamageDealt = enemy.statusEffectDamageReduction(enemySpeech, enemyDamageDealt, mPower, aero=True)
-              print(enemySpeech)
-              player.HP -= enemyDamageDealt
-              if ['Second Chance', True] in player.abilities and player.HP<1 and player.HP+enemyDamageDealt>1:
-                player.HP=1
-                print(green +'Second Chance' + white)
+              inflictEnemyDamage(enemySpeech, enemyDamageDealt, mPower, enemy)
   ### Status effect damage
               if 'fir' in enemy.statusEffect:
                 enemy.statusEffectDamage()
   ### Allies Help
-              if player.allies:
-                for ally in player.allies:
-                  helpType, helpValue, helpStatus = ally.selectCommand(player)
-                  if helpType == 'heal': player.HP = player.HP + helpValue
-                  else:
-                    helpValue=helpValue-enemy.defense
-                    if helpValue<0: helpValue=0
-                    enemy.HP = enemy.HP - helpValue
-                  if helpStatus != '':
-                    enemy.statusEffect = helpStatus
-                    enemy.statusDuration = magics[helpStatus]['status']['duration']
+              if player.allies: alliesHelp(enemy)
               if player.HP > player.TotalHP: player.HP = player.TotalHP
   ###
             else:
@@ -655,28 +651,11 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
               if 'fir' in enemy.statusEffect:
                 enemy.statusEffectDamage()
   ### Calculate enemy damage
-              if bossBattle == False: enemySpeech, enemyDamageDealt = enemy.selectCommand(defense)
-              else: enemySpeech, enemyDamageDealt = enemy.selectCommandBoss(defense)
+              enemySpeech, enemyDamageDealt = calculateEnemyDamage(bossBattle, enemy, defense)
   ### Inflict enemy damage
-              if enemy.statusEffect != 'none': enemySpeech, enemyDamageDealt = enemy.statusEffectDamageReduction(enemySpeech, enemyDamageDealt, mPower)
-              if enemy.aeroEffect != 'none': enemySpeech, enemyDamageDealt = enemy.statusEffectDamageReduction(enemySpeech, enemyDamageDealt, mPower, aero=True)
-              print(enemySpeech)
-              player.HP -= enemyDamageDealt
-              if ['Second Chance', True] in player.abilities and player.HP<1 and player.HP+enemyDamageDealt>1:
-                player.HP=1
-                print(green +'Second Chance' + white)
+              inflictEnemyDamage(enemySpeech, enemyDamageDealt, mPower, enemy)
   ### Allies Help
-              if player.allies:
-                for ally in player.allies:
-                  helpType, helpValue, helpStatus = ally.selectCommand(player)
-                  if helpType == 'heal': player.HP = player.HP + helpValue
-                  else:
-                    helpValue=helpValue-enemy.defense
-                    if helpValue<0: helpValue=0
-                    enemy.HP = enemy.HP - helpValue
-                  if helpStatus != '':
-                    enemy.statusEffect = helpStatus
-                    enemy.statusDuration = magics[helpStatus]['status']['duration']
+              if player.allies: alliesHelp(enemy)
               if player.HP > player.TotalHP: player.HP = player.TotalHP
   ###
             else:
@@ -696,18 +675,15 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
         if not player.activeAbilities:
           print('You don\'t have any active ability equipped!')
         else:
-          try:
-            command = [x for x in activeAbilitiesList if command.capitalize() in x][0] #identify ability
-          except:
-            command = [x for x in activeAbilitiesList if command in activeAbilities[x]['commands']][0] #identify ability
+          try: command = [x for x in activeAbilitiesList if command.capitalize() in x][0] #identify ability
+          except: command = [x for x in activeAbilitiesList if command in activeAbilities[x]['commands']][0] #identify ability
 
           if command in player.activeAbilities:
             if player.MP >= activeAbilities[command]['MP'] or command==usingAbility:
               ability = activeAbilities[command]
 
   ### Calculate enemy damage
-              if bossBattle == False: enemySpeech, enemyDamageDealt = enemy.selectCommand(defense)
-              else: enemySpeech, enemyDamageDealt = enemy.selectCommandBoss(defense)
+              enemySpeech, enemyDamageDealt = calculateEnemyDamage(bossBattle, enemy, defense)
               if enemy.statusEffect == 'gravity': enemy.defense=enemy.defense-(mPower+1)
             #Combo finisher
               finishCount = 0
@@ -746,32 +722,12 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
   ###Calculate damage
               enemy.HP = enemy.HP - abilityDamage
   ### Inflict enemy damage
-              if usingAbility == 'Trinity Limit':
-                enemySpeech=enemySpeech.replace('You lost ' + str(damageDealt) + ' ♥','The enemy is lightstruck and causes no damage!')
-                enemyDamageDealt=0
-              else:
-                if enemy.statusEffect != 'none': enemySpeech, enemyDamageDealt = enemy.statusEffectDamageReduction(enemySpeech, enemyDamageDealt, mPower)
-                if enemy.aeroEffect != 'none': enemySpeech, enemyDamageDealt = enemy.statusEffectDamageReduction(enemySpeech, enemyDamageDealt, mPower, aero=True)
-              print(enemySpeech)
-              player.HP -= enemyDamageDealt
-              if ['Second Chance', True] in player.abilities and player.HP<1 and player.HP+enemyDamageDealt>1:
-                player.HP=1
-                print(green +'Second Chance' + white)
+              inflictEnemyDamage(enemySpeech, enemyDamageDealt, mPower, enemy, command, damageDealt)
   ### Status effect damage
               if 'fir' in enemy.statusEffect:
                 enemy.statusEffectDamage()
   ### Allies Help
-              if player.allies:
-                for ally in player.allies:
-                  helpType, helpValue, helpStatus = ally.selectCommand(player)
-                  if helpType == 'heal': player.HP = player.HP + helpValue
-                  else:
-                    helpValue=helpValue-enemy.defense
-                    if helpValue<0: helpValue=0
-                    enemy.HP = enemy.HP - helpValue
-                  if helpStatus != '':
-                    enemy.statusEffect = helpStatus
-                    enemy.statusDuration = magics[helpStatus]['status']['duration']
+              if player.allies: alliesHelp(enemy)
               if player.HP > player.TotalHP: player.HP = player.TotalHP
   ###
             else:

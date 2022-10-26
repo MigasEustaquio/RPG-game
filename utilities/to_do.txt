@@ -2,8 +2,6 @@ urgent:{
 
     *Active Abilities description and print
 
-    aero status effect must be separeto so it won't be overwritten
-
 }
 
 locations: {

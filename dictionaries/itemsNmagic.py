@@ -116,7 +116,21 @@ magics = {
                 },
 
         
-        'stop':{},
+        'stop':{'speech' : ['', '', '', '', 'YELLOW'],
+                'MP': 2 ,'damage' : 0, 'heal' : 0,
+                'status' : {'name': 'Stop','duration' : 1}
+                },
+        
+        'stopra':{'speech' : ['', '', '', '', 'YELLOW'],
+                'MP': 3 ,'damage' : 0, 'heal' : 0,
+                'status' : {'name': 'Stop','duration' : 2}
+                },
+
+        'stopga':{'speech' : ['', '', '', '', 'YELLOW'],
+                'MP': 4 ,'damage' : 0, 'heal' : 0,
+                'status' : {'name': 'Stop','duration' : 3}
+                },
+
 
 }
 
