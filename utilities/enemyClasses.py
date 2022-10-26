@@ -38,6 +38,9 @@ class Heartless:
         self.statusEffect = 'none'
         self.statusDuration = 99
 
+        self.aeroEffect = 'none'
+        self.aeroDuration = 99
+
         if bossBattle == False:
           self.exp = heartless[name]['exp']
           self.munny = heartless[name]['munny']
@@ -59,15 +62,22 @@ class Heartless:
         print('\nThe ' + self.colors[magics[self.statusEffect]['speech'][4]] + magics[self.statusEffect]['status']['name'] + Fore.WHITE + ' effect has passed\n')
         self.statusEffect = 'none'
         self.statusDuration = 99
+      if self.aeroDuration == 0 and self.aeroEffect != 'none':
+        print('\nThe ' + self.colors[magics[self.aeroEffect]['speech'][4]] + magics[self.aeroEffect]['status']['name'] + Fore.WHITE + ' effect has passed\n')
+        self.aeroEffect = 'none'
+        self.aeroDuration = 99
       print("---------------------------")
 
     def statusEffectDuration(self):               ###STATUS EFFECT DURATION
       if 'blizza' in self.statusEffect or 'thund' in self.statusEffect or 'gravi' in self.statusEffect:
         self.statusDuration = self.statusDuration - 1
+      if 'aer' in self.aeroEffect:
+        self.aeroDuration = self.aeroDuration - 1
       print("\n---------------------------")
 
-    def statusEffectDamageReduction(self, speech, damageDealt, mPower):
-      reduction = magics[self.statusEffect]['status']['reduction']+mPower-self.magicResistance
+    def statusEffectDamageReduction(self, speech, damageDealt, mPower, aero=False):
+      if aero: reduction = magics[self.aeroEffect]['status']['reduction']+mPower-self.magicResistance
+      else: reduction = magics[self.statusEffect]['status']['reduction']+mPower-self.magicResistance
       if reduction<0: reduction=0
       newDamage = damageDealt - reduction
       if newDamage<0: newDamage=0
@@ -128,11 +138,11 @@ class Heartless:
       if self.commandTurn == 0:
         number=randint(1, 100)
         if heartless[self.name]['commands'] != 'attack':
-          if number <= 30:
+          if number <= 35:
             self.commandName = heartless[self.name]['commands'][1]
             self.commandTurn = commands[self.commandName]['turns']
             speech, damageDealt = self.useCommand(defense)
-          elif number <= 50: speech, damageDealt = self.block()
+          elif number <= 55: speech, damageDealt = self.block()
           else: speech, damageDealt = self.calculateDamage(defense)
         else:
           if number<=80: speech, damageDealt = self.calculateDamage(defense)

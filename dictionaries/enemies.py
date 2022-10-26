@@ -11,7 +11,7 @@ heartless = {
             },
 
             'soldier' : {'commands' : 'attack', 
-                    'HP': 40 , 'damage': 5,
+                    'HP': 40 , 'damage': 7,
                     'defense': 2,
                     'magic resistance' : 0, 'magicImmunity' : False,
                     'munny' : [2,6],

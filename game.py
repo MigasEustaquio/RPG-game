@@ -355,39 +355,43 @@ def battleCommands(commandOptions, usingAbility, activeAbilityCount):
     else: print(commandOptions)
 
 def comboModifiers(damage, enemy, enemyDamageDealt, enemySpeech):
-
+  slapshotUsed=False
   if any(player.combo):
     rand_idx = random.randrange(len(player.combo))
     comboModifier = player.combo[rand_idx]
     del(player.combo[rand_idx])
-
     if comboModifier == 'Aerial Sweep':
-      print()
+      if player.ignoreBlock: damageDealt=math.ceil((1.2*damage)-enemy.totalDefense)
+      else: damageDealt = math.ceil((1.2*damage)-enemy.defense)
+      speech ='You hit the enemy 3 times in a quick spiral. You caused ' + red + str(damageDealt) + ' ♥ ' + white + 'of damage!'
     elif comboModifier == 'Slapshot':
-      print()
+      slapshotUsed=True
+      name=enemy.name
+      if enemy.bossBattle:  damageDealt=damage-bosses[name]['defense']
+      else: damageDealt=damage-heartless[name]['defense']
+      speech='You rapidly striked the enemy. You caused ' + red + str(damageDealt) + ' ♥ ' + white + 'of damage!'
     elif comboModifier == 'Sliding Dash':
       print()
     elif comboModifier == 'Vortex':
-
       if player.ignoreBlock: damageDealt=damage-enemy.totalDefense
       else: damageDealt = (damage-enemy.defense)
-      if damageDealt < 0: damageDealt=0
-
       if 'attacks you' in enemySpeech and random.randint(1, 100)>60:
         enemySpeech=enemySpeech.replace(str(enemyDamageDealt)+' ♥', '0 ♥')
         enemyDamageDealt=0
-        print('You striked in a vortex slash parrying the enemy attack. You caused ' + red + str(damageDealt) + ' ♥ ' + white + 'of damage!')
+        speech='You striked in a vortex slash parrying the enemy attack. You caused ' + red + str(damageDealt) + ' ♥ ' + white + 'of damage!'
       else:
-        print('You striked in a vortex slash. You caused ' + red + str(damageDealt) + ' ♥ ' + white + 'of damage!')
-
-
+        speech='You striked in a vortex slash. You caused ' + red + str(damageDealt) + ' ♥ ' + white + 'of damage!'
   else:
     if player.ignoreBlock: damageDealt=damage-enemy.totalDefense
     else: damageDealt = (damage-enemy.defense)
-    if damageDealt < 0: damageDealt=0
-    print('You attacked and caused ' + red + str(damageDealt) + ' ♥ ' + white + 'of damage!')
+    speech='You attacked and caused ' + red + str(damageDealt) + ' ♥ ' + white + 'of damage!'
 
-  return damageDealt, enemyDamageDealt, enemySpeech
+  if damageDealt < 0:
+    speech=speech.replace(str(damageDealt),red+'0')
+    damageDealt=0
+  print(speech)
+
+  return damageDealt, enemyDamageDealt, enemySpeech, slapshotUsed
 
 def battle(enemyName, arenaBattle=False):       ###BATTLE
   ###
@@ -426,6 +430,8 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
     while True:
       player.showBattleStatus()
       enemy.damage = enemy.totalDamage
+
+      slapshotUsed=False
 
       if ['Berserk', True] in player.abilities and player.HPBarColour == 'RED': damage=damageBase+2
       else: damage=damageBase
@@ -469,6 +475,7 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
   ### Calculate enemy damage
           if bossBattle == False: enemySpeech, enemyDamageDealt = enemy.selectCommand(defense)
           else: enemySpeech, enemyDamageDealt = enemy.selectCommandBoss(defense)
+          if enemy.statusEffect == 'gravity': enemy.defense=enemy.defense-(mPower+1)
   ### Finishers
           if finishCount == 3:
             damage, defense, mPower, enemyDamageDealt, damageDealt = finishAttack(enemy, damage, defense, mPower, enemyDamageDealt)
@@ -504,7 +511,7 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
               print('You attacked and caused ' + red + str(damageDealt) + ' ♥ ' + white + 'of damage!')
 
         #Normal attack + Combo Modifier
-            else: damageDealt, enemyDamageDealt, enemySpeech = comboModifiers(damage, enemy, enemyDamageDealt, enemySpeech)
+            else: damageDealt, enemyDamageDealt, enemySpeech, slapshotUsed = comboModifiers(damage, enemy, enemyDamageDealt, enemySpeech)
           enemy.HP = enemy.HP - damageDealt
           player.blocked=False
 
@@ -516,6 +523,7 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
 
   ### Inflict enemy damage
           if enemy.statusEffect != 'none': enemySpeech, enemyDamageDealt = enemy.statusEffectDamageReduction(enemySpeech, enemyDamageDealt, mPower)
+          if enemy.aeroEffect != 'none': enemySpeech, enemyDamageDealt = enemy.statusEffectDamageReduction(enemySpeech, enemyDamageDealt, mPower, aero=True)
           print(enemySpeech)
           player.HP -= enemyDamageDealt
           if  ['Second Chance', True] in player.abilities and player.HP<1 and player.HP+enemyDamageDealt>1:
@@ -562,7 +570,7 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
   ###COLOR SPEECH
               magicText = magics[command[1]]['speech']
               print('You used ' + blue + str(magics[command[1]]['MP']) +' ● ' + white + '!')
-              if 'cur' not in command[1] and 'grav' not in command[1] and enemy.magicImmunity==False:
+              if 'cur' not in command[1] and 'grav' not in command[1] and 'aer' not in command[1] and enemy.magicImmunity==False:
                 magicDamage = mPower+magics[command[1]]['damage']-enemy.magicResistance
                 if magicDamage<0: magicDamage=0
                 print("You cast " + player.colors[magicText[4]] + command[1].capitalize() + white + " and deal " + red + str(magicDamage) + magicText[1] + white + magicText[2] + player.colors[magicText[4]] + magicText[3])
@@ -570,6 +578,9 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
                 magicDamage = mPower+math.ceil(enemy.MaxHP/5)-enemy.magicResistance
                 if magicDamage<0: magicDamage=0
                 print("You cast " + player.colors[magicText[4]] + command[1].capitalize() + white + " and deal " + red + str(magicDamage) + magicText[1] + white + magicText[2] + player.colors[magicText[4]] + magicText[3])
+              elif 'aer' in command[1]:
+                magicDamage=0
+                print("You cast " + blue + command[1].capitalize() + white + " and it reduces the damage taken!")
               elif 'cur' not in command[1]:
                 magicDamage=0
                 print("You cast " + player.colors[magicText[4]] + command[1].capitalize() + white + " but it doesn\'t have any effect!")
@@ -585,11 +596,16 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
                 enemy.HP = enemy.HP - magicDamage
               if 'cur' in command[1]: player.HP = player.HP + (magics[command[1]]['heal']+mPower)
   ### Start status effect
-              if 'cur' not in command[1] and enemy.magicImmunity==False:
+              if 'aer' in command[1]:
+                enemy.aeroEffect = command[1]
+                enemy.aeroDuration = magics[command[1]]['status']['duration']
+              elif 'cur' not in command[1] and enemy.magicImmunity==False:
                 enemy.statusEffect = command[1]
                 enemy.statusDuration = magics[command[1]]['status']['duration']
+
   ### Inflict enemy damage
               if enemy.statusEffect != 'none': enemySpeech, enemyDamageDealt = enemy.statusEffectDamageReduction(enemySpeech, enemyDamageDealt, mPower)
+              if enemy.aeroEffect != 'none': enemySpeech, enemyDamageDealt = enemy.statusEffectDamageReduction(enemySpeech, enemyDamageDealt, mPower, aero=True)
               print(enemySpeech)
               player.HP -= enemyDamageDealt
               if ['Second Chance', True] in player.abilities and player.HP<1 and player.HP+enemyDamageDealt>1:
@@ -643,6 +659,7 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
               else: enemySpeech, enemyDamageDealt = enemy.selectCommandBoss(defense)
   ### Inflict enemy damage
               if enemy.statusEffect != 'none': enemySpeech, enemyDamageDealt = enemy.statusEffectDamageReduction(enemySpeech, enemyDamageDealt, mPower)
+              if enemy.aeroEffect != 'none': enemySpeech, enemyDamageDealt = enemy.statusEffectDamageReduction(enemySpeech, enemyDamageDealt, mPower, aero=True)
               print(enemySpeech)
               player.HP -= enemyDamageDealt
               if ['Second Chance', True] in player.abilities and player.HP<1 and player.HP+enemyDamageDealt>1:
@@ -691,7 +708,7 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
   ### Calculate enemy damage
               if bossBattle == False: enemySpeech, enemyDamageDealt = enemy.selectCommand(defense)
               else: enemySpeech, enemyDamageDealt = enemy.selectCommandBoss(defense)
-
+              if enemy.statusEffect == 'gravity': enemy.defense=enemy.defense-(mPower+1)
             #Combo finisher
               finishCount = 0
               finishingPlusCheck=False
@@ -732,7 +749,9 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
               if usingAbility == 'Trinity Limit':
                 enemySpeech=enemySpeech.replace('You lost ' + str(damageDealt) + ' ♥','The enemy is lightstruck and causes no damage!')
                 enemyDamageDealt=0
-              elif enemy.statusEffect != 'none': enemySpeech, enemyDamageDealt = enemy.statusEffectDamageReduction(enemySpeech, enemyDamageDealt, mPower)
+              else:
+                if enemy.statusEffect != 'none': enemySpeech, enemyDamageDealt = enemy.statusEffectDamageReduction(enemySpeech, enemyDamageDealt, mPower)
+                if enemy.aeroEffect != 'none': enemySpeech, enemyDamageDealt = enemy.statusEffectDamageReduction(enemySpeech, enemyDamageDealt, mPower, aero=True)
               print(enemySpeech)
               player.HP -= enemyDamageDealt
               if ['Second Chance', True] in player.abilities and player.HP<1 and player.HP+enemyDamageDealt>1:
@@ -780,7 +799,8 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
         print('Command not found!')
 ###DEFEAT
       if player.HP < 1:       ###DEFEAT
-          return 'defeat'
+        if slapshotUsed and enemy.HP <= 0:  pass
+        else: return 'defeat'
 ###VICTORY
       if enemy.HP <= 0:       ###VICTORY
         if not arenaBattle:

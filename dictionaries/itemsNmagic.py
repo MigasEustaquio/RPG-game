@@ -1,203 +1,227 @@
 items = {
 
-                'potion' :{ 'speech':['You healed ', '2 ♥', ' !'],
-                        'HP' : 2, 'MP' : 0 },
-                'hi-potion' : { 'speech':['You healed ', '3 ♥', ' !'],
-                        'HP' : 3, 'MP' : 0 },
-                'mega-potion' : { 'speech':['You healed ', '10 ♥', ' !'],
-                        'HP' : 10, 'MP' : 0 },
-                'ether' : { 'speech':['You restored ', '2 ●', ' !'],
-                        'HP' : 0, 'MP' : 2 },
-                'hi-ether' : { 'speech':['You restored ', '4 ●', ' !'],
-                        'HP' : 0, 'MP' : 4 },
-                'mega-ether' : { 'speech':['You restored ', '10 ●', ' !'],
-                        'HP' : 0, 'MP' : 10 },
-                'elixir' :{ 'speech':['You healed ', '5 ♥', ' and restored ', '5 ●', ' !'],
-                        'HP' : 5, 'MP' : 5 },
-                'megalixir' : { 'speech':['You healed ', '10 ♥', ' and restored ', '10 ●', ' !'],
-                        'HP' : 10, 'MP' : 10 },
+        'potion' :{ 'speech':['You healed ', '2 ♥', ' !'],
+                'HP' : 2, 'MP' : 0 },
+        'hi-potion' : { 'speech':['You healed ', '3 ♥', ' !'],
+                'HP' : 3, 'MP' : 0 },
+        'mega-potion' : { 'speech':['You healed ', '10 ♥', ' !'],
+                'HP' : 10, 'MP' : 0 },
+        'ether' : { 'speech':['You restored ', '2 ●', ' !'],
+                'HP' : 0, 'MP' : 2 },
+        'hi-ether' : { 'speech':['You restored ', '4 ●', ' !'],
+                'HP' : 0, 'MP' : 4 },
+        'mega-ether' : { 'speech':['You restored ', '10 ●', ' !'],
+                'HP' : 0, 'MP' : 10 },
+        'elixir' :{ 'speech':['You healed ', '5 ♥', ' and restored ', '5 ●', ' !'],
+                'HP' : 5, 'MP' : 5 },
+        'megalixir' : { 'speech':['You healed ', '10 ♥', ' and restored ', '10 ●', ' !'],
+                'HP' : 10, 'MP' : 10 },
 
 }
 
 magics = {
 
-                'fire' :{ 'speech': ['You cast Fire and deal ', ' ♥', ' of damage!\nThe enemy is now ', 'Burning', 'RED'],
-                        'MP' : 1, 'damage' : 1, 'heal' : 0,
-                        'status' : {'name': 'Burning', 'speech': ['The enemy is ', 'burning', ' and takes ', '1 ♥', ' of damage!'], 'damage' : 1, 'duration' : 2, 'reduction' : 0}
+        'fire' :{ 'speech': ['You cast Fire and deal ', ' ♥', ' of damage!\nThe enemy is now ', 'Burning', 'RED'],
+                'MP' : 1, 'damage' : 1, 'heal' : 0,
+                'status' : {'name': 'Burning', 'speech': ['The enemy is ', 'burning', ' and takes ', '1 ♥', ' of damage!'], 'damage' : 1, 'duration' : 2, 'reduction' : 0}
+                },
+
+        'fira' :{ 'speech': ['You cast Fira and deal ', ' ♥', ' of damage!\nThe enemy is now ', 'Burning', 'RED'],
+                'MP' : 2, 'damage' : 2, 'heal' : 0,
+                'status' : {'name': 'Burning', 'speech': ['The enemy is ', 'burning', ' and takes ', '2 ♥', ' of damage!'], 'damage' : 2, 'duration' : 3, 'reduction' : 0}
+                },
+        
+        'firaga' :{ 'speech': ['You cast Firaga and deal ', ' ♥', ' of damage!\nThe enemy is now ', 'Burning', 'RED'],
+                'MP' : 3, 'damage' : 3, 'heal' : 0,
+                'status' : {'name': 'Burning', 'speech': ['The enemy is ', 'burning', ' and takes ', '3 ♥', ' of damage!'], 'damage' : 3, 'duration' : 4, 'reduction' : 0}
+                },
+
+
+
+        'blizzard' : { 'speech' : ['You cast Blizzard and deal ', ' ♥',  ' of damage!\nThe enemy is now ', 'Freezing', 'CYAN'],
+                'MP' : 1, 'damage' : 1, 'heal' : 0,
+                'status' : {'name': 'Freezing', 'speech': ['The enemy is ','freezing',' and inflicts ','1 ♥',' less of damage!'], 'damage' : 0, 'duration' : 2, 'reduction' : 1}
+                },
+
+        'blizzara' : { 'speech' : ['You cast Blizzara and deal ', ' ♥',  ' of damage!\nThe enemy is now ', 'Freezing', 'CYAN'],
+                'MP' : 2, 'damage' : 1, 'heal' : 0,
+                'status' : {'name': 'Freezing', 'speech': ['The enemy is ','freezing',' and inflicts ','2 ♥',' less of damage!'], 'damage' : 0, 'duration' : 2, 'reduction' : 2}
+                },
+
+        'blizzaga' : { 'speech' : ['You cast Blizzaga and deal ', ' ♥',  ' of damage!\nThe enemy is now ', 'Freezing', 'CYAN'],
+                'MP' : 3, 'damage' : 2, 'heal' : 0,
+                'status' : {'name': 'Freezing', 'speech': ['The enemy is ','freezing',' and inflicts ','2 ♥',' less of damage!'], 'damage' : 0, 'duration' : 3, 'reduction' : 2}
+                },
+
+
+
+        'thunder' : { 'speech' : ['You cast Thunder and deal ', ' ♥',  ' of damage!\nThe enemy is now ', 'Paralized', 'YELLOW'],
+                'MP' : 1, 'damage' : 2, 'heal' : 0,
+                'status' : {'name': 'Paralized', 'speech': ['The enemy is ','paralized',' and inflicts ','1 ♥',' less of damage!'], 'damage' : 0, 'duration' : 2, 'reduction' : 1}
+                },
+
+        'thundara' : { 'speech' : ['You cast Thundara and deal ', ' ♥',  ' of damage!\nThe enemy is now ', 'Paralized', 'YELLOW'],
+                'MP' : 2, 'damage' : 4, 'heal' : 0,
+                'status' : {'name': 'Paralized', 'speech': ['The enemy is ','paralized',' and inflicts ','1 ♥',' less of damage!'], 'damage' : 0, 'duration' : 2, 'reduction' : 1}
+                },
+
+        'thundaga' : { 'speech' : ['You cast Thundaga and deal ', ' ♥',  ' of damage!\nThe enemy is now ', 'Paralized', 'YELLOW'],
+                'MP' : 3, 'damage' : 6, 'heal' : 0,
+                'status' : {'name': 'Paralized', 'speech': ['The enemy is ','paralized',' and inflicts ','2 ♥',' less of damage!'], 'damage' : 0, 'duration' : 3, 'reduction' : 2}
+                },
+
+
+        'cure' : { 'speech' : ['You cast Cure and restore ', ' ♥', ' !', '', 'GREEN'],
+                'MP' : 1, 'damage' : 0, 'heal' : 3,
                         },
 
-                'fira' :{ 'speech': ['You cast Fira and deal ', ' ♥', ' of damage!\nThe enemy is now ', 'Burning', 'RED'],
-                        'MP' : 2, 'damage' : 2, 'heal' : 0,
-                        'status' : {'name': 'Burning', 'speech': ['The enemy is ', 'burning', ' and takes ', '2 ♥', ' of damage!'], 'damage' : 2, 'duration' : 3, 'reduction' : 0}
+        'cura' : { 'speech' : ['You cast Cura and restore ', ' ♥', ' !', '', 'GREEN'],
+                'MP' : 2, 'damage' : 0, 'heal' : 5,
                         },
-                
-                'firaga' :{ 'speech': ['You cast Firaga and deal ', ' ♥', ' of damage!\nThe enemy is now ', 'Burning', 'RED'],
-                        'MP' : 3, 'damage' : 3, 'heal' : 0,
-                        'status' : {'name': 'Burning', 'speech': ['The enemy is ', 'burning', ' and takes ', '3 ♥', ' of damage!'], 'damage' : 3, 'duration' : 4, 'reduction' : 0}
+
+        'curaga' : { 'speech' : ['You cast Curaga and restore ', ' ♥', ' !', '', 'GREEN'],
+                'MP' : 3, 'damage' : 0, 'heal' : 10,
                         },
 
 
+        'gravity' : {'speech' : ['', ' ♥', ' of damage!\nIt reduces the enemy\'s defense!', '', 'BLUE'],
+                        'MP' : 3, 'damage' : 1, 'heal' : 0,
+                        'status' : {'name': 'gravity', 'damage' : 0, 'duration' : 2, 'reduction' : 0}
+                },
 
-                'blizzard' : { 'speech' : ['You cast Blizzard and deal ', ' ♥',  ' of damage!\nThe enemy is now ', 'Freezing', 'CYAN'],
-                        'MP' : 1, 'damage' : 1, 'heal' : 0,
-                        'status' : {'name': 'Freezing', 'speech': ['The enemy is ','freezing',' and inflicts ','1 ♥',' less of damage!'], 'damage' : 0, 'duration' : 2, 'reduction' : 1}
-                        },
+        'gravira' : {'speech' : ['', ' ♥', ' of damage!\nIt reduces the enemy\'s defense!', '', 'BLUE'],
+                        'MP' : 4, 'damage' : 2, 'heal' : 0,
+                        'status' : {'name': 'gravity', 'damage' : 0, 'duration' : 2, 'reduction' : 0}
+                },
 
-                'blizzara' : { 'speech' : ['You cast Blizzara and deal ', ' ♥',  ' of damage!\nThe enemy is now ', 'Freezing', 'CYAN'],
-                        'MP' : 2, 'damage' : 1, 'heal' : 0,
-                        'status' : {'name': 'Freezing', 'speech': ['The enemy is ','freezing',' and inflicts ','2 ♥',' less of damage!'], 'damage' : 0, 'duration' : 3, 'reduction' : 2}
-                        },
-
-                'blizzaga' : { 'speech' : ['You cast Blizzaga and deal ', ' ♥',  ' of damage!\nThe enemy is now ', 'Freezing', 'CYAN'],
-                        'MP' : 3, 'damage' : 2, 'heal' : 0,
-                        'status' : {'name': 'Freezing', 'speech': ['The enemy is ','freezing',' and inflicts ','2 ♥',' less of damage!'], 'damage' : 0, 'duration' : 4, 'reduction' : 2}
-                        },
-
+        'graviga' : {'speech' : ['', ' ♥', ' of damage!\nIt reduces the enemy\'s defense!', '', 'BLUE'],
+                        'MP' : 5, 'damage' : 2, 'heal' : 0,
+                        'status' : {'name': 'gravity', 'damage' : 0, 'duration' : 3, 'reduction' : 0}
+                },
 
 
-                'thunder' : { 'speech' : ['You cast Thunder and deal ', ' ♥',  ' of damage!\nThe enemy is now ', 'Paralized', 'YELLOW'],
-                        'MP' : 1, 'damage' : 2, 'heal' : 0,
-                        'status' : {'name': 'Paralized', 'speech': ['The enemy is ','paralized',' and inflicts ','1 ♥',' less of damage!'], 'damage' : 0, 'duration' : 2, 'reduction' : 1}
-                        },
+        'aero' : {'speech' : ['', '', '', '', 'CYAN'],
+                'MP': 2 ,'damage' : 0, 'heal' : 0,
+                'status' : {'name': 'Aero','duration' : 4, 'reduction' : 2}
+                },
 
-                'thundara' : { 'speech' : ['You cast Thundara and deal ', ' ♥',  ' of damage!\nThe enemy is now ', 'Paralized', 'YELLOW'],
-                        'MP' : 2, 'damage' : 4, 'heal' : 0,
-                        'status' : {'name': 'Paralized', 'speech': ['The enemy is ','paralized',' and inflicts ','1 ♥',' less of damage!'], 'damage' : 0, 'duration' : 2, 'reduction' : 1}
-                        },
+        'aerora' : {'speech' : ['', '', '', '', 'CYAN'],
+                'MP': 3 ,'damage' : 0, 'heal' : 0,
+                'status' : {'name': 'Aero','duration' : 4, 'reduction' : 3}
+                },
 
-                'thundaga' : { 'speech' : ['You cast Thundaga and deal ', ' ♥',  ' of damage!\nThe enemy is now ', 'Paralized', 'YELLOW'],
-                        'MP' : 3, 'damage' : 6, 'heal' : 0,
-                        'status' : {'name': 'Paralized', 'speech': ['The enemy is ','paralized',' and inflicts ','2 ♥',' less of damage!'], 'damage' : 0, 'duration' : 3, 'reduction' : 2}
-                        },
+        'aeroga' : {'speech' : ['', '', '', '', 'CYAN'],
+                'MP': 4 ,'damage' : 0, 'heal' : 0,
+                'status' : {'name': 'Aero','duration' : 5, 'reduction' : 3}
+                },
 
-
-
-                'cure' : { 'speech' : ['You cast Cure and restore ', ' ♥', ' !', '', 'GREEN'],
-                        'MP' : 1, 'damage' : 0, 'heal' : 3,
-                         },
-
-                'cura' : { 'speech' : ['You cast Cura and restore ', ' ♥', ' !', '', 'GREEN'],
-                        'MP' : 2, 'damage' : 0, 'heal' : 5,
-                         },
-
-                'curaga' : { 'speech' : ['You cast Curaga and restore ', ' ♥', ' !', '', 'GREEN'],
-                        'MP' : 3, 'damage' : 0, 'heal' : 10,
-                         },
-
-                #damage based on enemy health and player total mp?
-                'gravity' : {'speech' : ['You cast Thundaga and deal ', ' ♥', ' of damage!\nThe enemy is now too heavy too attack!', '', 'BLUE'],
-                                'MP' : 3, 'damage' : 1, 'heal' : 0,
-                                'status' : {'name': 'gravity', 'speech': ['The ','gravity',' effect makes the enemy too heavy too attack! It inflicts ','0 ♥',' of damage!'], 'damage' : 0, 'duration' : 0, 'reduction' : 99}
-                        },
-
-                #defense
-                'aero' : {'speech' : ['', '', '', '', 'BLUE'] , 'status' : {'name': 'gravity', 'speech': ['The ','aero',' ','0 ♥',' of damage!'], 'damage' : 0, 'duration' : 1, 'reduction' : 1}
-                        },
+        
+        'stop':{},
 
 }
 
 
 keybladeStatus = { 
 
-            'Kingdom Key' : {
-                    'damage' : 1, 
-                    'MP': 0 
-            },
+        'Kingdom Key' : {
+                'damage' : 1, 
+                'MP': 0 
+        },
 
-            'Jungle King' : {
-                    'damage' : 3, 
-                    'MP': 0 
-            },
+        'Jungle King' : {
+                'damage' : 3, 
+                'MP': 0 
+        },
 
-            'Lady Luck' : {
-                    'damage' : 5, 
-                    'MP': 2 
-            },
+        'Lady Luck' : {
+                'damage' : 5, 
+                'MP': 2 
+        },
 
-            'Olympia' : {
-                    'damage' : 8, 
-                    'MP': 0 
-            },
+        'Olympia' : {
+                'damage' : 8, 
+                'MP': 0 
+        },
 
-            'Three Wishes' : {
-                    'damage' : 4, 
-                    'MP': 0 
-            },
+        'Three Wishes' : {
+                'damage' : 4, 
+                'MP': 0 
+        },
 
-            'Wishing Star' : {
-                    'damage' : 3, 
-                    'MP': 0 
-            },
+        'Wishing Star' : {
+                'damage' : 3, 
+                'MP': 0 
+        },
 
-            'Spellbinder' : {
-                    'damage' : 2, 
-                    'MP': 2 
-            },
+        'Spellbinder' : {
+                'damage' : 2, 
+                'MP': 2 
+        },
 
-            'Crabclaw' : {
-                    'damage' : 4, 
-                    'MP': 1 
-            },
+        'Crabclaw' : {
+                'damage' : 4, 
+                'MP': 1 
+        },
 
-            'Pumpkinhead' : {
-                    'damage' : 5, 
-                    'MP': 0 
-            },
+        'Pumpkinhead' : {
+                'damage' : 5, 
+                'MP': 0 
+        },
 
-            'Fairy Harp' : {
-                    'damage' : 8, 
-                    'MP': 1 
-            },
+        'Fairy Harp' : {
+                'damage' : 8, 
+                'MP': 1 
+        },
 
-            'Metal Chocobo' : {
-                    'damage' : 7, 
-                    'MP': -1 
-            },
+        'Metal Chocobo' : {
+                'damage' : 7, 
+                'MP': -1 
+        },
 
-            'Divine Rose' : {
-                    'damage' : 11, 
-                    'MP': 0 
-            },
+        'Divine Rose' : {
+                'damage' : 11, 
+                'MP': 0 
+        },
 
-            'Lionheart' : {
-                    'damage' : 8, 
-                    'MP': 1 
-            },
+        'Lionheart' : {
+                'damage' : 8, 
+                'MP': 1 
+        },
 
-            'Diamond Dust' : {
-                    'damage' : 1, 
-                    'MP': 3 
-            },
+        'Diamond Dust' : {
+                'damage' : 1, 
+                'MP': 3 
+        },
 
-            'One-Winged Angel' : {
-                    'damage' : 6, 
-                    'MP': -2 
-            },
+        'One-Winged Angel' : {
+                'damage' : 6, 
+                'MP': -2 
+        },
 
-            'Oathkeeper' : {
-                    'damage' : 7, 
-                    'MP': 1 
-            },
+        'Oathkeeper' : {
+                'damage' : 7, 
+                'MP': 1 
+        },
 
-            'Oblivion' : {
-                    'damage' : 9, 
-                    'MP': -1 
-            },
+        'Oblivion' : {
+                'damage' : 9, 
+                'MP': -1 
+        },
 
-            'Ultima Weapon' : {
-                    'damage' : 12, 
-                    'MP': 2 
-            },
+        'Ultima Weapon' : {
+                'damage' : 12, 
+                'MP': 2 
+        },
 
-            'Kingdom Key D' : {
-                    'damage' : 8, 
-                    'MP': 4 
-            },
+        'Kingdom Key D' : {
+                'damage' : 8, 
+                'MP': 4 
+        },
 
-            'Keyblade of heart' : {
-                    'damage' : 8, 
-                    'MP': 4 
-            },
+        'Keyblade of heart' : {
+                'damage' : 8, 
+                'MP': 4 
+        },
 }
 
 equipments = {

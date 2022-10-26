@@ -1,5 +1,9 @@
 urgent:{
 
+    *Active Abilities description and print
+
+    aero status effect must be separeto so it won't be overwritten
+
 }
 
 locations: {
@@ -156,7 +160,7 @@ implement:{
 
     unlock areas (for now only by magic) (require more worlds and rooms)
 
-    add abilities (almost done)
+    abilities (almost done)
 
 
 improve:{

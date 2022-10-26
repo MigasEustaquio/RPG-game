@@ -175,8 +175,7 @@ class player:
         print('\nEquipment Slots: ' + str(len(self.equipment)) + '\\' + str(self.equipmentNumber) + '\n')
         for equipment in self.equipmentList: #● ○
             tab=''
-            for _ in range(30-len(equipment)):
-                tab=tab+'-'
+            for _ in range(30-len(equipment)):  tab=tab+'-'
             tab = equipment + tab + 'HP: ' + str(equipments[equipment]['HP']) + '  MP: ' + str(equipments[equipment]['MP']) + '  STR: ' + str(equipments[equipment]['STR']) + '  DEF: ' + str(equipments[equipment]['DEF'])
             if ' -' in tab: tab=tab.replace(' -', '-')
             if equipment in self.equipment: print(Fore.YELLOW + '● ' + Fore.WHITE + tab)
@@ -184,8 +183,7 @@ class player:
     def showKeyblades(self):
         for keyblade in self.keyblades: #● ○
             tab=''
-            for _ in range(30-len(keyblade)):
-                tab=tab+'-'
+            for _ in range(30-len(keyblade)):   tab=tab+'-'
             tab = keyblade + tab + 'Damage: ' + str(keybladeStatus[keyblade]['damage']) + '   MP: ' + str(keybladeStatus[keyblade]['MP'])
             if keybladeStatus[keyblade]['damage'] > 9: tab=tab.replace('  MP:', ' MP:')
             if ' -' in tab: tab=tab.replace(' -', '-')
@@ -196,11 +194,7 @@ class player:
         for ability in self.abilities: #● ○
             name=ability[0]
             if ability[0] in self.finishers: name=name+' (F)'
-            for _ in range(30-len(name)):
-                name=name+' '
-            # if len(name)<=5: tab='\t\t\t\t'
-            # elif len(name)<=13: tab='\t\t\t'
-            # elif len(name)<=20: tab='\t\t'
+            for _ in range(30-len(name)):   name=name+' '
             if ability[1]: print(Fore.YELLOW + '● ' + Fore.WHITE + name + 'cost: ' + str(abilityList[ability[0]][1]))
             else: print('○ ' + name + 'cost: ' + str(abilityList[ability[0]][1]))
     def showSpells(self):
