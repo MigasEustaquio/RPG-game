@@ -163,8 +163,6 @@ implement:{
 
 improve:{
 
-    add magic spells and effects
-
     world map (almost done)
 
     enemy commands (started)
@@ -178,7 +176,7 @@ complete with data:{
 
     enemy drops (half done)
 
-    active abilities stats (mp, damage...)
+    active abilities and magics balance (easier when game is complete)
 
 }
 

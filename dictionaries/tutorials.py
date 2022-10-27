@@ -44,4 +44,4 @@ tutorialSpeech = {
 
 }
 
-journalOptions=['Treasures', 'Maps']
+journalOptions=['Treasures', 'Maps', 'Enemies']

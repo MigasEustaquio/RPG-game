@@ -76,7 +76,8 @@ def showStatus():                               ###SHOW STATUS
     for person in peopleToTalk:
       print('❕ You see ' + person)
   if "shop" in rooms[player.world][currentRoom]:
-    if (currentRoom+' Shop location') in player.keyItems or rooms[player.world][rooms[player.world][currentRoom]['shop']]['key'] in player.keyItems:
+    # if (currentRoom+' Shop location') in player.keyItems or rooms[player.world][rooms[player.world][currentRoom]['shop']]['key'] in player.keyItems:
+    if (currentRoom+' Shop location') in player.keyItems:
       print('You see the ' + rooms[player.world][currentRoom]['shop'] + ', try: \'enter shop\'')
   if "Shop" in currentRoom or "Save" in rooms[player.world][currentRoom]:
       player.HP = player.TotalHP
@@ -162,6 +163,10 @@ def resetHeartless(currentRoom, previousStory=0):
             else:
               previousStory = story
 
+def addToEnemiesList(enemyName):
+  if enemyName in player.enemiesList: player.enemiesList[enemyName]+=1
+  else: player.enemiesList[enemyName]=1
+
 def levelUP():                                  ###LEVEL UP
   if levelUp[player.level]['ability'] != 'none':
     player.abilities.append([levelUp[player.level]['ability'], False])
@@ -180,6 +185,54 @@ def levelUP():                                  ###LEVEL UP
   if 'DEF' in levelUp[player.level]:
     player.DEF += levelUp[player.level]['DEF']
     print('Defense increased!')
+
+def victoryMunny(enemyMunny):
+  munny = 3 * random.randint(enemyMunny[0], enemyMunny[1])
+  munny=math.ceil(munny+(player.abilities.count(['Jackpot', True])/5))
+  print('\nYou defeated the Heartless!\nCONGRATULATIONS!')
+  print('\nYou obtained ' + yellow + str(munny) + '🔸 munny!')
+  player.munny += munny
+
+def victoryExp(enemyEXP):
+  expBoost=0
+  if 'exp bracelet' in player.equipment: expBoost+=1
+  if 'exp earring' in player.equipment: expBoost+=1
+  expBoost+=player.abilities.count(['EXP Boost', True])
+  expReceived=math.ceil((expBoost)*(enemyEXP)/5)
+  print('You gained ' + str(expReceived) + ' exp!')
+  player.exp+=expReceived
+  while player.exp >= levelUp[player.level]['next']:
+    player.level+=1
+    print('\nLevel Up!\nLevel: ' + str(player.level))
+    levelUP()
+
+def victoryDrop(enemyDrop):
+
+  y=player.abilities.count(['Lucky Strike', True])
+  drops={(x+(20*y)):enemyDrop[x] for x in enemyDrop}
+  dropNumber = random.randint(1, 100)
+  for drop in drops:
+    if dropNumber <= drop:
+      if drops[drop] in items:
+        print("\nObtained a " + green + drops[drop] + white + "!")
+        if len(player.item) < player.itemPouch:
+          player.item.append(drops[drop])
+        else:
+          player.stock.append(drops[drop])
+          print('Your item pouch is full, item send to stock!!')
+      elif drops[drop] in keybladeStatus:
+        player.keyblades.append(drops[drop])
+        print('\nObtained the ' + cyan + drops[drop] + white + ' Keyblade!')
+      break
+
+def victoryMPRecover():
+  recoverMPNumber = random.randint(1, 100)
+  recoverMPNumberNeeded = 75-player.abilities.count(['MP Haste', True])
+  recoverMP = math.ceil(player.TotalMP/5) + math.ceil((player.TotalMP-player.MP)*(player.abilities.count(['MP Rage', True]))/5)
+  if recoverMPNumber > recoverMPNumberNeeded:
+    print('\nYou recovered ' + blue + str(recoverMP) + ' ● ' + white + '!')
+    player.MP += recoverMP
+    if player.MP > player.TotalMP: player.MP = player.TotalMP
 
 def useItem(item):                              ###USE ITEM
   del player.item[player.item.index(item)]
@@ -327,7 +380,7 @@ def finishAttack(enemy, damage, defense, mPower, enemyDamageDealt):             
         player.MP += 2
         damageDealt = damage-enemy.defense
       else:
-        print('You shouldn\'t have this keyblade... Anyway it has no bonus effect')
+        print("You used " + green + "Discharge" + white + "! It has no special effect.")
         damageDealt = damage-enemy.defense
     elif finish == 'Ripple Drive':
       print("You used " + blue + "Ripple Drive" + white + " and unleashes a great red orb of energy!")
@@ -426,12 +479,9 @@ def alliesHelp(enemy):
       enemy.statusDuration = magics[helpStatus]['status']['duration']
 
 def battle(enemyName, arenaBattle=False):       ###BATTLE
-  ###
     player.createBKP()
-    if enemyName in bosses:
-      bossBattle = True
-    elif enemyName in heartless:
-      bossBattle = False
+    if enemyName in bosses: bossBattle = True
+    elif enemyName in heartless:  bossBattle = False
 
     damageBase = keybladeStatus[player.keyblade]['damage'] + player.STR
     defense = player.DEF
@@ -462,18 +512,12 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
     while True:
       player.showBattleStatus()
       enemy.damage = enemy.totalDamage
-
       slapshotUsed=False
-
       if ['Berserk', True] in player.abilities and player.HPBarColour == 'RED': damage=damageBase+2
       else: damage=damageBase
-
       if ['Scan', True] in player.abilities:  scan(enemy)
-
       battleCommands(commandOptions, usingAbility, activeAbilityCount)
-
       # print(enemy.stopEffect, enemy.stopDuration)
-
       while command == '':
         command = input('>')
       command = command.lower()
@@ -493,7 +537,6 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
 
         if player.HP > player.TotalHP: player.HP = player.TotalHP
 ###ATTACK
-  ###
       elif command == 'attack':       ###ATTACK
           command = ''
   ### Calculate enemy damage
@@ -555,7 +598,6 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
 
           usingAbility = ''
 ###MAGIC
-  ###
       elif "magic" in command:       ###MAGIC
         command = command.lower().split()
   ###Check magic requirements
@@ -632,7 +674,6 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
         command = ''
         usingAbility = ''
 ###ITEM
-  ###
       elif "item" in command:       ###ITEM
         command = command.lower().split()
         if not player.item:
@@ -706,23 +747,20 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
               if usingAbility == 'Ragnarok' and abilityDamageName=='final damage':
                 abilityDamage = mPower+ability[abilityDamageName]-enemy.magicResistance
                 if abilityDamage<0: abilityDamage=0
-                print('dano: ', abilityDamage)
-                # print("You cast " + green + command[1].capitalize() + white + " and restore " + red + str(mPower+magics[command[1]]['heal']) + magicText[1] + white + magicText[2])
+                print(yellow + usingAbility + white + activeAbilities[usingAbility]['speech'][abilityDamageName][0] + red + str(abilityDamage) + ' ♥' + white + ' of damage!' + activeAbilities[usingAbility]['speech'][abilityDamageName][1])
               elif usingAbility != 'Trinity Limit':
                 abilityDamage = damage+ability[abilityDamageName]-enemy.defense
                 if abilityDamage<0: abilityDamage=0
-                print('dano: ', abilityDamage)
-                # print("You cast " + player.colors[magicText[4]] + command[1].capitalize() + white + " and deal " + red + str(magicDamage) + magicText[1] + white + magicText[2] + player.colors[magicText[4]] + magicText[3])
+                print(yellow + usingAbility + white + activeAbilities[usingAbility]['speech'][abilityDamageName][0] + red + str(abilityDamage) + ' ♥' + white + ' of damage!' + activeAbilities[usingAbility]['speech'][abilityDamageName][1])
               else:
                 abilityDamage = mPower+ability[abilityDamageName]-enemy.magicResistance
                 if abilityDamage<0: abilityDamage=0
-                print('dano: ', abilityDamage)
-                # print("You cast " + green + command[1].capitalize() + white + " and restore " + red + str(mPower+magics[command[1]]['heal']) + magicText[1] + white + magicText[2])
+                print(yellow + usingAbility + white + activeAbilities[usingAbility]['speech'][abilityDamageName][0] + red + str(abilityDamage) + ' ♥' + white + ' of damage!' + activeAbilities[usingAbility]['speech'][abilityDamageName][1])
               if activeAbilityCount == 0: usingAbility=''
   ###Calculate damage
               enemy.HP = enemy.HP - abilityDamage
   ### Inflict enemy damage
-              inflictEnemyDamage(enemySpeech, enemyDamageDealt, mPower, enemy, command, damageDealt)
+              inflictEnemyDamage(enemySpeech, enemyDamageDealt, mPower, enemy, command, abilityDamage)
   ### Status effect damage
               if 'fir' in enemy.statusEffect:
                 enemy.statusEffectDamage()
@@ -759,49 +797,12 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
         else: return 'defeat'
 ###VICTORY
       if enemy.HP <= 0:       ###VICTORY
+        addToEnemiesList(enemyName)
         if not arenaBattle:
-  ###MUNNY
-          munny = 3 * random.randint(enemy.munny[0], enemy.munny[1])
-          if ['Jackpot', True] in player.abilities: munny=math.ceil(munny*6/5)
-          print('\nYou defeated the Heartless!\nCONGRATULATIONS!')
-          print('\nYou obtained ' + yellow + str(munny) + '🔸 munny!')
-          player.munny += munny
-  ###EXP
-          if 'exp bracelet' in player.equipment or 'exp earring' in player.equipment: enemy.exp = math.ceil(enemy.exp*6/5)
-          print('You gained ' + str(enemy.exp) + ' exp!')
-          player.exp += enemy.exp
-          while player.exp >= levelUp[player.level]['next']:
-            player.level+=1
-            print('\nLevel Up!\nLevel: ' + str(player.level))
-            levelUP()
-  ###DROP
-          if ['Lucky Strike', True] in player.abilities: enemy.drop = enemy.luckyDrop
-          dropNumber = random.randint(1, 100)
-          for drop in enemy.drop:
-            if dropNumber <= drop:
-              if enemy.drop[drop] in items:
-                print("\nObtained a " + green + enemy.drop[drop] + white + "!")
-                if len(player.item) < player.itemPouch:
-                  player.item.append(enemy.drop[drop])
-                else:
-                  player.stock.append(enemy.drop[drop])
-                  print('Your item pouch is full, item send to stock!!')
-              elif enemy.drop[drop] in keybladeStatus:
-                player.keyblades.append(enemy.drop[drop])
-                print('\nObtained the ' + cyan + enemy.drop[drop] + white + ' Keyblade!')
-              break
-  ###MP RECOVER
-        recoverMPNumber = random.randint(1, 100)
-        if ['Mp Haste', True] in player.abilities: recoverMPNumberNeeded = 55
-        else: recoverMPNumberNeeded = 75
-        if ['Mp Rage', True] in player.abilities: recoverMP = math.ceil(player.TotalMP/4) + math.ceil((player.TotalMP-player.MP)/4)
-        else: recoverMP = math.ceil(player.TotalMP/4)
-
-        if recoverMPNumber > recoverMPNumberNeeded:
-          print('\nYou recovered ' + blue + str(recoverMP) + ' ● ' + white + '!')
-          player.MP += recoverMP
-          if player.MP > player.TotalMP: player.MP = player.TotalMP
-
+          victoryMunny(enemy.munny)
+          victoryExp(enemy.exp)
+          victoryDrop(enemy.drop)
+        victoryMPRecover()
         return 'victory'
       enemy.statusEffectEnd()
 
@@ -1050,15 +1051,17 @@ while True:                        ###MAIN
         option=move[1].lower()
         if 'treasure' in option: player.treasureJournal()
         elif 'map' in option: player.mapJournal()
+        elif 'enem' in option: player.enemiesJournal()
         else: print(red + '\nJournal section not found.\n')
       except:
           print('\nWhat section of the Journal you want to open?\n'+', '.join(journalOptions))
           option = input('>').lower()
           if 'treasure' in option: player.treasureJournal()
           elif 'map' in option: player.mapJournal()
+          elif 'enem' in option: player.enemiesJournal()
           else: print('\nJournal closed...\n')
 
-    elif 'map' in move and 'world' not in move:         ##### OPEN MAP
+    elif 'map' in move and 'world' not in move and 'journal' not in move:         ##### OPEN MAP
       if player.tutorial['open map'] == 0:
         print('The first time opening a map may glitch out and refuse to open, just close the map and open it again!')
         player.tutorial['open map'] = 1
@@ -1110,7 +1113,7 @@ while True:                        ###MAIN
     elif 'menu' in move:                                ##### SHOW MENU
         player.menu()
 
-    elif 'ability' in move or 'abilities' in move:      ##### EQUIP abilities
+    elif 'abilit' in move:                              ##### EQUIP abilities
         player.equipAbilities()
 
     elif 'equipment' in move:                           ##### TRADE EQUIPMENT

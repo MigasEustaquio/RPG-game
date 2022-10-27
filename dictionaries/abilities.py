@@ -12,6 +12,7 @@ abilityList = {
                 'Counterattack' : ['Attacks right after being blocked does more damage', 0],                ####
                 'Counter Replenisher' : ['Recover some lost MP when using Counterattack(Required*)', 0],    ####
                 'Discharge' : ['Unleashes the keyblade\'s ability that may cause various effects', 0],      ####
+                'EXP Boost': ['Increase exp received by 20%', 0],                                           ####
                 'Finishing Plus' : ['Allows to use a bonus combo finisher', 0],                             ####
                 'Gravity Break' : ['Deal strong downward strike while casting the Gravity spell', 0],       ####
                 'Hurricane Blast' : ['Rapidly strikes with a powerfull slash causing random damage', 0],    ####
@@ -36,6 +37,8 @@ abilityList = {
 
 }
 
+# stackAbilities = ['Jackpot', 'Lucky Strike', 'Mp Haste', 'Mp Rage']
+
 finishersList = ['Blitz', 'Discharge', 'Gravity Break', 'Hurricane Blast', 'Ripple Drive', 'Stun Impact', 'Zantetsuken']
 
 comboModifiersList = ['Aerial Sweep', 'Slapshot', 'Sliding Dash', 'Vortex']
@@ -48,23 +51,28 @@ activeAbilitiesCommands = ['bash','finish','rave','blast','raid','judgment','imp
 
 activeAbilities = {
 
-    'Ars Arcanum' : {'speech':['test'],
-                        'MP': 1, 'damage': 1, 'duration': 3, 'final damage': 2,
+    'Ars Arcanum' : {'speech': {'damage': [],
+                                'final damage': []},
+                        'MP': 5, 'damage': 1, 'duration': 3, 'final damage': 2,
                         'commands': ['bash','finish']},
 
-    'Sonic Blade' : {'speech':['test'],
-                        'MP': 1, 'damage': 1, 'duration': 2, 'final damage': 2,
+    'Sonic Blade' : {'speech': {'damage': ['\nYou slash the enemy while rushing past. You deal ','\nSelect followup attack for a combo!'],
+                                'final damage': ['\nYou blast the enemy while rushing past. You deal ','']},
+                        'MP': 3, 'damage': 1, 'duration': 2, 'final damage': 2,
                         'commands': ['rave','blast']},
 
-    'Strike Raid' : {'speech':['test'],
-                        'MP': 1, 'damage': 1, 'duration': 2, 'final damage': 2,
+    'Strike Raid' : {'speech': {'damage': [],
+                                'final damage': []},
+                        'MP': 3, 'damage': 1, 'duration': 2, 'final damage': 2,
                         'commands': ['raid','judgment']},
 
-    'Ragnarok' : {'speech':['test'],
-                        'MP': 1, 'damage': 1, 'duration': 1, 'final damage': 2,
+    'Ragnarok' : {'speech': {'damage': [],
+                                'final damage': []},
+                        'MP': 4, 'damage': 1, 'duration': 1, 'final damage': 2,
                         'commands': ['impact','impact']},
 
-    'Trinity Limit' : {'speech':['test'],
-                        'MP': 1, 'damage': 5, 'duration': 0, 'final damage': 5,
+    'Trinity Limit' : {'speech': {'damage': [],
+                                'final damage': []},
+                        'MP': 6, 'damage': 5, 'duration': 0, 'final damage': 5,
                         'commands': ['light','light']},
 }

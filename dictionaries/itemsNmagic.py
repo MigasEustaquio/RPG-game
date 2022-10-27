@@ -137,6 +137,11 @@ magics = {
 
 keybladeStatus = { 
 
+        'Wooden Sword' : {
+                'damage' : 0, 
+                'MP': 0 
+        },
+
         'Kingdom Key' : {
                 'damage' : 1, 
                 'MP': 0 

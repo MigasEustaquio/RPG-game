@@ -11,7 +11,7 @@ heartless = {
             },
 
             'soldier' : {'commands' : 'attack', 
-                    'HP': 40 , 'damage': 7,
+                    'HP': 10 , 'damage': 7,
                     'defense': 2,
                     'magic resistance' : 0, 'magicImmunity' : False,
                     'munny' : [2,6],
@@ -21,6 +21,7 @@ heartless = {
 
             'air pirate' : {'commands' : 'attack', 
                     'HP': 2 , 'damage': 1,
+                    'defense': 2,
                     'munny' : [2,6],
                     'exp' : 20,
                     'drop' : {}

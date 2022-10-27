@@ -13,11 +13,12 @@ from dictionaries.tutorials import *
 from dictionaries.treasuresNrestrictions import *
 from dictionaries.abilities import *
 from dictionaries.arenas import *
+from dictionaries.enemies import *
 
 class player:
     def __init__(self):
 
-        self.keyblade = 'Kingdom Key'
+        self.keyblade = 'Wooden Sword'
 
         self.MaxHP = 5
         self.TotalHP = self.MaxHP
@@ -26,7 +27,7 @@ class player:
         self.TotalMP = self.MaxMP
         self.MP = self.MaxMP  ## full: ●,  empty: ○
 
-        self.STR = 0
+        self.STR = 1
         self.DEF = 0
         self.magicPower = 0
 
@@ -35,7 +36,7 @@ class player:
         self.equipmentList = []
 
         self.magic = []
-        self.item = ['potion']
+        self.item = []
         self.itemPouch = 3
         self.keyItems = []
         self.exp = 0
@@ -43,7 +44,7 @@ class player:
         self.munny = 0
         self.stock = []
 
-        self.keyblades = ['Kingdom Key']
+        self.keyblades = ['Wooden Sword']
 
         self.MaxAP = 1
         self.TotalAP = self.MaxAP
@@ -72,6 +73,8 @@ class player:
         self.treasures = treasureList
         self.restrictionLifted = restrictionLiftedList
         self.visitedRooms = worlds
+
+        self.enemiesList = {}
 
         self.saveFile = 0
         self.editedSaves = saves
@@ -264,13 +267,17 @@ class player:
         print("Next level: " + str(levelUp[self.level]['next']-self.exp) + ' xp')
         print(Fore.GREEN + "---------------------------\n"+Fore.WHITE+"Keyblades:")
         self.showKeyblades()
-        print(Fore.BLUE + "---------------------------\n"+Fore.WHITE+"Equipment")
-        self.showEquipments()
-        print(Fore.GREEN + "---------------------------\n"+Fore.WHITE+"Spells:")
-        self.showSpells()
-        print(Fore.BLUE + "---------------------------\n"+Fore.WHITE+"Abilities")
-        self.showAbilities()
-        print("\nKey items: " + ', '.join(self.keyItems))
+        if any(self.equipmentList):
+            print(Fore.BLUE + "---------------------------\n"+Fore.WHITE+"Equipment")
+            self.showEquipments()
+        if any(self.magic):
+            print(Fore.GREEN + "---------------------------\n"+Fore.WHITE+"Spells:")
+            self.showSpells()
+        if any(self.abilities):
+            print(Fore.BLUE + "---------------------------\n"+Fore.WHITE+"Abilities")
+            self.showAbilities()
+        if any(self.keyItems):
+            print("\nKey items: " + ', '.join(self.keyItems))
 
     def showTutorials(self):
         for text in self.tutorial:
@@ -295,6 +302,38 @@ class player:
             print(worldDisplayName[world])
             for mapNumber in self.map[world]:
                 print('Map '+mapNumber+': '+self.map[world][mapNumber])
+
+    def enemyDetails(self, enemyName):
+        enemy=heartless[enemyName]
+
+        try:
+            if enemy['magicImmunity'] == True: magicResistance='Immune'
+            else: magicResistance = str(enemy['magic resistance'])
+        except:
+            try: magicResistance = str(enemy['magic resistance'])
+            except: magicResistance='0'
+
+        text='HP: ' + str(enemy['HP']) + '   damage: ' + str(enemy['damage']) + '   defense: ' + str(enemy['defense']) + '   magic resistance: ' + magicResistance
+
+        if enemy['HP']>9:text=text.replace('   damage:','  damage:')
+        if enemy['damage']>9:text=text.replace('   defense:','  defense:')
+        if enemy['defense']>9:text=text.replace('   magic:','  magic:')
+
+        print(text)
+
+    def enemyDeepDetails(self, enemyName):
+        enemy=heartless[enemyName]
+
+        print('test2')
+
+    def enemiesJournal(self):
+        print('Enemy List')
+        for enemy in self.enemiesList:
+            tab=''
+            for _ in range(30-len(enemy)):   tab=tab+' '
+            print('\n' + enemy.capitalize() + tab + 'Defeated: ', self.enemiesList[enemy])
+            if self.enemiesList[enemy]>=10: self.enemyDetails(enemy)
+            if self.enemiesList[enemy]>=20: self.enemyDeepDetails(enemy)
 
 #####TRADE EQUIPMENTS
     def tradeEquipment(self):
@@ -404,8 +443,7 @@ class player:
             if option == '0' or option[0] == '0':   break
 
             elif option[0] == 'equip':
-                if [option[1], True] in self.abilities: print(Fore.RED + 'This ability is already equipped!')
-                elif [option[1], False] in self.abilities:
+                if [option[1], False] in self.abilities:
                     if self.AP >= abilityList[option[1]][1]:
                         self.abilities[self.abilities.index([option[1], False])][1]=True
                         self.AP=self.AP-abilityList[option[1]][1]
@@ -414,18 +452,19 @@ class player:
                         if option[1] in comboModifiersList: self.comboModifiers.append(option[1])
                         if option[1] in activeAbilitiesList: self.activeAbilities.append(option[1])
                     else: print(Fore.RED + 'Not enought AP!')
+                elif [option[1], True] in self.abilities: print(Fore.RED + 'This ability is already equipped!')
                 else:   print(Fore.RED + 'Ability not found!')
                 option=''
 
             elif option[0] == 'unequip':
-                if [option[1], False] in self.abilities: print(Fore.RED + 'This ability is already unequipped!')
-                elif [option[1], True] in self.abilities:
+                if [option[1], True] in self.abilities:
                     self.abilities[self.abilities.index([option[1], True])][1]=False
                     self.AP+=abilityList[option[1]][1]
                     print(Fore.CYAN + option[1] + ' unequipped!\n')
                     if option[1] in finishersList: del(self.finishers[self.finishers.index(option[1])])
                     if option[1] in comboModifiersList: del(self.comboModifiers[self.comboModifiers.index(option[1])])
                     if option[1] in activeAbilitiesList: del(self.activeAbilities[self.activeAbilities.index(option[1])])
+                elif [option[1], False] in self.abilities: print(Fore.RED + 'This ability is already unequipped!')
                 else:   print(Fore.RED + 'Ability not found')
                 option=''
 
