@@ -313,7 +313,7 @@ class player:
             try: magicResistance = str(enemy['magic resistance'])
             except: magicResistance='0'
 
-        text='HP: ' + str(enemy['HP']) + '   damage: ' + str(enemy['damage']) + '   defense: ' + str(enemy['defense']) + '   magic resistance: ' + magicResistance
+        text=Fore.YELLOW + 'HP: ' + Fore.WHITE + str(enemy['HP']) + Fore.YELLOW + '   damage: ' + Fore.WHITE + str(enemy['damage']) + Fore.YELLOW + '   defense: ' + Fore.WHITE + str(enemy['defense']) + Fore.YELLOW + '   magic resistance: ' + Fore.WHITE + magicResistance
 
         if enemy['HP']>9:text=text.replace('   damage:','  damage:')
         if enemy['damage']>9:text=text.replace('   defense:','  defense:')
@@ -323,15 +323,25 @@ class player:
 
     def enemyDeepDetails(self, enemyName):
         enemy=heartless[enemyName]
+        drops=list(enemy['drop'].values())
 
-        print('test2')
+        text=Fore.YELLOW + 'Munny: ' + Fore.WHITE + str(3*enemy['munny'][0]) + '-' + str(3*enemy['munny'][1]) + Fore.YELLOW + '    Exp: ' + Fore.WHITE + str(enemy['exp']) + Fore.YELLOW + '    Drops: ' + Fore.WHITE + ', '.join(drops)
+
+        if (3*enemy['munny'][0])>9:text=text.replace('   Exp','  Exp')
+        if (3*enemy['munny'][0])>99:text=text.replace('   Exp','  Exp')
+        if (3*enemy['munny'][0])>99:text=text.replace('   Exp','  Exp')
+        if enemy['exp']>99:text=text.replace('   Drops','  Drops')
+        if enemy['exp']>999:text=text.replace('  Drops',' Drops')
+        if not drops: text=text+'Nothing'
+
+        print(text)
 
     def enemiesJournal(self):
         print('Enemy List')
         for enemy in self.enemiesList:
             tab=''
             for _ in range(30-len(enemy)):   tab=tab+' '
-            print('\n' + enemy.capitalize() + tab + 'Defeated: ', self.enemiesList[enemy])
+            print('\n' + Fore.LIGHTRED_EX + enemy.capitalize() + Fore.WHITE + tab + 'Defeated: ', self.enemiesList[enemy])
             if self.enemiesList[enemy]>=10: self.enemyDetails(enemy)
             if self.enemiesList[enemy]>=20: self.enemyDeepDetails(enemy)
 

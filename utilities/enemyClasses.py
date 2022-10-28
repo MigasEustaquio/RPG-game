@@ -53,12 +53,10 @@ class Heartless:
           self.exp = heartless[name]['exp']
           self.munny = heartless[name]['munny']
           self.drop = heartless[name]['drop']
-          self.luckyDrop = {(x+20):heartless[name]['drop'][x] for x in heartless[name]['drop']}
         else:
           self.exp = bosses[name]['exp']
           self.munny = bosses[name]['munny']
           self.drop = bosses[name]['drop']
-          self.luckyDrop = {(x+20):bosses[name]['drop'][x] for x in bosses[name]['drop']}
 
 
         colorama_init(autoreset=True)
