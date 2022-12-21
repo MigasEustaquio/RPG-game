@@ -899,14 +899,15 @@ def gameOver():                                 ###GAME OVER
       print('Command not found!\n')
       command = ''
 
-def arenaGameOver():                            ###ARENA GAME OVER
-  print('\n\nKINGDOM HEARTS🤍\n\nColiseum Arena\nretry?\nquit?\n\n')
+def arenaGameOver(practice=False):                            ###ARENA GAME OVER
+  if practice: print('\n\nKINGDOM HEARTS🤍\n\Practice Arena\nretry?\ncontinue?\n\n')
+  else: print('\n\nKINGDOM HEARTS🤍\n\nColiseum Arena\nretry?\ncontinue?\n\n')
   command = ''
   while True:
     player.restoreArenaBKP()
     command = input('>').lower()
     if 'retry' in command: return 'retry'
-    elif 'quit' in command: return 'quit'
+    elif 'continue' in command: return 'continue'
     else:
       print('Command not found!\n')
       command = ''
@@ -1012,7 +1013,7 @@ def arena(arenaNumber):                         ###ARENA FIGHT
           if result == 'retry':
             retry = True
             break
-          if result == 'quit':
+          if result == 'continue':
             return
 
     if retry == False:
@@ -1074,7 +1075,49 @@ def selectArena():                              ###SELECT ARENA
     else:
       print('\nArena not found!')
 
+def practice(enemyName):
+  while True:
+    retry = False
+    player.createArenaBKP()
 
+    result = battle(enemyName, arenaBattle=True)
+    if result == 'victory':
+      print(green +'\nEnemy defeated!\n' + white)
+      player.restoreArenaBKP()
+    elif result == 'defeat':
+        
+      print("---------------------------")
+      print('Your HP has dropped to zero!\nYou were defeated')
+
+      result = arenaGameOver(practice=True)
+      if result == 'retry':
+        retry = True
+        break
+      if result == 'continue':
+        return
+
+    if retry == False:  break
+
+def selectPractice():
+  while True:
+    print('\nRoxas: Who do you want to practice against?\n(type the name of the enemy you wish to face. 0 or \'nevermind\' to leave)')
+    i=0
+    for enemy in player.enemiesList:
+      tab=''
+      for _ in range(30-len(enemy)):   tab=tab+' '
+      print('\n' + str(i+1) + '. ' + Fore.LIGHTRED_EX + enemy.capitalize())
+      i+=1
+
+    answer = input('>')
+    answer = answer.lower()
+    if answer == '0' or answer == 'nevermind':
+      print('\nRoxas: Okay, see ya next time.')
+      break
+    elif answer in player.enemiesList:
+      print('\nRoxas: Very well, good luck!')
+      practice(answer)
+      break
+    else: print('\nEnemy not found!')
 
 
 #################
@@ -1349,58 +1392,63 @@ while True:                        ###MAIN
             print('You can\'t go that way!')
 
     elif move[0] == 'talk' :                            ##### TALK WITH PERSON
-      #if the room contains an person
-      peopleToTalk, storyToTalk = verifyPersonStory(rooms[player.world][currentRoom]['person'])
+      #if the room contains a person
+      
+      if "person" in rooms[player.world][currentRoom]:
+        peopleToTalk, storyToTalk = verifyPersonStory(rooms[player.world][currentRoom]['person'])
 
-      if 'person' in rooms[player.world][currentRoom] and move[1].capitalize() in peopleToTalk:
-        i=0
-        for person in peopleToTalk:
-          if move[1].capitalize() == person:
-            #falar com a pessoa
-            print(people[currentRoom][person][storyToTalk[i]]['speech'])
-            event = people[currentRoom][person][storyToTalk[i]]
-            reward = event['reward']
-            if reward == 'story':
-              if player.story[player.world] == (people[currentRoom][person][storyToTalk[i]]['story']-1):
-                player.story[player.world] += 1
-                print()
-            elif reward == 'mapUpdate':
-              if player.map[player.world][event['mapUpdate']] == 'no':
-                player.map[player.world][event['mapUpdate']] = 'incomplete'
-                print('Obtained ' + player.world + ' ' + event['mapUpdate'] + ' map!')
-              elif player.map[player.world][event['mapUpdate']] == 'incomplete':
-                player.map[player.world][event['mapUpdate']] = 'complete'
-                print(player.world + ' ' + event['mapUpdate'] + ' map updated!')
-              tutorials(['open map'])
-            elif reward == 'keyblade':
-              player.keyblades.append(people[currentRoom][person][storyToTalk[i]]['keyblade'])
-              print('You got the ' + cyan + people[currentRoom][person][storyToTalk[i]]['keyblade'] + white + ' Keyblade!')
-            elif reward == 'key item':
-              player.keyItems.append(people[currentRoom][person][storyToTalk[i]]['key item'])
-              print('You got the "' + people[currentRoom][person][storyToTalk[i]]['key item'] + '" key item!')
-            elif reward == 'item':
-              print('You got a ' + green + people[currentRoom][person][storyToTalk[i]]['item'] + white + '!')
-              if len(player.item) < player.itemPouch:
-                player.item.append(people[currentRoom][person][storyToTalk[i]]['item'])
-              else:
-                player.stock.append(people[currentRoom][person][storyToTalk[i]]['item'])
-                print('Your item pouch is full, item send to stock!!')
-            elif reward == 'arena':
-              selectArena()
-            # elif reward == 'transport':
-            #   print(event['transport speech'])
+        if move[1].capitalize() in peopleToTalk:
+          i=0
+          for person in peopleToTalk:
+            if move[1].capitalize() == person:
+              #falar com a pessoa
+              print(people[currentRoom][person][storyToTalk[i]]['speech'])
+              event = people[currentRoom][person][storyToTalk[i]]
+              reward = event['reward']
+              if reward == 'story':
+                if player.story[player.world] == (people[currentRoom][person][storyToTalk[i]]['story']-1):
+                  player.story[player.world] += 1
+                  print()
+              elif reward == 'mapUpdate':
+                if player.map[player.world][event['mapUpdate']] == 'no':
+                  player.map[player.world][event['mapUpdate']] = 'incomplete'
+                  print('Obtained ' + player.world + ' ' + event['mapUpdate'] + ' map!')
+                elif player.map[player.world][event['mapUpdate']] == 'incomplete':
+                  player.map[player.world][event['mapUpdate']] = 'complete'
+                  print(player.world + ' ' + event['mapUpdate'] + ' map updated!')
+                tutorials(['open map'])
+              elif reward == 'keyblade':
+                player.keyblades.append(people[currentRoom][person][storyToTalk[i]]['keyblade'])
+                print('You got the ' + cyan + people[currentRoom][person][storyToTalk[i]]['keyblade'] + white + ' Keyblade!')
+              elif reward == 'key item':
+                player.keyItems.append(people[currentRoom][person][storyToTalk[i]]['key item'])
+                print('You got the "' + people[currentRoom][person][storyToTalk[i]]['key item'] + '" key item!')
+              elif reward == 'item':
+                print('You got a ' + green + people[currentRoom][person][storyToTalk[i]]['item'] + white + '!')
+                if len(player.item) < player.itemPouch:
+                  player.item.append(people[currentRoom][person][storyToTalk[i]]['item'])
+                else:
+                  player.stock.append(people[currentRoom][person][storyToTalk[i]]['item'])
+                  print('Your item pouch is full, item send to stock!!')
+              elif reward == 'arena':
+                selectArena()
 
-            if reward != 'arena':
-              people[currentRoom][person][storyToTalk[i]]['reward'] = 'no'
+              elif reward == 'practice':
+                selectPractice()
 
-            if 'Moogle' in rooms[player.world][currentRoom]['person']:
-                shop(currentRoom)
+              # elif reward == 'transport':
+              #   print(event['transport speech'])
 
-          i+=1
+              if reward != 'arena' and reward != 'practice':
+                people[currentRoom][person][storyToTalk[i]]['reward'] = 'no'
 
-      else:
-        #tell them they can't talk
-        print('Can\'t talk to ' + move[1] + '!')
+              if 'Moogle' in rooms[player.world][currentRoom]['person']:
+                  shop(currentRoom)
+
+            i+=1
+
+        else: print('Can\'t talk to ' + move[1] + '!')
+      else: print('There\'s no one to talk here!')
 
 
     if 'boss' in rooms[player.world][currentRoom] and player.story[player.world] == (bosses[rooms[player.world][currentRoom]['boss']]['story']-1):           ###### BOSS BATTLE

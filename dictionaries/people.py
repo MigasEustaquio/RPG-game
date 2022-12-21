@@ -124,9 +124,8 @@ people = {
 
             '2nd Floor' : {
               'Roxas' : {
-                      0: {'speech' : 'Roxas: Story is now 1!',
-                        'reward' : 'story',
-                        'story' : 1,
+                      0: {'speech' : 'Roxas: How about some practice?',
+                        'reward' : 'practice',
                         'present' : 'yes',
                       },
                       2: {'speech' : 'Roxas: Here is an elixir!',

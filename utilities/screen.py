@@ -52,7 +52,6 @@ def save(file, y, saves):
 
   with open('utilities/saveFile.txt', 'w') as file:
     file.write(str(saves))
-
   print('Save complete!\n')
 
 def load(file, y, saves):
@@ -196,15 +195,15 @@ Load Game
 
 def saveScreen(y, saves):
     if y.saveFile !=0:
-        answer = input('You wish to overwrite the save file ' + str(y.saveFile) + ' ? (yes/no)\n>')
-        if answer.lower() == 'yes':
-            save(int(y.saveFile), y, saves)
-            return
-        elif answer.lower() == 'no':
-            pass
-        else:
-            print('Save canceled')
-            return
+      answer = input('You wish to overwrite the save file ' + str(y.saveFile) + ' ? (yes/no)\n>')
+      if answer.lower() == 'yes':
+          save(int(y.saveFile), y, saves)
+          return
+      elif answer.lower() == 'no':
+          pass
+      else:
+          print('Save canceled')
+          return
     
     option = ''
     while option == '':
@@ -217,37 +216,24 @@ def saveScreen(y, saves):
 
       option = input('>')
 
-      # if str(option).lower() == 'next':
-      #     if (i+3) in saves:
-      #         i+=1
-      #     else:
-      #         print(Fore.RED + 'No save file after these!')
-      #     option=''
-      # elif str(option).lower() == 'previous':
-      #     if i>1:
-      #         i-=1
-      #     else:
-      #         print(Fore.RED + 'No save file previous to these!')
-      #     option=''
-
       if option == '0':
         print('Save canceled')
         return
       elif option.isnumeric():
-          if int(option) in saves:
-              answer = input('You wish to overwrite the save file ' + option + ' ? (yes/no)')
-              if answer.lower() == 'yes':
-                  save(int(option), y, saves)
-                  return
-              else:
-                  print('Save canceled')
-          else:
-              if (int(option)-1) in saves:
+        if int(option) in saves:
+            answer = input('You wish to overwrite the save file ' + option + ' ? (yes/no)')
+            if answer.lower() == 'yes':
                 save(int(option), y, saves)
-              else:
-                print("Save file too far! Saving in new file...")
-                save(len(saves)+1, y, saves)
-              return
+                return
+            else:
+                print('Save canceled')
+        else:
+            if (int(option)-1) in saves:
+              save(int(option), y, saves)
+            else:
+              print("Save file too far! Saving in new file...")
+              save(len(saves)+1, y, saves)
+            return
       else:
-            print(Fore.RED + 'Save file not found')
-            option=''
+        print(Fore.RED + 'Save file not found')
+        option=''

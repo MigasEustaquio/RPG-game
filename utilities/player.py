@@ -106,6 +106,8 @@ class player:
         self.MP = self.MPBKP
         self.item = self.item + self.itemBKP
     def createArenaBKP(self):
+        self.HP=self.TotalHP
+        self.MP=self.TotalMP
         self.ArenaHPBKP = self.HP
         self.ArenaMPBKP = self.MP
         self.ArenaitemBKP = []
