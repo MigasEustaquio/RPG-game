@@ -32,6 +32,7 @@ def save(file, y, saves):
   x['finishers'] = y.finishers
   x['comboModifiers'] = y.comboModifiers
   x['activeAbilities'] = y.activeAbilities
+  x['path'] = y.path
   x['world'] = y.world
   x['map'] = y.map
   x['tutorial'] = y.tutorial
@@ -82,6 +83,7 @@ def load(file, y, saves):
   y.finishers = x['finishers']
   y.comboModifiers = x['comboModifiers']
   y.activeAbilities = x['activeAbilities']
+  y.path = x['path']
   y.world = x['world']
   y.map = x['map']
   y.tutorial = x['tutorial']
@@ -215,20 +217,20 @@ def saveScreen(y, saves):
 
       option = input('>')
 
-      if str(option).lower() == 'next':
-          if (i+3) in saves:
-              i+=1
-          else:
-              print(Fore.RED + 'No save file after these!')
-          option=''
-      elif str(option).lower() == 'previous':
-          if i>1:
-              i-=1
-          else:
-              print(Fore.RED + 'No save file previous to these!')
-          option=''
+      # if str(option).lower() == 'next':
+      #     if (i+3) in saves:
+      #         i+=1
+      #     else:
+      #         print(Fore.RED + 'No save file after these!')
+      #     option=''
+      # elif str(option).lower() == 'previous':
+      #     if i>1:
+      #         i-=1
+      #     else:
+      #         print(Fore.RED + 'No save file previous to these!')
+      #     option=''
 
-      elif option == '0':
+      if option == '0':
         print('Save canceled')
         return
       elif option.isnumeric():

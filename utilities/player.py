@@ -46,7 +46,7 @@ class player:
 
         self.keyblades = ['Wooden Sword']
 
-        self.MaxAP = 1
+        self.MaxAP = 3
         self.TotalAP = self.MaxAP
         self.AP = self.TotalAP
 
@@ -57,11 +57,12 @@ class player:
         self.combo = [] #Avaliable combo modifiers for current combo
 
         #STORY RELATED
-        self.world = 'TraverseTown'
+        self.path = 'none'
+        self.world = 'DestinyIslands'
         self.allies = []
         self.map = worldMaps
         self.shipUnlocked = True
-        self.unlockedWorlds = ['TraverseTown']
+        self.unlockedWorlds = ['DestinyIslands']
         self.story = {'DestinyIslands' : 0, 'TraverseTown' : 0, 'Wonderland' : 0, 'DeepJungle' : 0,
         'Atlantica' : 0, 'OlympusColiseum' : 0, 'Agrabah' : 0, 'Monstro' : 0, '100AcreWood' : 0,
         'HalloweenTown' : 0, 'Neverland' : 0, 'HollowBastion' : 0, 'EndOfTheWorld' : 0}
@@ -78,7 +79,7 @@ class player:
 
         self.saveFile = 0
         self.editedSaves = saves
-        self.currentRoom = 'First District'
+        self.currentRoom = 'Dive to the Heart'
 
         self.HPBKP = 0
         self.MPBKP = 0
@@ -264,7 +265,7 @@ class player:
         print("Total Strength: ", damage)
         print("Total Defense: ", defense)
         print("\nExp: " + str(self.exp))
-        print("Next level: " + str(levelUp[self.level]['next']-self.exp) + ' xp')
+        print("Next level: " + str(levelUpExp[self.level+1]-self.exp) + ' xp')
         print(Fore.GREEN + "---------------------------\n"+Fore.WHITE+"Keyblades:")
         self.showKeyblades()
         if any(self.equipmentList):

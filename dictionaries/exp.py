@@ -1,305 +1,74 @@
-
-levelUp = {
-
-                1 : { 'exp': 0, 'next' : 20,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                2 : { 'exp': 20, 'next' : 70,
-                        'ability' : 'Scan', 'HP' : 1, 'MP' : 0  },
-
-                3 : { 'exp': 70, 'next' : 140,
-                        'ability' : 'Mp Haste', 'HP' : 0, 'MP' : 1  },
-
-                4 : { 'exp': 140, 'next' : 240,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                5 : { 'exp': 240, 'next' : 390,
-                        'ability' : 'none', 'HP' : 1, 'MP' : 0  },
-
-                6 : { 'exp': 390, 'next' : 580,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 1  },
-
-                7 : { 'exp': 580, 'next' : 800,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                8 : { 'exp': 800, 'next' : 1090,
-                        'ability' : 'none', 'HP' : 1, 'MP' : 0  },
-
-                9 : { 'exp': 1090, 'next' : 1350,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 1  },
-
-                10 : { 'exp': 1350, 'next' : 1620,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                11 : { 'exp': 1620, 'next' : 2000,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                12 : { 'exp': 2000, 'next' : 2470,
-                        'ability' : 'scan', 'HP' : 1, 'MP' : 0  },
-
-                13 : { 'exp': 2470, 'next' : 3040,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 1  },
-
-                14 : { 'exp': 3040, 'next' : 3470,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                15 : { 'exp': 3470, 'next' : 0,
-                        'ability' : 'scan', 'HP' : 1, 'MP' : 0  },
-
-                16 : { 'exp': 0, 'next' : 0,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 1  },
-
-                17 : { 'exp': 0, 'next' : 0,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                18 : { 'exp': 0, 'next' : 0,
-                        'ability' : 'scan', 'HP' : 1, 'MP' : 0  },
-
-                19 : { 'exp': 0, 'next' : 6930,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 1  },
-
-                20 : { 'exp': 6930, 'next' : 0,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                21 : { 'exp': 0, 'next' : 0,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                22 : { 'exp': 0, 'next' : 0,
-                        'ability' : 'scan', 'HP' : 1, 'MP' : 0  },
-
-                23 : { 'exp': 0, 'next' : 0,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 1  },
-
-                24 : { 'exp': 0, 'next' : 13030,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                25 : { 'exp': 13030, 'next' : 0,
-                        'ability' : 'scan', 'HP' : 1, 'MP' : 0  },
-
-                26 : { 'exp': 50, 'next' : 100,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 1  },
-
-                27 : { 'exp': 0, 'next' : 20,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                28 : { 'exp': 20, 'next' : 50,
-                        'ability' : 'scan', 'HP' : 1, 'MP' : 0  },
-
-                29 : { 'exp': 50, 'next' : 23030,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 1  },
-
-                30 : { 'exp': 23030, 'next' : 0,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                31 : { 'exp': 0, 'next' : 20,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                32 : { 'exp': 20, 'next' : 50,
-                        'ability' : 'scan', 'HP' : 1, 'MP' : 0  },
-
-                33 : { 'exp': 50, 'next' : 100,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 1  },
-
-                34 : { 'exp': 0, 'next' : 39030,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                35 : { 'exp': 39030, 'next' : 50,
-                        'ability' : 'scan', 'HP' : 1, 'MP' : 0  },
-
-                36 : { 'exp': 50, 'next' : 100,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 1  },
-
-                37 : { 'exp': 0, 'next' : 20,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                38 : { 'exp': 20, 'next' : 50,
-                        'ability' : 'scan', 'HP' : 1, 'MP' : 0  },
-
-                39 : { 'exp': 50, 'next' : 67630,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 1  },
-
-                40 : { 'exp': 67630, 'next' : 0,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                41 : { 'exp': 0, 'next' : 20,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                42 : { 'exp': 20, 'next' : 50,
-                        'ability' : 'scan', 'HP' : 1, 'MP' : 0  },
-
-                43 : { 'exp': 50, 'next' : 100,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 1  },
-
-                44 : { 'exp': 0, 'next' : 114630,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                45 : { 'exp': 114630, 'next' : 50,
-                        'ability' : 'scan', 'HP' : 1, 'MP' : 0  },
-
-                46 : { 'exp': 50, 'next' : 100,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 1  },
-
-                47 : { 'exp': 0, 'next' : 20,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                48 : { 'exp': 20, 'next' : 50,
-                        'ability' : 'scan', 'HP' : 1, 'MP' : 0  },
-
-                49 : { 'exp': 50, 'next' : 191430,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 1  },
-
-                50 : { 'exp': 191430, 'next' : 20,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                51 : { 'exp': 0, 'next' : 20,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                52 : { 'exp': 20, 'next' : 50,
-                        'ability' : 'scan', 'HP' : 1, 'MP' : 0  },
-
-                53 : { 'exp': 50, 'next' : 100,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 1  },
-
-                54 : { 'exp': 0, 'next' : 321630,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                55 : { 'exp': 321630, 'next' : 50,
-                        'ability' : 'scan', 'HP' : 1, 'MP' : 0  },
-
-                56 : { 'exp': 50, 'next' : 100,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 1  },
-
-                57 : { 'exp': 0, 'next' : 20,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                58 : { 'exp': 20, 'next' : 50,
-                        'ability' : 'scan', 'HP' : 1, 'MP' : 0  },
-
-                59 : { 'exp': 50, 'next' : 471630,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 1  },
-
-                60 : { 'exp': 471630, 'next' : 20,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                61 : { 'exp': 0, 'next' : 20,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                62 : { 'exp': 20, 'next' : 50,
-                        'ability' : 'scan', 'HP' : 1, 'MP' : 0  },
-
-                63 : { 'exp': 50, 'next' : 100,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 1  },
-
-                64 : { 'exp': 0, 'next' : 639630,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                65 : { 'exp': 639630, 'next' : 50,
-                        'ability' : 'scan', 'HP' : 1, 'MP' : 0  },
-
-                66 : { 'exp': 50, 'next' : 100,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 1  },
-
-                67 : { 'exp': 0, 'next' : 20,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                68 : { 'exp': 20, 'next' : 50,
-                        'ability' : 'scan', 'HP' : 1, 'MP' : 0  },
-
-                69 : { 'exp': 50, 'next' : 819630,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 1  },
-
-                70 : { 'exp': 819630, 'next' : 20,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                71 : { 'exp': 0, 'next' : 20,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                72 : { 'exp': 20, 'next' : 50,
-                        'ability' : 'scan', 'HP' : 1, 'MP' : 0  },
-
-                73 : { 'exp': 50, 'next' : 100,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 1  },
-
-                74 : { 'exp': 0, 'next' : 999630,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                75 : { 'exp': 999630, 'next' : 50,
-                        'ability' : 'scan', 'HP' : 1, 'MP' : 0  },
-
-                76 : { 'exp': 50, 'next' : 100,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 1  },
-
-                77 : { 'exp': 0, 'next' : 20,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                78 : { 'exp': 20, 'next' : 50,
-                        'ability' : 'scan', 'HP' : 1, 'MP' : 0  },
-
-                79 : { 'exp': 50, 'next' : 1179630,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 1  },
-
-                80 : { 'exp': 1179630, 'next' : 20,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                81 : { 'exp': 0, 'next' : 20,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                82 : { 'exp': 20, 'next' : 50,
-                        'ability' : 'scan', 'HP' : 1, 'MP' : 0  },
-
-                83 : { 'exp': 50, 'next' : 100,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 1  },
-
-                84 : { 'exp': 0, 'next' : 1359630,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                85 : { 'exp': 1359630, 'next' : 50,
-                        'ability' : 'scan', 'HP' : 1, 'MP' : 0  },
-
-                86 : { 'exp': 50, 'next' : 100,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 1  },
-
-                87 : { 'exp': 0, 'next' : 20,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                88 : { 'exp': 20, 'next' : 50,
-                        'ability' : 'scan', 'HP' : 1, 'MP' : 0  },
-
-                89 : { 'exp': 50, 'next' : 1539630,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 1  },
-
-                90 : { 'exp': 1539630, 'next' : 20,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                91 : { 'exp': 0, 'next' : 20,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                92 : { 'exp': 20, 'next' : 50,
-                        'ability' : 'scan', 'HP' : 1, 'MP' : 0  },
-
-                93 : { 'exp': 50, 'next' : 100,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 1  },
-
-                94 : { 'exp': 0, 'next' : 1719630,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                95 : { 'exp': 1719630, 'next' : 50,
-                        'ability' : 'scan', 'HP' : 1, 'MP' : 0  },
-
-                96 : { 'exp': 50, 'next' : 100,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 1  },
-
-                97 : { 'exp': 0, 'next' : 20,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 0},
-
-                98 : { 'exp': 20, 'next' : 50,
-                        'ability' : 'scan', 'HP' : 1, 'MP' : 0  },
-
-                99 : { 'exp': 50, 'next' : 1899630,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 1  },
-
-                100 : { 'exp': 1899630, 'next' : 0,
-                        'ability' : 'none', 'HP' : 0, 'MP' : 1  },
-
-
+#https://gamefaqs.gamespot.com/ps2/516587-kingdom-hearts/faqs/62863
+
+levelUpStatsDetails = {
+
+        'HP': 3, 'MP': 1, 'AP': 2, 'STR': 2, 'DEF': 2, 'item slot': 1, 'equipment slot': 1
+}
+
+levelUpStatsBonus={
+        2:'STR', 3:'DEF', 4:'STR', 5:'DEF', 6:'HP', 7:'STR', 8:'HP', 9:'DEF', 10:'HP',
+        11:'AP', 12:'MP', 13:'STR', 14:'HP', 15:'DEF', 16:'HP', 17:'AP', 18:'item slot', 19:'STR', 20:'AP',
+        21:'DEF', 22:'HP', 23:'AP', 24:'MP', 25:'STR', 26:'HP', 27:'DEF', 28:'HP', 29:'AP', 30:'item slot',
+        31:'STR', 32:'AP', 33:'DEF', 34:'HP', 35:'AP', 36:'MP', 37:'STR', 38:'HP', 39:'DEF', 40:'HP',
+        41:'AP', 42:'item slot', 43:'STR', 44:'AP', 45:'DEF', 46:'HP', 47:'AP', 48:'MP', 49:'STR', 50:'HP',
+        51:'DEF', 52:'HP', 53:'AP', 54:'HP', 55:'STR', 56:'AP', 57:'DEF', 58:'HP', 59:'AP', 60:'MP',
+        61:'STR', 62:'HP', 63:'DEF', 64:'HP', 65:'AP', 66:'HP', 67:'STR', 68:'AP', 69:'DEF', 70:'HP',
+        71:'AP', 72:'HP', 73:'STR', 74:'HP', 75:'DEF', 76:'AP', 77:'STR', 78:'DEF', 79:'AP', 80:'STR',
+        81:'DEF', 82:'STR', 83:'DEF', 84:'STR', 85:'DEF', 86:'STR', 87:'DEF', 88:'STR', 89:'DEF', 90:'STR',
+        91:'DEF', 92:'STR', 93:'DEF', 94:'STR', 95:'DEF', 96:'STR', 97:'DEF', 98:'STR', 99:'DEF', 100:'STR'
+}
+
+levelUpBonus = {
+        'SWORD':{
+                1 : '', 2 : '', 3 : '', 4 : '', 5 : '', 6 : 'Sliding Dash', 7 : '', 8 : '', 9 : 'Scan', 10 : '',
+                11 : '', 12 : 'Slapshot', 13 : '', 14 : '', 15 : 'Counterattack', 16 : '', 17 : '', 18 : 'EXP Boost', 19 : '', 20 : '',
+                21 : '*', 22 : '', 23 : '', 24 : '*', 25 : '', 26 : '', 27 : 'Hurricane Blast', 28 : '', 29 : '', 30 : 'Aerial Sweep',
+                31 : '', 32 : '', 33 : 'Blitz', 34 : '', 35 : '', 36 : '*', 37 : '', 38 : '', 39 : 'Ripple Drive', 40 : '', 
+                41 : '', 42 : 'MP', 43 : '', 44 : '', 45 : 'MP Haste', 46 : '', 47 : '', 48 : 'Second Chance', 49 : '', 50 : 'Combo Master', 
+                51 : 'Stun Impact', 52 : '', 53 : '', 54 : 'item slot', 55 : '', 56 : '', 57 : 'Vortex', 58 : '', 59 : '', 60 : 'Aerial Sweep', 
+                61 : '', 62 : '', 63 : 'MP Rage', 64 : '', 65 : '', 66 : '*', 67 : '', 68 : '', 69 : 'Leaf Bracer', 70 : '', 
+                71 : '', 72 : '*', 73 : '', 74 : '', 75 : '*', 76 : '', 77 : '', 78 : '*', 79 : '', 80 : '', 
+                81 : 'EXP Boost', 82 : '', 83 : '', 84 : '*', 85 : '', 86 : '', 87 : 'MP Rage', 88 : '', 89 : '', 90 : 'Lucky Strike', 
+                91 : '', 92 : '', 93 : '*', 94 : '', 95 : '', 96 : '*', 97 : '', 98 : '', 99 : '*', 100 : 'Jackpot'
+        },
+
+        'ROD':{
+                1 : '', 2 : '', 3 : '', 4 : '', 5 : '', 6 : 'Stun Impact', 7 : '', 8 : '', 9 : '*', 10 : '',
+                11 : '', 12 : 'Ripple Drive', 13 : '', 14 : '', 15 : 'Scan', 16 : '', 17 : '', 18 : 'Hurricane Blast', 19 : '', 20 : '',
+                21 : 'MP Haste', 22 : '', 23 : '', 24 : '*', 25 : '', 26 : '', 27 : 'EXP Boost', 28 : '', 29 : '', 30 : '',
+                31 : '', 32 : '', 33 : '*', 34 : '', 35 : '', 36 : 'Aerial Sweep', 37 : '', 38 : '', 39 : 'Leaf Bracer', 40 : '', 
+                41 : '', 42 : 'MP Rage', 43 : '', 44 : '', 45 : '*', 46 : '', 47 : '', 48 : 'Lucky Strike', 49 : '', 50 : '', 
+                51 : 'Sliding Dash', 52 : '', 53 : '', 54 : 'equipment slot', 55 : 'Combo Master', 56 : '', 57 : 'Counterattack', 58 : '', 59 : '', 60 : 'Berserk', 
+                61 : '', 62 : '', 63 : 'Jackpot', 64 : '', 65 : '', 66 : 'MP', 67 : '', 68 : '', 69 : 'Slapshot', 70 : '', 
+                71 : '', 72 : '*', 73 : '', 74 : '', 75 : 'MP Rage', 76 : '', 77 : '', 78 : 'Blitz', 79 : '', 80 : '', 
+                81 : 'EXP Boost', 82 : '', 83 : '', 84 : 'Vortex', 85 : '', 86 : '', 87 : '*', 88 : '', 89 : '', 90 : 'Second Chance', 
+                91 : '', 92 : '', 93 : '*', 94 : '', 95 : '', 96 : '*', 97 : '', 98 : '', 99 : '*', 100 : '*'
+        },
+
+        'SHIELD':{
+                1 : '', 2 : '', 3 : '', 4 : '', 5 : '', 6 : 'Slapshot', 7 : '', 8 : '', 9 : 'Berserk', 10 : '',
+                11 : '', 12 : 'EXP Boost', 13 : '', 14 : '', 15 : '*', 16 : '', 17 : '', 18 : 'Stun Impact', 19 : '', 20 : '',
+                21 : 'Scan', 22 : '', 23 : '', 24 : 'Lucky Strike', 25 : '', 26 : '', 27 : 'Leaf Bracer', 28 : '', 29 : '', 30 : '*',
+                31 : '', 32 : '', 33 : '', 34 : '', 35 : '', 36 : 'Second Chance', 37 : '', 38 : '', 39 : 'Sliding Dash', 40 : '', 
+                41 : '', 42 : 'Jackpot', 43 : '', 44 : '', 45 : 'Counterattack', 46 : '', 47 : '', 48 : '*', 49 : '', 50 : '', 
+                51 : 'Hurricane Blast', 52 : '', 53 : '', 54 : '', 55 : 'Combo Master', 56 : '', 57 : '*', 58 : '', 59 : '', 60 : 'Blitz', 
+                61 : '', 62 : '', 63 : '*', 64 : '', 65 : '', 66 : '', 67 : '', 68 : '', 69 : 'Ripple Drive', 70 : '', 
+                71 : '', 72 : 'MP Haste', 73 : '', 74 : '', 75 : '*', 76 : '', 77 : '', 78 : 'Vortex', 79 : '', 80 : '', 
+                81 : 'EXP Boost', 82 : '', 83 : '', 84 : 'Aerial Sweep', 85 : '', 86 : '', 87 : '*', 88 : '', 89 : '', 90 : 'MP Rage', 
+                91 : '', 92 : '', 93 : '*', 94 : '', 95 : '', 96 : '*', 97 : '', 98 : '', 99 : '*', 100 : '*'
+        },
+                
+}
+
+levelUpExp = {
+                2: 20, 3: 70, 4: 140, 5: 240, 6: 390, 7: 580, 8: 800, 9: 1090, 10: 1350,
+        11: 1620, 12: 2000, 13: 2470, 14: 3040, 15: 0, 16: 0, 17: 0, 18: 0, 19: 0, 20: 6930,
+        21: 0, 22: 0, 23: 0, 24: 0, 25: 13030, 26: 0, 27: 0, 28: 0, 29: 0, 30: 23030, 
+        31: 0, 32: 0, 33: 0, 34: 0, 35: 39030, 36: 0, 37: 0, 38: 0, 39: 0, 40: 67630, 
+        41: 0, 42: 0, 43: 0, 44: 0, 45: 114630, 46: 0, 47: 0, 48: 0, 49: 0, 50: 191430, 
+        51: 0, 52: 0, 53: 0, 54: 0, 55: 321630, 56: 0, 57: 0, 58: 0, 59: 0, 60: 471630, 
+        61: 0, 62: 0, 63: 0, 64: 0, 65: 639630, 66: 0, 67: 0, 68: 0, 69: 0, 70: 819630, 
+        71: 0, 72: 0, 73: 0, 74: 0, 75: 999630, 76: 0, 77: 0, 78: 0, 79: 0, 80: 1179630, 
+        81: 0, 82: 0, 83: 0, 84: 0, 85: 1359630, 86: 0, 87: 0, 88: 0, 89: 0, 90: 1539630, 
+        91: 0, 92: 0, 93: 0, 94: 0, 95: 1719630, 96: 0, 97: 0, 98: 0, 99: 0, 100: 1899630
 }

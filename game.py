@@ -12,22 +12,94 @@ from dictionaries.enemies import *
 from dictionaries.scenes import *
 from dictionaries.enemyLocations import *
 
-def showInstructions():
-    #print a main menu and the commands
-    print('''
-Tutorial:
-Traverse Town
-========
-Talk to Leon!
-Find Donald and Goofy!
-Survive the heartless!
+def tutorials(tutorialList):
+  for tutorial in tutorialList:
+    if player.tutorial[tutorial] == 0:
+      print(Fore.YELLOW + "tutorial: " + Fore.WHITE + tutorialSpeech[tutorial])
+      player.tutorial[tutorial] = 1
 
-Commands:
-  go [direction]/[back]
-  enter [location]
-  talk [person]
-  menu
-''')
+
+def newGame():  ############################################
+  choose = ''
+  giveUp = ''
+
+  while choose == '':
+    print('\nChoose well\n\n1- Power of the warrior (STR+1)\n2- Power of the mystic (MP+1)\n3- Power of the guardian (DEF+1)')
+    choose = input('>')
+    text='\nAnd what power do you give up in return?\n'
+
+
+    if '1' in choose:
+      text=text+'\n2- Power of the mystic (AP-1)\n3- Power of the guardian (DEF-1)'
+      choose='3'
+      print('The power of the warrior.\nInvincible courage.\nA sword of terrible destruction.')
+
+    elif '2' in choose:
+      text=text+'\n1- Power of the guardian (DEF-1)\n3- Power of the warrior (STR-1)'
+      choose='2'
+      print('The power of the mystic.\nInner strength.\nA staff of wonder and ruin.')
+
+    elif '3' in choose:
+      text=text+'\n1- Power of the warrior (STR-1)\n2- Power of the mystic (AP-1)'
+      choose='1'
+      print('The power of the guardian.\nKindness to aid friends.\nA shield to repel all.')
+
+    else:
+      print('\nChoose one of the powers below')
+      choose=''
+
+    if '1' in choose or '2' in choose or '3' in choose:
+      answer=input('\nIs this the power you choose?\n>')
+      if answer.lower() == 'yes': break
+      else: choose = ''
+
+  while giveUp == '':
+    print(text)
+    giveUp = input('>')
+
+    if '1' in giveUp and '1' not in choose:
+      giveUp='1'
+      print('The power of the warrior.\nInvincible courage.\nA sword of terrible destruction.')
+
+    elif '2' in giveUp and '2' not in choose:
+      giveUp='2'
+      print('The power of the mystic.\nInner strength.\nA staff of wonder and ruin.')
+
+    elif '3' in giveUp and '3' not in choose:
+      giveUp='3'
+      print('The power of the guardian.\nKindness to aid friends.\nA shield to repel all.')
+
+    else:
+      print('\nChoose one of the powers below')
+      giveUp = ''
+
+    if '1' in giveUp or '2' in giveUp or '3' in giveUp:
+      answer=input('\nIs this the power you want to give up?\n>')
+      if answer.lower() == 'yes':
+        print('\nYour path is set.')
+        break
+      else: giveUp = ''
+
+  tutorials(['traverse rooms'])
+
+  if choose == '1':
+    player.path = 'SWORD'
+    player.STR+=1
+  elif choose == '2':
+    player.path = 'ROD'
+    player.MaxMP+=1
+    player.MP+=1
+    player.magicPower+=1
+  elif choose == '3':
+    player.path = 'SHIELD'
+    player.DEF+=1
+
+  if giveUp == '1': player.STR-=1
+  elif giveUp == '2':
+    player.MaxAP-=1
+    player.AP-=1
+  elif giveUp == '3': player.DEF-=1
+
 
 def verifyPersonStory(peolpeInRoom):            ###Check person's speech and reward based on story
   peopleToTalk = []
@@ -83,11 +155,7 @@ def showStatus():                               ###SHOW STATUS
       player.HP = player.TotalHP
       player.MP = player.TotalMP
       print('\nYou see a Save point, HP and MP restored!')
-      if player.tutorial['save'] == 0:
-        print(Fore.YELLOW + "tutorial: " + Fore.WHITE + tutorialSpeech['save'])
-        print(Fore.YELLOW + "tutorial: " + Fore.WHITE + tutorialSpeech['quit'])
-        player.tutorial['save'] = 1
-        player.tutorial['quit'] = 1
+      tutorials(['save', 'quit'])
       if "Shop" in currentRoom:
         print('To get out of the shop type: \'leave\'')
   if 'treasure' in rooms[player.world][currentRoom]:
@@ -100,17 +168,15 @@ def showStatus():                               ###SHOW STATUS
       print('🔸 You see a treasure chest!')
     elif count > 1:
       print('🔸 You see ' + str(count) + ' treasure chests!')
-    if player.tutorial['treasure chest'] == 0:
-      print(Fore.YELLOW + "tutorial: " + Fore.WHITE + tutorialSpeech['treasure chest'])
-      player.tutorial['treasure chest'] = 1
+    tutorials(['treasure chest'])
   print()
   for x in rooms[player.world][currentRoom]['move']:
     if rooms[player.world][currentRoom][x] in player.visitedRooms[player.world]:
       print('➤ ' + x + ': ' + rooms[player.world][currentRoom][x])
+    else: print('➤ ' + x + ': ???')
   print(Fore.RED + "---------------------------")
 
 def openTreasure(number, currentRoom):
-
   if treasureList[player.world][currentRoom][number]['treasure'] == 'item':
     print('Obtained a "' + treasureList[player.world][currentRoom][number]['item'] + '"!')
     if len(player.item) < player.itemPouch:
@@ -130,9 +196,7 @@ def openTreasure(number, currentRoom):
     elif player.map[player.world][treasureList[player.world][currentRoom][number]['mapUpdate']] == 'incomplete':
       player.map[player.world][treasureList[player.world][currentRoom][number]] = 'complete'
       print(player.world + ' ' + treasureList[player.world][currentRoom][number]['mapUpdate'] + ' map updated!')
-    if player.tutorial['open map'] == 0:
-      print(Fore.YELLOW + "tutorial: " + Fore.WHITE + tutorialSpeech['open map'])
-      player.tutorial['open map'] = 1
+    tutorials(['open map'])
 
   elif treasureList[player.world][currentRoom][number]['treasure'] == 'keyblade':
     print('Obtained the ' + cyan + treasureList[player.world][currentRoom][number]['keyblade'] + white + ' Keyblade!')
@@ -168,23 +232,33 @@ def addToEnemiesList(enemyName):
   else: player.enemiesList[enemyName]=1
 
 def levelUP():                                  ###LEVEL UP
-  if levelUp[player.level]['ability'] != 'none':
-    player.abilities.append([levelUp[player.level]['ability'], False])
-    print('\nObtained ' + yellow + levelUp[player.level]['ability'] + '!')
-  if levelUp[player.level]['HP'] != 0:
-    player.MaxHP += levelUp[player.level]['HP']
-    player.HP += levelUp[player.level]['HP']
+  if levelUpStatsBonus[player.level] == 'HP':
+    player.MaxHP += levelUpStatsDetails['HP']
+    player.HP += levelUpStatsDetails['HP']
     print('Maximum HP increased!')
-  if levelUp[player.level]['MP'] != 0:
-    player.MaxMP += levelUp[player.level]['MP']
-    player.MP += levelUp[player.level]['MP']
+  elif levelUpStatsBonus[player.level] == 'MP':
+    player.MaxMP += levelUpStatsDetails['MP']
+    player.MP += levelUpStatsDetails['MP']
     print('Maximum MP increased!')
-  if 'STR' in levelUp[player.level]:
-    player.STR += levelUp[player.level]['STR']
+  elif levelUpStatsBonus[player.level] == 'STR':
+    player.STR += levelUpStatsDetails['STR']
     print('Strength increased!')
-  if 'DEF' in levelUp[player.level]:
-    player.DEF += levelUp[player.level]['DEF']
+  elif levelUpStatsBonus[player.level] == 'DEF':
+    player.DEF += levelUpStatsDetails['DEF']
     print('Defense increased!')
+
+  if levelUpBonus[player.path][player.level] == '': pass
+  elif levelUpBonus[player.path][player.level] == 'item slot':
+    player.itemPouch += levelUpStatsDetails['item slot']
+  elif levelUpBonus[player.path][player.level] == 'equipment slot':
+    player.equipmentNumber += levelUpStatsDetails['equipment slot']
+  elif levelUpBonus[player.path][player.level] == 'MP':
+    player.MaxMP += levelUpStatsDetails['MP']
+    player.MP += levelUpStatsDetails['MP']
+    print('Maximum MP increased!')
+  else:
+    player.abilities.append([levelUpBonus[player.path][player.level], False])
+    print('\nObtained ' + yellow + levelUpBonus[player.path][player.level] + '!')
 
 def victoryMunny(enemyMunny):
   munny = 3 * random.randint(enemyMunny[0], enemyMunny[1])
@@ -198,16 +272,15 @@ def victoryExp(enemyEXP):
   if 'exp bracelet' in player.equipment: expBoost+=1
   if 'exp earring' in player.equipment: expBoost+=1
   expBoost+=player.abilities.count(['EXP Boost', True])
-  expReceived=math.ceil((expBoost)*(enemyEXP)/5)
+  expReceived=math.ceil(enemyEXP+(expBoost)*(enemyEXP)/5)
   print('You gained ' + str(expReceived) + ' exp!')
   player.exp+=expReceived
-  while player.exp >= levelUp[player.level]['next']:
+  while player.exp >= levelUpExp[player.level+1]:
     player.level+=1
     print('\nLevel Up!\nLevel: ' + str(player.level))
     levelUP()
 
 def victoryDrop(enemyDrop):
-
   y=player.abilities.count(['Lucky Strike', True])
   drops={(x+(20*y)):enemyDrop[x] for x in enemyDrop}
   dropNumber = random.randint(1, 100)
@@ -416,13 +489,13 @@ def comboModifiers(damage, enemy, enemyDamageDealt, enemySpeech):
     if comboModifier == 'Aerial Sweep':
       if player.ignoreBlock: damageDealt=math.ceil((1.2*damage)-enemy.totalDefense)
       else: damageDealt = math.ceil((1.2*damage)-enemy.defense)
-      speech ='You hit the enemy 3 times in a quick spiral. You caused ' + red + str(damageDealt) + ' ♥ ' + white + 'of damage!'
+      speech ='Sora hits the enemy 3 times in a quick spiral. You caused ' + red + str(damageDealt) + ' ♥ ' + white + 'of damage!'
     elif comboModifier == 'Slapshot':
       slapshotUsed=True
       name=enemy.name
       if enemy.bossBattle:  damageDealt=damage-bosses[name]['defense']
       else: damageDealt=damage-heartless[name]['defense']
-      speech='You rapidly striked the enemy. You caused ' + red + str(damageDealt) + ' ♥ ' + white + 'of damage!'
+      speech='Sora rapidly striked the enemy. You caused ' + red + str(damageDealt) + ' ♥ ' + white + 'of damage!'
     elif comboModifier == 'Sliding Dash':
       print()
     elif comboModifier == 'Vortex':
@@ -431,9 +504,9 @@ def comboModifiers(damage, enemy, enemyDamageDealt, enemySpeech):
       if 'attacks you' in enemySpeech and random.randint(1, 100)>60:
         enemySpeech=enemySpeech.replace(str(enemyDamageDealt)+' ♥', '0 ♥')
         enemyDamageDealt=0
-        speech='You striked in a vortex slash parrying the enemy attack. You caused ' + red + str(damageDealt) + ' ♥ ' + white + 'of damage!'
+        speech='Sora striked in a vortex slash parrying the enemy attack. You caused ' + red + str(damageDealt) + ' ♥ ' + white + 'of damage!'
       else:
-        speech='You striked in a vortex slash. You caused ' + red + str(damageDealt) + ' ♥ ' + white + 'of damage!'
+        speech='Sora striked in a vortex slash. You caused ' + red + str(damageDealt) + ' ♥ ' + white + 'of damage!'
   else:
     if player.ignoreBlock: damageDealt=damage-enemy.totalDefense
     else: damageDealt = (damage-enemy.defense)
@@ -1035,7 +1108,8 @@ while True:                        ###MAIN
   currentRoom = player.currentRoom
   previousRoom = currentRoom
 #
-  showInstructions()
+  if currentRoom == 'Dive to the Heart': newGame()
+
   while True:
     showStatus()
 
@@ -1062,9 +1136,7 @@ while True:                        ###MAIN
           else: print('\nJournal closed...\n')
 
     elif 'map' in move and 'world' not in move and 'journal' not in move:         ##### OPEN MAP
-      if player.tutorial['open map'] == 0:
-        print('The first time opening a map may glitch out and refuse to open, just close the map and open it again!')
-        player.tutorial['open map'] = 1
+      tutorials(['open map'])
       
       print('Opening map...\n')
       from PIL import Image
@@ -1299,9 +1371,7 @@ while True:                        ###MAIN
               elif player.map[player.world][event['mapUpdate']] == 'incomplete':
                 player.map[player.world][event['mapUpdate']] = 'complete'
                 print(player.world + ' ' + event['mapUpdate'] + ' map updated!')
-              if player.tutorial['open map'] == 0:
-                print(Fore.YELLOW + "tutorial: " + Fore.WHITE + tutorialSpeech['open map'])
-                player.tutorial['open map'] = 1
+              tutorials(['open map'])
             elif reward == 'keyblade':
               player.keyblades.append(people[currentRoom][person][storyToTalk[i]]['keyblade'])
               print('You got the ' + cyan + people[currentRoom][person][storyToTalk[i]]['keyblade'] + white + ' Keyblade!')

@@ -1,6 +1,6 @@
 urgent:{
 
-    *Active Abilities description and print
+    Level up abilities marked with '*' missing
 
 }
 

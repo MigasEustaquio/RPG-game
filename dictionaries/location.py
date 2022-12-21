@@ -11,7 +11,30 @@ rooms = {
 
   'DestinyIslands': {
 
-    0 : 'Seashore',
+    0 : 'Dive to the Heart',
+
+      'Dive to the Heart' : { 'down' : 'Dive to the Heart 2',
+                  'resetHeartless' : [],
+                  'map number' : '0',
+                  'restricted' : {},
+                  'move': ['down']
+      },
+
+      'Dive to the Heart 2' : { 'down' : 'Dive to the Heart 3',
+                  'resetHeartless' : [],
+                  'treasure' : '',
+                  'map number' : '0',
+                  'restricted' : {},
+                  'move': ['down']
+      },
+
+      'Dive to the Heart 3' : { 'down' : 'Seashore',
+                  'resetHeartless' : [],
+                  'heartless'  : '',
+                  'map number' : '0',
+                  'restricted' : {},
+                  'move': ['down']
+      },
 
       'Seashore' : { 'right' : 'Cove',
                   'down' : 'Paopu Tree',

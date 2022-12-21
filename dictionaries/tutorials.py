@@ -1,8 +1,10 @@
 tutorials = {
 
-            'use item' :  1,
+            'traverse rooms' : 0,
 
-            'cast magic' : 1,
+            'use item' :  0,
+
+            'cast magic' : 0,
 
             'talk' : 1,
 
@@ -22,6 +24,8 @@ tutorials = {
 
 tutorialSpeech = {
 
+            'traverse rooms' : 'To traverse through areas just type \'go [direction]\'',
+
             'use item' : 'To use an item just type \'use [item]\'',
 
             'cast magic' : 'To cast a magic spell just type \'cast [magic]\'',
@@ -32,7 +36,7 @@ tutorialSpeech = {
 
             'treasure chest' : 'To get the treasure chest from the current room just type \'treasure\'',
 
-            'open map' : 'To open the map of the current World just type \'map\'',
+            'open map' : 'To open the map of the current World just type \'map\'\nThe first time opening a map may glitch out and refuse to open, just close the map and open it again!',
 
             'equipment' : 'To equip an equipment just type \'equipment\'',
 
