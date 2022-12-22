@@ -49,7 +49,7 @@ rooms = {
 
       'Cove' : { 'left' : 'Seashore',
                   'up' : 'Seaside Shack',
-                  # 'treasure' : '',
+                  'treasure' : '',
                   'person'  : ['Riku', 'Kairi'],
                   'resetHeartless' : [],
                   'map number' : '1',
@@ -220,7 +220,8 @@ rooms = {
 
               'Magician\'s Study' : { 'down' : 'Mystical House',
                   'elevator' : 'Cavern',
-                  'person'  : ['Merlin', 'Fairy Godmother'],
+                  # 'person'  : ['Merlin', 'Fairy Godmother'],
+                  'book': 'book',
                   'resetHeartless' : ['Third District', 'Alleyway'],
                   'Save':'',
                   'map number' : '2',
@@ -376,11 +377,23 @@ rooms = {
 
     '100AcreWood': {
 
-      0:'',
+      0:'Old Book',
 
+      'Old Book' : {
+                  # 'one' : 'First Page',
+                  # 'two' : 'Second Page',
+                  # 'three' : 'Third Page',
+                  # 'four' : 'Fourth Page',
+                  # 'five' : 'Fifth Page',
+                  'resetHeartless' : [],
+                  'map number' : '0',
+                  'restricted' : {},
+                  'move': []
+                  # 'move': ['one', 'two', 'three', 'four', 'five']
+      },
 
       'Rooms List' : {
-                  'resetHeartless' : []
+                  'resetHeartless' : ['Old Book', '', '', '', '', '']
     }
 
   },

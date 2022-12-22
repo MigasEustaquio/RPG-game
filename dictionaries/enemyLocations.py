@@ -1,4 +1,24 @@
+# TUTORIAL
+# world:{
+#     room:{
+#         story:{
+#             'waves': (number of waves), 'status': (current wave),
+#             'wave': {(wave number): (enemy in the wave)}
+#         }
+#     }
+# }
+
 enemyLocations = {
+
+    'DestinyIslands': {
+
+        'Dive to the Heart 3':{
+            0:{
+                'waves': 1, 'status': 1,
+                'wave': {1: 'shadow'}
+            }
+        }
+    },
 
     'TraverseTown': {
 

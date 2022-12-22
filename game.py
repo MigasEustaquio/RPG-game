@@ -80,8 +80,6 @@ def newGame():  ############################################
         break
       else: giveUp = ''
 
-  tutorials(['traverse rooms'])
-
   if choose == '1':
     player.path = 'SWORD'
     player.STR+=1
@@ -139,6 +137,25 @@ def bossScene(enemyName):                       ###Print Scenes
      time.sleep(3)
     print()
 
+def sincBook():
+  numberOfPages = player.keyItems.count('Torn Page')
+  if numberOfPages > 0 and 'one' not in rooms['100AcreWood']['Old Book']:
+    rooms['100AcreWood']['Old Book']['one']='First Page'
+    rooms['100AcreWood']['Old Book']['move'].append('one')
+  if numberOfPages > 1 and 'two' not in rooms['100AcreWood']['Old Book']:
+    rooms['100AcreWood']['Old Book']['two']='Second Page'
+    rooms['100AcreWood']['Old Book']['move'].append('two')
+  if numberOfPages > 2 and 'three' not in rooms['100AcreWood']['Old Book']:
+    rooms['100AcreWood']['Old Book']['three']='Third Page'
+    rooms['100AcreWood']['Old Book']['move'].append('three')
+  if numberOfPages > 3 and 'four' not in rooms['100AcreWood']['Old Book']:
+    rooms['100AcreWood']['Old Book']['four']='Fourth Page'
+    rooms['100AcreWood']['Old Book']['move'].append('four')
+  if numberOfPages > 4 and 'five' not in rooms['100AcreWood']['Old Book']:
+    rooms['100AcreWood']['Old Book']['five']='Fifth Page'
+    rooms['100AcreWood']['Old Book']['move'].append('five')
+
+
 def showStatus():                               ###SHOW STATUS
   #print the player's current status
   print(Fore.RED + '\n---------------------------')
@@ -163,22 +180,25 @@ def showStatus():                               ###SHOW STATUS
     for number in player.treasures[player.world][currentRoom]:
       if number > player.story[player.world]: break
       if player.treasures[player.world][currentRoom][number]['status']=='closed': count+=1
-    if count == 0: return
+    if count == 0: pass
     elif count == 1:
       print('🔸 You see a treasure chest!')
     elif count > 1:
       print('🔸 You see ' + str(count) + ' treasure chests!')
     tutorials(['treasure chest'])
+  if 'book' in rooms[player.world][currentRoom]:
+    sincBook()
   print()
   for x in rooms[player.world][currentRoom]['move']:
     if rooms[player.world][currentRoom][x] in player.visitedRooms[player.world]:
       print('➤ ' + x + ': ' + rooms[player.world][currentRoom][x])
     else: print('➤ ' + x + ': ???')
   print(Fore.RED + "---------------------------")
+  tutorials(['traverse rooms'])
 
 def openTreasure(number, currentRoom):
   if treasureList[player.world][currentRoom][number]['treasure'] == 'item':
-    print('Obtained a "' + treasureList[player.world][currentRoom][number]['item'] + '"!')
+    print('Obtained a ' + green + treasureList[player.world][currentRoom][number]['item'] + white + '!')
     if len(player.item) < player.itemPouch:
       player.item.append(treasureList[player.world][currentRoom][number]['item'])
     else:
@@ -186,7 +206,7 @@ def openTreasure(number, currentRoom):
       print('Your item pouch is full, item send to stock!!')
 
   elif treasureList[player.world][currentRoom][number]['treasure'] == 'key item':
-    print('Obtained the "' + treasureList[player.world][currentRoom][number]['key item'] + '" key item!')
+    print('Obtained the ' + yellow + treasureList[player.world][currentRoom][number]['key item'] + white + ' key item!')
     player.keyItems.append(treasureList[player.world][currentRoom][number]['key item'])
 
   elif treasureList[player.world][currentRoom][number]['treasure'] == 'mapUpdate':
@@ -1192,26 +1212,25 @@ while True:                        ###MAIN
 
     elif 'test' in move:                                ##### TEST
 
-      # player.allies.append(Ally('Donald&Goofy', player))
-
-      player.treasureInfo()
-
-      # if bool(player.arenaRecords):
-      #   for record in player.arenaRecords:
-      #     print(arenaNames[record] + ' record: ' + player.arenaRecords[record])
-      # else:
-      #   print('There are no arena records!')
+      player.world = '100AcreWood'
+      player.currentRoom= 'Old Book'
+      currentRoom='Old Book'
 
       print('\ntested!\n')
+
+    elif 'transport' in move:                                ##### TEST
+
+      player.world = 'TraverseTown'
+      player.currentRoom= 'Mystical House'
+      currentRoom='Mystical House'
+
+      print('\ntransported!\n')
     
     elif 'upgrade' in move:                             ##### TEST 2 (story)
 
-      # print(player.allies)
+      player.keyItems.append('Torn Page')
 
-      player.story[player.world] += 1
-      print('Story: ' + str(player.story[player.world]))
-
-      print('\ntested!\n')
+      print('\nupgraded!\n')
     
     elif 'treasure' in move:                            ##### TREASURE
       if 'treasure' in rooms[player.world][currentRoom]:
@@ -1375,7 +1394,6 @@ while True:                        ###MAIN
           previousRoom = currentRoom
           currentRoom = rooms[player.world][currentRoom][move[1]]
           addVisitedRoom(currentRoom)
-
           resetHeartless(currentRoom) ####
 
         #there is no door (link) to the new room
@@ -1384,7 +1402,6 @@ while True:                        ###MAIN
             temp = currentRoom
             currentRoom = previousRoom
             previousRoom = temp
-
             resetHeartless(currentRoom) ####
 
         else:
