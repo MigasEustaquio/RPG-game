@@ -185,6 +185,24 @@ class player:
             else:
                 itemsDisplay = itemsDisplay + Fore.GREEN + individualItem + Fore.WHITE + 'x' + str(itemRepeat[individualItem]) + ', '
         return itemsDisplay[:-2]
+    def buildKeyItemDisplay(self, item):
+        itemRepeat = {}
+        shop=False
+        for individualItem in item:
+            if individualItem in itemRepeat:
+                itemRepeat[individualItem] += 1
+            else:
+                itemRepeat[individualItem] = 1
+        itemsDisplay = ''
+        for individualItem in itemRepeat:
+            if 'Shop location' in individualItem and shop == False:
+                itemsDisplay = itemsDisplay[:-2] + '\n\nShop locations: '
+                shop=True
+            if itemRepeat[individualItem] == 1:
+                itemsDisplay = itemsDisplay + Fore.YELLOW + individualItem.replace(' Shop location', '') + Fore.WHITE + ', '
+            else:
+                itemsDisplay = itemsDisplay + Fore.YELLOW + individualItem + Fore.WHITE + 'x' + str(itemRepeat[individualItem]) + ', '
+        return itemsDisplay[:-2]
     def buildSTRDEFDisplay(self):
         damage = self.STR
         defense = self.DEF
@@ -277,6 +295,8 @@ class player:
     def status(self):
         
         damage, defense = self.buildSTRDEFDisplay()
+        self.sortKeyItem()
+        keyItemsDisplay = self.buildKeyItemDisplay(self.keyItems) 
 
         self.menu()
         print("\nStrength: ", self.STR)
@@ -297,7 +317,7 @@ class player:
             print(Fore.BLUE + "---------------------------\n"+Fore.WHITE+"Abilities")
             self.showAbilities()
         if any(self.keyItems):
-            print("\nKey items: " + ', '.join(self.keyItems))
+            print("\nKey items: " + keyItemsDisplay)
 
     def showTutorials(self):
         for text in self.tutorial:

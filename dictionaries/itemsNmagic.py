@@ -296,4 +296,4 @@ equipments = {
         
 }
 
-keyItems = []
+keyItems = ['teste1', 'teste2', '1st Floor Shop location', 'Coliseum Shop location']

@@ -155,7 +155,6 @@ def sincBook():
     rooms['100AcreWood']['Old Book']['five']='Fifth Page'
     rooms['100AcreWood']['Old Book']['move'].append('five')
 
-
 def showStatus():                               ###SHOW STATUS
   #print the player's current status
   print(Fore.RED + '\n---------------------------')
@@ -165,8 +164,7 @@ def showStatus():                               ###SHOW STATUS
     for person in peopleToTalk:
       print('❕ You see ' + person)
   if "shop" in rooms[player.world][currentRoom]:
-    # if (currentRoom+' Shop location') in player.keyItems or rooms[player.world][rooms[player.world][currentRoom]['shop']]['key'] in player.keyItems:
-    if (currentRoom+' Shop location') in player.keyItems:
+    if (currentRoom+' Shop location') in player.keyItems or rooms[player.world][rooms[player.world][currentRoom]['shop']]['key'] in player.keyItems:
       print('You see the ' + rooms[player.world][currentRoom]['shop'] + ', try: \'enter shop\'')
   if "Shop" in currentRoom or "Save" in rooms[player.world][currentRoom]:
       player.HP = player.TotalHP
@@ -1226,9 +1224,8 @@ while True:                        ###MAIN
 
     elif 'test' in move:                                ##### TEST
 
-      player.world = '100AcreWood'
-      player.currentRoom= 'Old Book'
-      currentRoom='Old Book'
+      player.sortKeyItem()
+      print(player.buildKeyItemDisplay(player.keyItems))
 
       print('\ntested!\n')
 
@@ -1242,7 +1239,7 @@ while True:                        ###MAIN
     
     elif 'upgrade' in move:                             ##### TEST 2 (story)
 
-      player.keyItems.append('Torn Page')
+      player.keyItems.append('Coliseum Shop location')
 
       print('\nupgraded!\n')
     
