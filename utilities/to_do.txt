@@ -160,6 +160,8 @@ implement:{
 
     abilities (almost done)
 
+    place the sort function after acquire items, abilities, etc (player.abilities.append)
+
 
 improve:{
 

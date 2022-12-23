@@ -136,6 +136,23 @@ class player:
             self.HPBarColour = 'YELLOW'
         else: self.HPBarColour = 'GREEN'
 
+    def sortItem(self):
+        self.item.sort(key=lambda val: list(items.keys()).index(val))
+    def sortStock(self):
+        self.stock.sort(key=lambda val: list(items.keys()).index(val))
+    def sortKeyItem(self):
+        self.keyItems.sort(key=lambda val: keyItems.index(val))
+    def sortMagic(self):
+        self.magic.sort(key=lambda val: list(magics.keys()).index(val))
+    def sortEquipment(self):
+        self.equipment.sort(key=lambda val: list(equipments.keys()).index(val))
+    def sortEquipmentList(self):
+        self.equipmentList.sort(key=lambda val: list(equipments.keys()).index(val))
+    def sortKeyblades(self):
+        self.keyblades.sort(key=lambda val: list(keybladeStatus.keys()).index(val))
+    def sortAbilities(self):
+        self.abilities.sort(key=lambda val: list(abilityList.keys()).index(val))
+
     def buildHPMPDisplay(self):
         currentHP = ''
         currentMP = ''
@@ -367,6 +384,7 @@ class player:
                 if option[1] in self.equipmentList:
                     if len(self.equipment)<self.equipmentNumber:
                         self.equipment.append(option[1])
+                        self.sortEquipment()
                         print(option[1] + ' equipped!\n')
                         self.TotalHP += equipments[option[1]]['HP']
                         self.HP += equipments[option[1]]['HP']

@@ -201,13 +201,16 @@ def openTreasure(number, currentRoom):
     print('Obtained a ' + green + treasureList[player.world][currentRoom][number]['item'] + white + '!')
     if len(player.item) < player.itemPouch:
       player.item.append(treasureList[player.world][currentRoom][number]['item'])
+      player.sortItem()
     else:
       player.stock.append(treasureList[player.world][currentRoom][number]['item'])
+      player.sortStock()
       print('Your item pouch is full, item send to stock!!')
 
   elif treasureList[player.world][currentRoom][number]['treasure'] == 'key item':
     print('Obtained the ' + yellow + treasureList[player.world][currentRoom][number]['key item'] + white + ' key item!')
     player.keyItems.append(treasureList[player.world][currentRoom][number]['key item'])
+      player.sortKeyItem()
 
   elif treasureList[player.world][currentRoom][number]['treasure'] == 'mapUpdate':
     if player.map[player.world][treasureList[player.world][currentRoom][number]['mapUpdate']] == 'no':
@@ -221,6 +224,7 @@ def openTreasure(number, currentRoom):
   elif treasureList[player.world][currentRoom][number]['treasure'] == 'keyblade':
     print('Obtained the ' + cyan + treasureList[player.world][currentRoom][number]['keyblade'] + white + ' Keyblade!')
     player.keyblades.append(treasureList[player.world][currentRoom][number]['keyblade'])
+    player.sortKeyblades()
 
   player.treasures[player.world][currentRoom][number]['status']='opened'
 
@@ -278,6 +282,7 @@ def levelUP():                                  ###LEVEL UP
     print('Maximum MP increased!')
   else:
     player.abilities.append([levelUpBonus[player.path][player.level], False])
+    player.sortAbilities()
     print('\nObtained ' + yellow + levelUpBonus[player.path][player.level] + '!')
 
 def victoryMunny(enemyMunny):
@@ -310,11 +315,14 @@ def victoryDrop(enemyDrop):
         print("\nObtained a " + green + drops[drop] + white + "!")
         if len(player.item) < player.itemPouch:
           player.item.append(drops[drop])
+          player.sortItem()
         else:
           player.stock.append(drops[drop])
+          player.sortStock()
           print('Your item pouch is full, item send to stock!!')
       elif drops[drop] in keybladeStatus:
         player.keyblades.append(drops[drop])
+        player.sortKeyblades()
         print('\nObtained the ' + cyan + drops[drop] + white + ' Keyblade!')
       break
 
@@ -1046,26 +1054,32 @@ def arena(arenaNumber):                         ###ARENA FIGHT
         print('You got a ' + green + arenaRewards[arenaNumber][2] + white + '!')
         if len(player.item) < player.itemPouch:
           player.item.append(arenaRewards[arenaNumber][2])
+          player.sortItem()
         else:
           player.stock.append(arenaRewards[arenaNumber][2])
+          player.sortStock()
           print('Your item pouch is full, item send to stock!!')
 
       ##First time completing the arena
       else:
         rewards = arenaRewards[arenaNumber][1]
         player.keyItems.append(trophy)
+        player.sortKeyItem()
         print('You obtained the ' + trophy + '!\n')
 
         if 'keyblade' in rewards:
           player.keyblades.append(arenaRewards[arenaNumber]['keyblade'])
+          player.sortKeyblades()
           print('You got the ' + cyan + arenaRewards[arenaNumber]['keyblade'] + white + ' Keyblade!')
         if 'magic' in rewards:
           magicName = arenaRewards[arenaNumber]['magic']
           player.magic.append(arenaRewards[arenaNumber]['magic'])
+          player.sortMagic()
           print('You learned the ' + player.colors[magics[magicName]['speech'][4]] + magicName + white + ' spell!')
         if 'ability' in rewards:
           abilityName = arenaRewards[arenaNumber]['ability']
           player.abilities.append([abilityName, False])
+          player.sortAbilities()
           print('\nObtained ' + yellow + abilityName + '!')
 
       break
@@ -1300,11 +1314,14 @@ while True:                        ###MAIN
               if move[1] in items:
                 if len(player.item) < player.itemPouch:
                   player.item.append(move[1])
+                  player.sortItem()
                 else:
                   player.stock.append(move[1])
+                  player.sortStock()
                   print('Your item pouch is full, item send to stock!!')
               else:
                 player.equipmentList.append(move[1])
+                player.sortEquipmentList()
           else:
               print('\nMoogle: You don\'t have enough munny for this item, Kupo!!')
         else:
@@ -1436,16 +1453,20 @@ while True:                        ###MAIN
                 tutorials(['open map'])
               elif reward == 'keyblade':
                 player.keyblades.append(people[currentRoom][person][storyToTalk[i]]['keyblade'])
+                player.sortKeyblades()
                 print('You got the ' + cyan + people[currentRoom][person][storyToTalk[i]]['keyblade'] + white + ' Keyblade!')
               elif reward == 'key item':
                 player.keyItems.append(people[currentRoom][person][storyToTalk[i]]['key item'])
+                player.sortKeyItem()
                 print('You got the "' + people[currentRoom][person][storyToTalk[i]]['key item'] + '" key item!')
               elif reward == 'item':
                 print('You got a ' + green + people[currentRoom][person][storyToTalk[i]]['item'] + white + '!')
                 if len(player.item) < player.itemPouch:
                   player.item.append(people[currentRoom][person][storyToTalk[i]]['item'])
+                  player.sortItem()
                 else:
                   player.stock.append(people[currentRoom][person][storyToTalk[i]]['item'])
+                  player.sortStock()
                   print('Your item pouch is full, item send to stock!!')
               elif reward == 'arena':
                 selectArena()

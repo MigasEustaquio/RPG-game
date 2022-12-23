@@ -295,3 +295,5 @@ equipments = {
 
         
 }
+
+keyItems = []
