@@ -210,7 +210,7 @@ def openTreasure(number, currentRoom):
   elif treasureList[player.world][currentRoom][number]['treasure'] == 'key item':
     print('Obtained the ' + yellow + treasureList[player.world][currentRoom][number]['key item'] + white + ' key item!')
     player.keyItems.append(treasureList[player.world][currentRoom][number]['key item'])
-      player.sortKeyItem()
+    player.sortKeyItem()
 
   elif treasureList[player.world][currentRoom][number]['treasure'] == 'mapUpdate':
     if player.map[player.world][treasureList[player.world][currentRoom][number]['mapUpdate']] == 'no':
