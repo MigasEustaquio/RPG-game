@@ -2,8 +2,8 @@
 heartless = {
 
             'shadow' : {'commands' : 'attack', 
-                    'HP': 1 , 'damage': 1,
-                    'defense': 2,
+                    'HP': 5 , 'damage': 2,
+                    'defense': 0,
                     'magic resistance' : 0, 'magicImmunity' : False,
                     'munny' : [1,5],
                     'exp' : 10,

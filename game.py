@@ -18,7 +18,6 @@ def tutorials(tutorialList):
       print(Fore.YELLOW + "tutorial: " + Fore.WHITE + tutorialSpeech[tutorial])
       player.tutorial[tutorial] = 1
 
-
 def newGame():  ############################################
   choose = ''
   giveUp = ''
@@ -31,18 +30,18 @@ def newGame():  ############################################
 
     if '1' in choose:
       text=text+'\n2- Power of the mystic (AP-1)\n3- Power of the guardian (DEF-1)'
-      choose='3'
-      print('The power of the warrior.\nInvincible courage.\nA sword of terrible destruction.')
+      choose='1'
+      print('\nThe power of the warrior.\nInvincible courage.\nA sword of terrible destruction.')
 
     elif '2' in choose:
-      text=text+'\n1- Power of the guardian (DEF-1)\n3- Power of the warrior (STR-1)'
+      text=text+'\n1- Power of the warrior (STR-1)\n3- Power of the guardian (DEF-1)'
       choose='2'
-      print('The power of the mystic.\nInner strength.\nA staff of wonder and ruin.')
+      print('\nThe power of the mystic.\nInner strength.\nA staff of wonder and ruin.')
 
     elif '3' in choose:
       text=text+'\n1- Power of the warrior (STR-1)\n2- Power of the mystic (AP-1)'
-      choose='1'
-      print('The power of the guardian.\nKindness to aid friends.\nA shield to repel all.')
+      choose='3'
+      print('\nThe power of the guardian.\nKindness to aid friends.\nA shield to repel all.')
 
     else:
       print('\nChoose one of the powers below')
@@ -59,15 +58,15 @@ def newGame():  ############################################
 
     if '1' in giveUp and '1' not in choose:
       giveUp='1'
-      print('The power of the warrior.\nInvincible courage.\nA sword of terrible destruction.')
+      print('\nThe power of the warrior.\nInvincible courage.\nA sword of terrible destruction.')
 
     elif '2' in giveUp and '2' not in choose:
       giveUp='2'
-      print('The power of the mystic.\nInner strength.\nA staff of wonder and ruin.')
+      print('\nThe power of the mystic.\nInner strength.\nA staff of wonder and ruin.')
 
     elif '3' in giveUp and '3' not in choose:
       giveUp='3'
-      print('The power of the guardian.\nKindness to aid friends.\nA shield to repel all.')
+      print('\nThe power of the guardian.\nKindness to aid friends.\nA shield to repel all.')
 
     else:
       print('\nChoose one of the powers below')
@@ -196,14 +195,8 @@ def showStatus():                               ###SHOW STATUS
 
 def openTreasure(number, currentRoom):
   if treasureList[player.world][currentRoom][number]['treasure'] == 'item':
-    print('Obtained a ' + green + treasureList[player.world][currentRoom][number]['item'] + white + '!')
-    if len(player.item) < player.itemPouch:
-      player.item.append(treasureList[player.world][currentRoom][number]['item'])
-      player.sortItem()
-    else:
-      player.stock.append(treasureList[player.world][currentRoom][number]['item'])
-      player.sortStock()
-      print('Your item pouch is full, item send to stock!!')
+
+    player.getItem(treasureList[player.world][currentRoom][number]['item'])
 
   elif treasureList[player.world][currentRoom][number]['treasure'] == 'key item':
     print('Obtained the ' + yellow + treasureList[player.world][currentRoom][number]['key item'] + white + ' key item!')
@@ -310,14 +303,7 @@ def victoryDrop(enemyDrop):
   for drop in drops:
     if dropNumber <= drop:
       if drops[drop] in items:
-        print("\nObtained a " + green + drops[drop] + white + "!")
-        if len(player.item) < player.itemPouch:
-          player.item.append(drops[drop])
-          player.sortItem()
-        else:
-          player.stock.append(drops[drop])
-          player.sortStock()
-          print('Your item pouch is full, item send to stock!!')
+        player.getItem(drops[drop])
       elif drops[drop] in keybladeStatus:
         player.keyblades.append(drops[drop])
         player.sortKeyblades()
@@ -334,7 +320,14 @@ def victoryMPRecover():
     if player.MP > player.TotalMP: player.MP = player.TotalMP
 
 def useItem(item):                              ###USE ITEM
-  del player.item[player.item.index(item)]
+  if item in player.item:
+    del player.item[player.item.index(item)]
+  else:
+    del player.stock[player.stock.index(item)]
+
+  if player.autoStockEnabled and item in player.item:
+    del player.autoPouch[player.autoPouch.index(item)]
+
   player.itemBKP.append(item)
   player.ArenaitemBKP.append(item)
 
@@ -347,13 +340,22 @@ def useItem(item):                              ###USE ITEM
     print(items[item]['speech'][0] + red + items[item]['speech'][1] + white + items[item]['speech'][2])
   elif 'ether' in item:
     print(items[item]['speech'][0] + blue + items[item]['speech'][1] + white + items[item]['speech'][2])
-  else:
-    print(items[item]['speech'][0] + red + items[item]['speech'][1] + white + items[item]['speech'][2] +  blue + items[item]['speech'][3] + white + items[item]['speech'][4])
+  elif 'lixir' in item:
+    print(items[item]['speech'][0] + green + items[item]['speech'][1] + white + items[item]['speech'][2] +  blue + items[item]['speech'][3] + white + items[item]['speech'][4])
+  elif 'tent' in item:
+    print(items[item]['speech'][0] + green + items[item ]['speech'][1] + white + items[item]['speech'][2])
 
-  player.HP = player.HP + items[item]['HP']
-  if player.HP > player.TotalHP: player.HP = player.TotalHP
-  player.MP = player.MP + items[item]['MP']
-  if player.MP > player.TotalMP: player.MP = player.TotalMP
+  if items[item]['HP'] == 'full':
+    player.HP = player.TotalHP
+  else:
+    player.HP = player.HP + items[item]['HP']
+    if player.HP > player.TotalHP: player.HP = player.TotalHP
+
+  if items[item]['MP'] == 'full':
+    player.MP = player.TotalMP
+  else:
+    player.MP = player.MP + items[item]['MP']
+    if player.MP > player.TotalMP: player.MP = player.TotalMP
 
 def scan(enemy):                                ###SCAN
   heartlessHealthDisplay = ''
@@ -567,12 +569,17 @@ def inflictEnemyDamage(enemySpeech, enemyDamageDealt, mPower, enemy, command='',
 
 def alliesHelp(enemy):
   for ally in player.allies:
-    helpType, helpValue, helpStatus = ally.selectCommand(player)
-    if helpType == 'heal': player.HP = player.HP + helpValue
+    helpType, helpValue, helpStatus, text = ally.selectCommand(player)
+    if helpType == '': pass
+    elif helpType == 'heal':
+      player.HP = player.HP + helpValue
+      print(text)
     else:
-      helpValue=helpValue-enemy.defense
-      if helpValue<0: helpValue=0
-      enemy.HP = enemy.HP - helpValue
+      value=helpValue-enemy.defense
+      if value<0: value=0
+      enemy.HP = enemy.HP - value
+      text=text.replace(str(helpValue), str(value))
+      print(text)
     if helpStatus != '':
       enemy.statusEffect = helpStatus
       enemy.statusDuration = magics[helpStatus]['status']['duration']
@@ -885,6 +892,7 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
         else:
           command = ''
           print('You got away successfully!')
+          player.reAutoStock()
           return 'run'
 ###ERROR
       else:       ###ERROR
@@ -902,6 +910,7 @@ def battle(enemyName, arenaBattle=False):       ###BATTLE
           victoryExp(enemy.exp)
           victoryDrop(enemy.drop)
         victoryMPRecover()
+        player.reAutoStock()
         return 'victory'
       enemy.statusEffectEnd()
 
@@ -1049,14 +1058,7 @@ def arena(arenaNumber):                         ###ARENA FIGHT
 
       ##Already completed the arena before
       if (trophy) in player.keyItems:
-        print('You got a ' + green + arenaRewards[arenaNumber][2] + white + '!')
-        if len(player.item) < player.itemPouch:
-          player.item.append(arenaRewards[arenaNumber][2])
-          player.sortItem()
-        else:
-          player.stock.append(arenaRewards[arenaNumber][2])
-          player.sortStock()
-          print('Your item pouch is full, item send to stock!!')
+        player.getItem(arenaRewards[arenaNumber][2])
 
       ##First time completing the arena
       else:
@@ -1183,7 +1185,7 @@ while True:                        ###MAIN
   currentRoom = player.currentRoom
   previousRoom = currentRoom
 #
-  if currentRoom == 'Dive to the Heart': newGame()
+  if currentRoom == 'Snow White\'s Stained Glass': newGame()
 
   while True:
     showStatus()
@@ -1224,8 +1226,8 @@ while True:                        ###MAIN
 
     elif 'test' in move:                                ##### TEST
 
-      player.sortKeyItem()
-      print(player.buildKeyItemDisplay(player.keyItems))
+      player.stock.append('potion')
+      # print(player.abilities)
 
       print('\ntested!\n')
 
@@ -1239,9 +1241,9 @@ while True:                        ###MAIN
     
     elif 'upgrade' in move:                             ##### TEST 2 (story)
 
-      player.keyItems.append('Coliseum Shop location')
+      # player.keyItems.append('Coliseum Shop location')
 
-      print('\nupgraded!\n')
+      print('\nnothing!\n')
     
     elif 'treasure' in move:                            ##### TREASURE
       if 'treasure' in rooms[player.world][currentRoom]:
@@ -1268,7 +1270,7 @@ while True:                        ###MAIN
         player.tradeKeyblade()
 
     elif 'status' in move:                              ##### SHOW MENU
-        player.status()
+      player.status()
 
     elif 'tutorials' in move:                           ##### SHOW TUTORIALS
         player.showTutorials()
@@ -1309,13 +1311,7 @@ while True:                        ###MAIN
               print('\nMoogle: Thanks for shopping here, Kupo!!\nObtained a ' + green + move[1] + white + '!')
               player.munny = player.munny - shops[currentRoom][move[1]]
               if move[1] in items:
-                if len(player.item) < player.itemPouch:
-                  player.item.append(move[1])
-                  player.sortItem()
-                else:
-                  player.stock.append(move[1])
-                  player.sortStock()
-                  print('Your item pouch is full, item send to stock!!')
+                player.getItem(move[1])
               else:
                 player.equipmentList.append(move[1])
                 player.sortEquipmentList()
@@ -1331,13 +1327,17 @@ while True:                        ###MAIN
           print('You have no items!')
       else:
           try:
-              if move[1] in player.item:
-                  useItem(move[1])
+              if move[1] in player.item or move[1] in player.stock:
+                useItem(move[1])
+                if player.autoStockEnabled: player.reAutoStock()
               else:
-                  print("You don\'t have any ", move[1])
+                print("You don\'t have any ", move[1])
           except IndexError:
               print('try: use [item]')
           command = ''
+
+    elif 'item' in move:
+      player.equipItems()
 
     elif move[0] == 'cast':                             ##### MAGIC
       if not player.magic:
@@ -1457,14 +1457,7 @@ while True:                        ###MAIN
                 player.sortKeyItem()
                 print('You got the "' + people[currentRoom][person][storyToTalk[i]]['key item'] + '" key item!')
               elif reward == 'item':
-                print('You got a ' + green + people[currentRoom][person][storyToTalk[i]]['item'] + white + '!')
-                if len(player.item) < player.itemPouch:
-                  player.item.append(people[currentRoom][person][storyToTalk[i]]['item'])
-                  player.sortItem()
-                else:
-                  player.stock.append(people[currentRoom][person][storyToTalk[i]]['item'])
-                  player.sortStock()
-                  print('Your item pouch is full, item send to stock!!')
+                player.getItem(people[currentRoom][person][storyToTalk[i]]['item'])
               elif reward == 'arena':
                 selectArena()
 

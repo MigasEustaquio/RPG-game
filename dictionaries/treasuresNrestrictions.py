@@ -8,7 +8,9 @@ treasureList = {
 
     'DestinyIslands': {
 
-        'Dive to the Heart 2': {0: {'treasure': 'item', 'item': 'potion', 'status': 'closed'}},
+        'Cinderella\'s Stained Glass': {0: {'treasure': 'item', 'item': 'tent', 'status': 'closed'}},
+
+        'Unknown': {0: {'treasure': 'item', 'item': 'potion', 'status': 'closed'}},
 
         'Cove': {1:{'treasure': 'item', 'item': 'potion', 'status': 'closed'}}
 

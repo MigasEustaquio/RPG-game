@@ -14,6 +14,8 @@ tutorials = {
 
             'open map' : 0,
 
+            'equip item' : 0,
+
             'equipment' : 0,
 
             'keyblade' : 0,
@@ -37,6 +39,8 @@ tutorialSpeech = {
             'treasure chest' : 'To get the treasure chest from the current room just type \'treasure\'',
 
             'open map' : 'To open the map of the current World just type \'map\'\nThe first time opening a map may glitch out and refuse to open, just close the map and open it again!',
+
+            'equip item' : 'To equip an item just type \'item\'',
 
             'equipment' : 'To equip an equipment just type \'equipment\'',
 

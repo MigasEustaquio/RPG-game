@@ -1,6 +1,6 @@
 urgent:{
 
-    Level up abilities marked with '*' missing
+    Level up abilities marked with '*' missing (combo/air combo plus, guard, treasure magnet)
 
 }
 

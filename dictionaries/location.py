@@ -11,16 +11,25 @@ rooms = {
 
   'DestinyIslands': {
 
-    0 : 'Dive to the Heart',
+    0 : 'Snow White\'s Stained Glass',
 
-      'Dive to the Heart' : { 'down' : 'Dive to the Heart 2',
+      'Snow White\'s Stained Glass' : { 'down' : 'Cinderella\'s Stained Glass',
                   'resetHeartless' : [],
                   'map number' : '0',
                   'restricted' : {},
                   'move': ['down']
       },
 
-      'Dive to the Heart 2' : { 'down' : 'Dive to the Heart 3',
+      'Cinderella\'s Stained Glass' : { 'down' : 'Unknown',
+                  'resetHeartless' : [],
+                  'heartless'  : '',
+                  'treasure' : '',
+                  'map number' : '0',
+                  'restricted' : {},
+                  'move': ['down']
+      },
+
+      'Unknown' : { 'down' : 'Aurora\'s Stained Glass',
                   'resetHeartless' : [],
                   'treasure' : '',
                   'map number' : '0',
@@ -28,9 +37,17 @@ rooms = {
                   'move': ['down']
       },
 
-      'Dive to the Heart 3' : { 'down' : 'Seashore',
+      'Aurora\'s Stained Glass' : { 'down' : 'Belle\'s Stained Glass',
                   'resetHeartless' : [],
-                  'heartless'  : '',
+                  'treasure' : '',
+                  'map number' : '0',
+                  'restricted' : {},
+                  'move': ['down']
+      },
+
+      'Belle\'s Stained Glass' : { 'down' : 'Seashore',
+                  'resetHeartless' : [],
+                  'treasure' : '',
                   'map number' : '0',
                   'restricted' : {},
                   'move': ['down']

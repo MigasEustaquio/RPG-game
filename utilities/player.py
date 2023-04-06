@@ -14,13 +14,14 @@ from dictionaries.treasuresNrestrictions import *
 from dictionaries.abilities import *
 from dictionaries.arenas import *
 from dictionaries.enemies import *
+from utilities.sortOrders import *
 
 class player:
     def __init__(self):
 
         self.keyblade = 'Wooden Sword'
 
-        self.MaxHP = 5
+        self.MaxHP = 10
         self.TotalHP = self.MaxHP
         self.HP = self.TotalHP  ## full: ♥,  empty: ♡
         self.MaxMP = 1
@@ -28,7 +29,7 @@ class player:
         self.MP = self.MaxMP  ## full: ●,  empty: ○
 
         self.STR = 1
-        self.DEF = 0
+        self.DEF = 1
         self.magicPower = 0
 
         self.equipment = []
@@ -43,6 +44,8 @@ class player:
         self.level = 1
         self.munny = 0
         self.stock = []
+        self.autoStockEnabled = False
+        self.autoPouch = []
 
         self.keyblades = ['Wooden Sword']
 
@@ -79,7 +82,7 @@ class player:
 
         self.saveFile = 0
         self.editedSaves = saves
-        self.currentRoom = 'Dive to the Heart'
+        self.currentRoom = 'Snow White\'s Stained Glass'
 
         self.HPBKP = 0
         self.MPBKP = 0
@@ -136,10 +139,56 @@ class player:
             self.HPBarColour = 'YELLOW'
         else: self.HPBarColour = 'GREEN'
 
+    def createAutoPouch(self):
+        self.autoPouch=[]
+        for item in self.item:
+            self.autoPouch.append([item, True])
+
+#####AUTO STOCK ITEMS TO POUCH AFTER USED OR BATTLES
+    def reAutoStock(self):
+        for item in self.autoPouch:
+            if False in item and item[0] in self.stock:
+                self.autoPouch[self.autoPouch.index(item)][1]=True
+                self.item.append(item[0])
+                del self.stock[self.stock.index(item[0])]
+
+    def getItem(self, item):
+        print('Obtained a ' + Fore.GREEN + item + Fore.WHITE + '!')
+        if item in stockOnly:
+            self.stock.append(item)
+            self.sortStock()
+            print(green + item + white +' sent to stock!')      
+        else:
+            if len(self.item) < self.itemPouch:
+                if self.autoStockEnabled:
+                    if  [item, False] in self.autoPouch:
+                        self.autoPouch[self.autoPouch.index([item, False])][1]=True
+                        self.item.append(item)
+                    else:
+                        if len(self.autoPouch) < self.itemPouch:
+                            self.autoPouch.append(item)
+                            self.item.append(item)
+                        else:
+                            self.stock.append(item)
+                            print('Your item pouch is full, item sent to stock!!')
+                else:
+                    if len(self.item) < self.itemPouch:
+                        self.sortItem()
+                    else:
+                        self.stock.append(item)
+                        print('Your item pouch is full, item sent to stock!!')       
+            else:
+                self.stock.append(item)
+                print('Your item pouch is full, item sent to stock!!')
+        self.sortItem()
+        self.sortStock()
+
     def sortItem(self):
         self.item.sort(key=lambda val: list(items.keys()).index(val))
     def sortStock(self):
         self.stock.sort(key=lambda val: list(items.keys()).index(val))
+    def sortAutoPouch(self):
+        self.autoPouch.sort(key=lambda val: autoPouchOrder.index(val))
     def sortKeyItem(self):
         self.keyItems.sort(key=lambda val: keyItems.index(val))
     def sortMagic(self):
@@ -151,7 +200,8 @@ class player:
     def sortKeyblades(self):
         self.keyblades.sort(key=lambda val: list(keybladeStatus.keys()).index(val))
     def sortAbilities(self):
-        self.abilities.sort(key=lambda val: list(abilityList.keys()).index(val))
+        self.abilities=sorted(self.abilities, key=lambda x:x[1])
+        # self.abilities.sort(key=lambda val: list(abilityList.keys()).index(val))
 
     def buildHPMPDisplay(self):
         currentHP = ''
@@ -172,6 +222,8 @@ class player:
             i+=1
         return currentHP, currentMP
     def buildItemDisplay(self, item):
+        self.sortItem()
+        self.sortStock()
         itemRepeat = {}
         for individualItem in item:
             if individualItem in itemRepeat:
@@ -231,6 +283,7 @@ class player:
             if keyblade == self.keyblade: print(Fore.BLUE + '● ' + Fore.WHITE + tab)
             else: print(Fore.BLUE + '○ ' + Fore.WHITE + tab)
     def showAbilities(self):
+        self.sortAbilities()
         print('\nAP: ' + str(self.AP) + '\\' + str(self.TotalAP) + '\n')
         for ability in self.abilities: #● ○
             name=ability[0]
@@ -251,6 +304,32 @@ class player:
 
         for line in spellList:
             print(self.colors[magics[line[0]]['speech'][4]] + ', '.join(line))
+    def showItems(self):
+        self.sortItem()
+        self.sortStock()
+        self.sortAutoPouch()
+        if self.autoStockEnabled: text = Fore.YELLOW +'● '
+        else: text = '○ '
+        print('\n' + text + Fore.WHITE + 'Auto Stock')#● ○
+        text='\nItem Pouch: ' + str(len(self.item))+'/'+ str(self.itemPouch)
+        if self.autoStockEnabled: text += ' ' + Fore.RED + str(len(self.autoPouch))+'/'+ str(self.itemPouch)
+        print(text + Fore.WHITE + '\n')
+        if self.autoStockEnabled:
+            for i in range(self.itemPouch):
+                try:
+                    if self.autoPouch[i][1]: print(self.autoPouch[i][0])
+                    else: print(Fore.RED + self.autoPouch[i][0])
+                except:
+                    print('--------')
+        else:
+            for i in range(self.itemPouch):
+                try:
+                    print(self.item[i])
+                except:
+                    print('--------')
+
+        print('\nStock:\n')
+        print(self.buildItemDisplay(self.stock))
 
     def startingGame(self):
         self.calculateHealth()
@@ -275,7 +354,6 @@ class player:
         print(Fore.YELLOW + "---------------------------")
 
     def menu(self):
-        
         itemsDisplay = self.buildItemDisplay(self.stock) 
 
         self.showBattleStatus()
@@ -284,6 +362,8 @@ class player:
         print('\nMunny: ' + str(self.munny) + '🔸')
         print("Items in stock: ", itemsDisplay)
         print("To see the complete status just type \'status\'")
+        if self.tutorial['equip item'] == 0:
+          print(Fore.YELLOW + "tutorial: " + Fore.WHITE + tutorialSpeech['equip item'])
         if self.tutorial['equipment'] == 0:
           print(Fore.YELLOW + "tutorial: " + Fore.WHITE + tutorialSpeech['equipment'])
           self.tutorial['equipment'] = 1
@@ -528,3 +608,84 @@ class player:
                 option=''
 
         self.calculateHealth()
+
+#####EQUIP ITEMS
+    def equipItems(self):
+        option = ''
+        while option == '':
+            print('\nTo equip an item from stock use \'equip [item]\', to unequip one from pouch use \'unequip [item]\'. If you want to see an item description use \'see [item]\'. Use enable/disable auto stock. (0 to cancel)')
+            self.showItems()
+
+            option = input('>')
+            option = option.lower().split()
+            if len(option)>2: option[1] = option[1] + '-' + option[2]
+
+            if option == '0' or option[0] == '0':   break
+ 
+            elif option[0] == 'equip':
+                if len(self.item) < self.itemPouch:
+                    if option[1] not in itemDescription: print(Fore.RED + 'Item not found!')
+                    else:
+                        if option[1] in self.stock:
+                            if self.autoStockEnabled: self.autoPouch.append([option[1], True])
+                            if len(self.autoPouch) > self.itemPouch:
+                                del self.autoPouch[[ele for _, ele in self.autoPouch].index(False)]
+                            self.item.append(option[1])
+                            del self.stock[self.stock.index(option[1])]
+                            print(Fore.GREEN + option[1] + ' equipped!\n')
+                        else:
+                            if len(self.autoPouch) < self.itemPouch:
+                                if not self.autoStockEnabled:
+                                    self.autoStockEnabled = True
+                                    self.createAutoPouch()
+                                self.autoPouch.append([option[1], False])
+                                print('Auto Stock enabled!')
+                            else: print(Fore.RED + 'Item Pouch full!')
+                else: print(Fore.RED + 'Item Pouch full!')
+                option=''
+
+            elif option[0] == 'unequip':
+                if self.autoStockEnabled:
+                    if [option[1], False] in self.autoPouch:
+                        self.item.reverse()
+                        self.autoPouch.reverse()
+                        del self.autoPouch[self.autoPouch.index([option[1], False])]
+                        print(Fore.GREEN + option[1] + ' removed from auto stock!\n')
+                    elif [option[1], True] in self.autoPouch:
+                        self.item.reverse()
+                        self.autoPouch.reverse()
+                        del self.autoPouch[self.autoPouch.index([option[1], True])]
+                        del self.item[self.item.index(option[1])]
+                        self.stock.append(option[1])
+                        print(Fore.GREEN + option[1] + ' unequipped!\n')
+                    else:   print(Fore.RED + 'Item not found!')
+                else:
+                    if option[1] in self.item:
+                        self.stock.append(option[1])
+                        self.item.reverse()
+                        del self.item[self.item.index(option[1])]
+                        print(Fore.GREEN + option[1] + ' unequipped!\n')
+                    else:   print(Fore.RED + 'Item not found!')
+                option=''
+
+            elif option[0] == 'see':
+                if option[1] in itemDescription:
+                    print(itemDescription[option[1]])
+                option=''
+
+            elif option[0] == 'enable':
+                if self.autoStockEnabled: print('The auto stock is already enabled')
+                else:
+                    self.autoStockEnabled=True
+                    self.createAutoPouch()
+                option=''
+
+            elif option[0] == 'disable':
+                if self.autoStockEnabled: self.autoStockEnabled=False
+                else: print('The auto stock is already disabled')
+                option=''
+
+            else:
+                print(Fore.RED + 'Command not found')
+                option=''
+

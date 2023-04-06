@@ -12,7 +12,7 @@ enemyLocations = {
 
     'DestinyIslands': {
 
-        'Dive to the Heart 3':{
+        'Cinderella\'s Stained Glass':{
             0:{
                 'waves': 1, 'status': 1,
                 'wave': {1: 'shadow'}

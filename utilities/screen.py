@@ -19,6 +19,8 @@ def save(file, y, saves):
   x['magic'] = y.magic
   x['item'] = y.item
   x['itemPouch'] = y.itemPouch
+  x['autoStockEnabled'] = y.autoStockEnabled
+  x['autoPouch'] = y.autoPouch
   x['keyItems'] = y.keyItems
   x['equipment'] = y.equipment
   x['equipmentNumber'] = y.equipmentNumber
@@ -69,6 +71,8 @@ def load(file, y, saves):
   y.magic = x['magic']
   y.item = x['item']
   y.itemPouch = x['itemPouch']
+  y.autoStockEnabled = x['autoStockEnabled']
+  y.autoPouch = x['autoPouch']
   y.keyItems = x['keyItems']
   y.equipment = x['equipment']
   y.equipmentNumber = x['equipmentNumber']

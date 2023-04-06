@@ -12,11 +12,27 @@ items = {
                 'HP' : 0, 'MP' : 4 },
         'mega-ether' : { 'speech':['You restored ', '10 ●', ' !'],
                 'HP' : 0, 'MP' : 10 },
-        'elixir' :{ 'speech':['You healed ', '5 ♥', ' and restored ', '5 ●', ' !'],
-                'HP' : 5, 'MP' : 5 },
-        'megalixir' : { 'speech':['You healed ', '10 ♥', ' and restored ', '10 ●', ' !'],
-                'HP' : 10, 'MP' : 10 },
+        'elixir' :{ 'speech':['You fully restored Sora\'s ', 'HP', ' and ', 'MP', '!'],
+                'HP' : 'full', 'MP' : 'full' },
+        'megalixir' : { 'speech':['You fully restored the party\'s ', 'HP', ' and ', 'MP', '!'],
+                'HP' : 'full', 'MP' : 'full' },
+        'tent' :{ 'speech':['You fully restored the party\'s ', 'HP', '!'],
+                'HP' : 'full', 'MP' : 0 },
+}
 
+stockOnly = ['tent', 'cottage']
+
+itemDescription = {
+        'potion' : 'Restores ? HP of one character',
+        'hi-potion' : 'Restores ? HP of one character',
+        'mega-potion' : 'Restores ? HP of one character',
+        'ether' : 'Restores ? MP of one character',
+        'hi-ether' : 'Restores ? MP of one character',
+        'mega-ether' : 'Restores ? MP of one character',
+        'elixir' : 'Fully restores a character\'s HP and MP',
+        'megalixir' :  'Fully restores the party\'s HP and MP',
+        'tent' : 'Fully restores the party\'s HP',
+        'cottage' : 'Fully restores the party\'s HP and MP',
 }
 
 magics = {
@@ -138,7 +154,7 @@ magics = {
 keybladeStatus = { 
 
         'Wooden Sword' : {
-                'damage' : 0, 
+                'damage' : 1, 
                 'MP': 0 
         },
 

@@ -49,26 +49,26 @@ class Ally:
         if command in magics:
             text=magics[command]['speech']
             if helpType == 'damage':
-                print(self.name1 + " casts " + self.colors[text[-1]] + command.capitalize() + Fore.WHITE + " and it deals " + Fore.RED + text[1] + Fore.WHITE + text[2] + self.colors[text[-1]] + text[3])
+                text=self.name1 + " casts " + self.colors[text[-1]] + command.capitalize() + Fore.WHITE + " and it deals " + Fore.RED + text[1] + Fore.WHITE + text[2] + self.colors[text[-1]] + text[3]
                 helpStatus=command
             else:
-                print(self.name1 + " casts " + Fore.GREEN + command.capitalize() + Fore.WHITE + " and it restores " + Fore.RED + text[1] + Fore.WHITE + text[2])
+                text=self.name1 + " casts " + Fore.GREEN + command.capitalize() + Fore.WHITE + " and it restores " + Fore.RED + text[1] + Fore.WHITE + text[2]
                 helpStatus=''
             self.MP = self.MP-magics[command]['MP']
             helpValue=magics[command][helpType]
 
-            return helpType, helpValue, helpStatus
+            return helpType, helpValue, helpStatus, text
         else:
             text=alliesAbilities[command]['speech']
             if helpType == 'damage':
-                print(self.name2 + " uses " + self.colors[text[-1]] + command.capitalize() + Fore.WHITE + " and it deals " + Fore.RED + text[1] + Fore.WHITE + text[2])
+                text=self.name2 + " uses " + self.colors[text[-1]] + command.capitalize() + Fore.WHITE + " and it deals " + Fore.RED + text[1] + Fore.WHITE + text[2]
             else:
-                print(self.name2 + " uses " + Fore.GREEN + command.capitalize() + Fore.WHITE + " and it restores " + Fore.RED + text[1] + Fore.WHITE + text[2])
+                text=self.name2 + " uses " + Fore.GREEN + command.capitalize() + Fore.WHITE + " and it restores " + Fore.RED + text[1] + Fore.WHITE + text[2]
             helpStatus=''
             self.MP = self.MP-alliesAbilities[command]['MP']
             helpValue=alliesAbilities[command][helpType]
 
-            return helpType, helpValue, helpStatus
+            return helpType, helpValue, helpStatus, text
 
     def selectCommand(self, player):     ###SELECT COMMAND
     #   if self.commandTurn == 0:
@@ -93,6 +93,6 @@ class Ally:
                         else:
                             if self.MP >= alliesAbilities[command]['MP']: availableCommands.append(command)
             # print(availableCommands) #####
-            if availableCommands: return self.useCommand(availableCommands[randint(0, len(availableCommands)-1)], helpType)
-            else: return '', 0, ''
-        else: return '', 0, ''
+            if availableCommands: return helpType, self.useCommand(availableCommands[randint(0, len(availableCommands)-1)], text)
+            else: return '', 0, '', ''
+        else: return '', 0, '', ''
