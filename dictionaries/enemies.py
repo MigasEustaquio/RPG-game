@@ -126,7 +126,7 @@ heartless = {
             },
 
             'invisible' : {'commands' : ['attack', 'invisible strike'],
-                    'HP': 40 , 'damage': 5, #4
+                    'HP': 4 , 'damage': 5, #4
                     'defense': 2,
                     'magic resistance' : 0, 'magicImmunity' : False,
                     'munny' : [2,6],
@@ -232,11 +232,12 @@ bosses = {
         },
 
         'Xemnas' : {'commands' : ['attack' ,'barrier', 'energy sphere'],
-                    'HP': 10 , 'damage': 5, 'defense' : 5,
+                    'HP': 5 , 'damage': 5, 'defense' : 5,
+                    'magic resistance' : 0, 'magicImmunity' : False,
                     'munny' : [0,0],
                     'exp' : 1000,
                     'drop' : {100 : 'Kingdom Key D'},
-                    'story' : 2,
+                    'story' : 4,
         },
 
 }

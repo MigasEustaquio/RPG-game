@@ -231,7 +231,7 @@ def resetHeartless(currentRoom, previousStory=0):
           enemyLocations[player.world][room][player.story[player.world]]['status'] = enemyLocations[player.world][room][player.story[player.world]]['waves']
       else:
         if player.story[player.world] > list(enemyLocations[player.world][room])[-1]:
-          enemyLocations[player.world][room][-1]['status'] = enemyLocations[player.world][room][-1]['waves']
+          enemyLocations[player.world][room][list(enemyLocations[player.world][room])[-1]]['status'] = enemyLocations[player.world][room][list(enemyLocations[player.world][room])[-1]]['waves']
         elif player.story[player.world] < list(enemyLocations[player.world][room])[0]:
           pass
         else:
@@ -955,7 +955,7 @@ def determineBattle(story, currentRoom, previousRoom):   ###DETERMINE ENEMY TO B
         if result == 'victory':
           enemyLocations[player.world][currentRoom][story]['status'] = (status - 1)
           player.calculateHealth()
-          return 1, currentRoom, previousRoom
+          return currentRoom, previousRoom
         if result == 'defeat':
           print("---------------------------")
           print('Your HP has dropped to zero!\nGAME OVER')
@@ -965,12 +965,12 @@ def determineBattle(story, currentRoom, previousRoom):   ###DETERMINE ENEMY TO B
           currentRoom = previousRoom
           previousRoom = temp
           player.calculateHealth()
-          return 0, currentRoom, previousRoom
+          return currentRoom, previousRoom
         if result == 'load':
           player.HP = player.TotalHP
           player.MP = player.TotalMP
-          return 0, rooms[player.world][0], rooms[player.world][0]
-    else: return 0, currentRoom, previousRoom
+          return rooms[player.world][0], rooms[player.world][0]
+    else: return currentRoom, previousRoom
   
 def unrestrict(room):                           ###UNRESTRICT AREAS
 
@@ -1179,7 +1179,7 @@ while True:                        ###MAIN
       for direction in player.restrictionLifted[world][room]:
         del rooms[world][room]['restricted'][direction]
 #INITIALIZE VARIABLES
-  alreadyBattled = 0
+
   retryBoss = False
   previousStory = 0
   currentRoom = player.currentRoom
@@ -1188,13 +1188,73 @@ while True:                        ###MAIN
   if currentRoom == 'Snow White\'s Stained Glass': newGame()
 
   while True:
-    showStatus()
 
-    if retryBoss == False:                              ##### INPUT READER
-      move = ''
-      while move == '':  
-        move = input('>')
-      move = move.lower().split()
+    if ('boss' in rooms[player.world][currentRoom] and player.story[player.world] == (bosses[rooms[player.world][currentRoom]['boss']]['story']-1)) or retryBoss:           ###### BOSS BATTLE
+      retryBoss = False
+      bossScene(rooms[player.world][currentRoom]['boss'])
+      result = battle(rooms[player.world][currentRoom]['boss'])
+      if result == 'victory':
+        player.story[player.world] += 1
+      ###RESET HEARTLESS STATUS SO PLAYER WON'T FIGHT RIGHT AWAY
+        if 'heartless' in rooms[player.world][currentRoom]:
+          if player.story[player.world] > list(enemyLocations[player.world][currentRoom])[-1]:
+            enemyLocations[player.world][currentRoom][list(enemyLocations[player.world][currentRoom])[-1]]['status'] = 0
+          elif player.story[player.world] < list(enemyLocations[player.world][currentRoom])[0]:
+            pass
+          else:
+            for story in enemyLocations[player.world][currentRoom]:
+              if story == player.story[player.world]:
+                enemyLocations[player.world][currentRoom][story]['status'] = 0
+                break
+              else:
+                if story > player.story[player.world]:
+                  enemyLocations[player.world][currentRoom][previousStory]['status'] = 0
+                  break
+                else:
+                  previousStory = story
+      ###DEFEAT
+      elif result == 'defeat':
+          print("---------------------------")
+          print('Your HP has dropped to zero!\nGAME OVER')
+          result = gameOver()
+          if result == '':
+            retryBoss = True
+          if result == 'run':
+            temp = currentRoom
+            currentRoom = previousRoom
+            previousRoom = temp
+            player.calculateHealth()
+          if result == 'load':
+            player.HP = player.TotalHP
+            player.MP = player.TotalMP
+            currentRoom = rooms[player.world][0]
+            previousRoom = currentRoom
+      player.calculateHealth()
+
+    elif 'heartless' in rooms[player.world][currentRoom]:           ###### BATTLE
+      if player.story[player.world] > list(enemyLocations[player.world][currentRoom])[-1]:
+        currentRoom, previousRoom = determineBattle(list(enemyLocations[player.world][currentRoom])[-1], currentRoom, previousRoom)
+      elif player.story[player.world] < list(enemyLocations[player.world][currentRoom])[0]:
+        pass
+      else:
+        for story in enemyLocations[player.world][currentRoom]:
+          if story == player.story[player.world]:
+            currentRoom, previousRoom = determineBattle(story, currentRoom, previousRoom)
+            break
+          else:
+            if story > player.story[player.world]:
+              currentRoom, previousRoom = determineBattle(previousStory, currentRoom, previousRoom)
+              break
+            else:
+              previousStory = story
+
+
+    showStatus()
+                             
+    move = ''                                     ##### INPUT READER
+    while move == '':  
+      move = input('>')
+    move = move.lower().split()
 
     if 'journal' in move:                           ###INCOMPLETE
                             #MAKE TUTORIAL
@@ -1226,8 +1286,7 @@ while True:                        ###MAIN
 
     elif 'test' in move:                                ##### TEST
 
-      player.stock.append('potion')
-      # print(player.abilities)
+      print(player.story['CastleOblivion'])
 
       print('\ntested!\n')
 
@@ -1404,7 +1463,6 @@ while True:                        ###MAIN
       else:
         if move[1] in rooms[player.world][currentRoom]:
           #set the current room to the new room
-          alreadyBattled = 0
           previousRoom = currentRoom
           currentRoom = rooms[player.world][currentRoom][move[1]]
           addVisitedRoom(currentRoom)
@@ -1412,7 +1470,6 @@ while True:                        ###MAIN
 
         #there is no door (link) to the new room
         elif move[1] == 'back':
-            alreadyBattled = 0
             temp = currentRoom
             currentRoom = previousRoom
             previousRoom = temp
@@ -1478,68 +1535,3 @@ while True:                        ###MAIN
         else: print('Can\'t talk to ' + move[1] + '!')
       else: print('There\'s no one to talk here!')
 
-
-    if 'boss' in rooms[player.world][currentRoom] and player.story[player.world] == (bosses[rooms[player.world][currentRoom]['boss']]['story']-1):           ###### BOSS BATTLE
-      retryBoss = False
-      bossScene(rooms[player.world][currentRoom]['boss'])
-      result = battle(rooms[player.world][currentRoom]['boss'])
-      if result == 'victory':
-        player.story[player.world] += 1
-      ###RESET HEARTLESS STATUS SO PLAYER WON'T FIGHT RIGHT AWAY
-        if 'heartless' in rooms[player.world][currentRoom]:
-          if player.story[player.world] > list(enemyLocations[player.world][currentRoom])[-1]:
-            enemyLocations[player.world][currentRoom][-1]['status'] = 0
-          elif player.story[player.world] < list(enemyLocations[player.world][currentRoom])[0]:
-            pass
-          else:
-            for story in enemyLocations[player.world][currentRoom]:
-              if story == player.story[player.world]:
-                enemyLocations[player.world][currentRoom][story]['status'] = 0
-                break
-              else:
-                if story > player.story[player.world]:
-                  enemyLocations[player.world][currentRoom][previousStory]['status'] = 0
-                  break
-                else:
-                  previousStory = story
-      ###DEFEAT
-      elif result == 'defeat':
-          print("---------------------------")
-          print('Your HP has dropped to zero!\nGAME OVER')
-          result = gameOver()
-          if result == '':
-            retryBoss = True
-          if result == 'run':
-            temp = currentRoom
-            currentRoom = previousRoom
-            previousRoom = temp
-            player.calculateHealth()
-          if result == 'load':
-            player.HP = player.TotalHP
-            player.MP = player.TotalMP
-            currentRoom = rooms[player.world][0]
-            previousRoom = currentRoom
-      player.calculateHealth()
-
-    elif 'heartless' in rooms[player.world][currentRoom] and alreadyBattled == 0:           ###### BATTLE
-      if player.story[player.world] > list(enemyLocations[player.world][currentRoom])[-1]:
-        alreadyBattled, currentRoom, previousRoom = determineBattle(list(enemyLocations[player.world][currentRoom])[-1], currentRoom, previousRoom)
-      elif player.story[player.world] < list(enemyLocations[player.world][currentRoom])[0]:
-        pass
-      else:
-        for story in enemyLocations[player.world][currentRoom]:
-          if story == player.story[player.world]:
-            alreadyBattled, currentRoom, previousRoom = determineBattle(story, currentRoom, previousRoom)
-            break
-          else:
-            if story > player.story[player.world]:
-              alreadyBattled, currentRoom, previousRoom = determineBattle(previousStory, currentRoom, previousRoom)
-              break
-            else:
-              previousStory = story
-
-
-    # player wins if they get to the Third District
-    if currentRoom == 'Third District' and  player.story[player.world] == 1:
-      print('You found Donald & Goofy... YOU WIN!')
-      break
