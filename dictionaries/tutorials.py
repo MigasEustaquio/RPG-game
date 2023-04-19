@@ -6,9 +6,11 @@ tutorials = {
 
             'cast magic' : 0,
 
-            'talk' : 1,
+            'talk' : 0,
 
             'save' : 0,
+
+            'quit' : 0,
 
             'treasure chest' : 0,
 

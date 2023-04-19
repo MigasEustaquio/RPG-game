@@ -2,6 +2,8 @@ urgent:{
 
     Level up abilities marked with '*' missing (combo/air combo plus, guard, treasure magnet)
 
+    retry boss not working with pygame
+
 }
 
 locations: {

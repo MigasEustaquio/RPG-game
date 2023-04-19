@@ -157,7 +157,7 @@ class player:
         if item in stockOnly:
             self.stock.append(item)
             self.sortStock()
-            print(green + item + white +' sent to stock!')      
+            print(Fore.GREEN + item + Fore.WHITE +' sent to stock!')      
         else:
             if len(self.item) < self.itemPouch:
                 if self.autoStockEnabled:

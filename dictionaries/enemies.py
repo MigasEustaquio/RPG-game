@@ -223,6 +223,14 @@ heartless = {
 
 bosses = {
 
+        'Darkside' : {'commands' : ['attack' ,'barrier', 'energy sphere'],
+                    'HP': 10 , 'damage': 2, 'defense' : 0,
+                    'munny' : [1,5],
+                    'exp' : 50,
+                    'drop' : {5 : 'ether'},
+                    'story' : 1,
+        },
+
         'Xemnas' : {'commands' : ['attack' ,'barrier', 'energy sphere'],
                     'HP': 10 , 'damage': 5, 'defense' : 5,
                     'munny' : [0,0],

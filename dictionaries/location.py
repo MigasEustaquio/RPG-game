@@ -39,7 +39,7 @@ rooms = {
 
       'Aurora\'s Stained Glass' : { 'down' : 'Belle\'s Stained Glass',
                   'resetHeartless' : [],
-                  'treasure' : '',
+                  'Save':'',
                   'map number' : '0',
                   'restricted' : {},
                   'move': ['down']
@@ -47,7 +47,7 @@ rooms = {
 
       'Belle\'s Stained Glass' : { 'down' : 'Seashore',
                   'resetHeartless' : [],
-                  'treasure' : '',
+                  'heartless'  : '',
                   'map number' : '0',
                   'restricted' : {},
                   'move': ['down']

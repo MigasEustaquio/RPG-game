@@ -17,6 +17,12 @@ enemyLocations = {
                 'waves': 1, 'status': 1,
                 'wave': {1: 'shadow'}
             }
+        },
+        'Belle\'s Stained Glass':{
+            0:{
+                'waves': 1, 'status': 1,
+                'wave': {1: 'Darkside'}
+            }
         }
     },
 
