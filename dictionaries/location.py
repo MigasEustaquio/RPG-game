@@ -523,7 +523,7 @@ rooms = {
 
       '1st Floor Shop' : { 'leave' : '1st Floor',              
                   'person'  : ['Moogle'],
-                  'resetHeartless' : [],
+                  'resetHeartless' : ['5th Floor'],
                   'map number' : '1',
                   'restricted' : {},
                   'move': ['leave']
